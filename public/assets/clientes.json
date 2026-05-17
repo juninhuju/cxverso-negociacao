@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "nome": "Ana Paula Souza",
+    "cpfCnpj": "123.456.789-00",
+    "tipo": "PF",
+    "status": "ativo",
+    "email": "ana.souza@email.com",
+    "telefone": "(11) 99999-1111"
+  },
+  {
+    "id": 2,
+    "nome": "João Carlos Lima",
+    "cpfCnpj": "987.654.321-00",
+    "tipo": "PF",
+    "status": "inadimplente",
+    "email": "joao.lima@email.com",
+    "telefone": "(21) 98888-2222"
+  },
+  {
+    "id": 3,
+    "nome": "Empresa XPTO Ltda",
+    "cpfCnpj": "12.345.678/0001-99",
+    "tipo": "PJ",
+    "status": "ativo",
+    "email": "contato@xpto.com.br",
+    "telefone": "(31) 97777-3333"
+  },
+  {
+    "id": 4,
+    "nome": "Maria Eduarda Silva",
+    "cpfCnpj": "321.654.987-00",
+    "tipo": "PF",
+    "status": "bloqueado",
+    "email": "maria.silva@email.com",
+    "telefone": "(41) 96666-4444"
+  },
+  {
+    "id": 5,
+    "nome": "Construtora Alpha S.A.",
+    "cpfCnpj": "98.765.432/0001-11",
+    "tipo": "PJ",
+    "status": "inadimplente",
+    "email": "financeiro@alpha.com.br",
+    "telefone": "(51) 95555-5555"
+  },
+  {
+    "id": 6,
+    "nome": "Carlos Alberto Torres",
+    "cpfCnpj": "456.789.123-00",
+    "tipo": "PF",
+    "status": "ativo",
+    "email": "carlos.torres@email.com",
+    "telefone": "(61) 94444-6666"
+  },
+  {
+    "id": 7,
+    "nome": "Padaria Pão Quente ME",
+    "cpfCnpj": "23.456.789/0001-55",
+    "tipo": "PJ",
+    "status": "bloqueado",
+    "email": "padaria@paoquente.com",
+    "telefone": "(71) 93333-7777"
+  },
+  {
+    "id": 8,
+    "nome": "Fernanda Ribeiro",
+    "cpfCnpj": "654.321.987-00",
+    "tipo": "PF",
+    "status": "ativo",
+    "email": "fernanda.ribeiro@email.com",
+    "telefone": "(81) 92222-8888"
+  },
+  {
+    "id": 9,
+    "nome": "Transportes Rápido Ltda",
+    "cpfCnpj": "34.567.890/0001-22",
+    "tipo": "PJ",
+    "status": "inadimplente",
+    "email": "contato@rapido.com",
+    "telefone": "(91) 91111-9999"
+  },
+  {
+    "id": 10,
+    "nome": "Lucas Martins",
+    "cpfCnpj": "789.123.456-00",
+    "tipo": "PF",
+    "status": "bloqueado",
+    "email": "lucas.martins@email.com",
+    "telefone": "(85) 90000-0000"
+  }
+]

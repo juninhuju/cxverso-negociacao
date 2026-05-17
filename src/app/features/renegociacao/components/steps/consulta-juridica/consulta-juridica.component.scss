@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.consulta-juridica-host {
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+}

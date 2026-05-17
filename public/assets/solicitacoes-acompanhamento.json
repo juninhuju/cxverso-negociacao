@@ -1,0 +1,26 @@
+[
+  {
+    "id": "SOL-20260516-001",
+    "protocolo": "PRT-2026-000001",
+    "numeroContrato": "100000001",
+    "cliente": "Ana Paula Souza",
+    "cpfCnpj": "12345678900",
+    "produto": "Crédito Pessoal",
+    "valorTotal": 15000,
+    "valorTotalFormatado": "R$ 15.000,00",
+    "dataInicio": "2026-05-12",
+    "status": "EM_ANDAMENTO"
+  },
+  {
+    "id": "SOL-20260516-002",
+    "protocolo": "PRT-2026-000002",
+    "numeroContrato": "100000003",
+    "cliente": "João Carlos Lima",
+    "cpfCnpj": "98765432100",
+    "produto": "Capital de Giro",
+    "valorTotal": 45000,
+    "valorTotalFormatado": "R$ 45.000,00",
+    "dataInicio": "2026-05-14",
+    "status": "AGUARDANDO_JURIDICO"
+  }
+]

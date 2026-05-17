@@ -1,0 +1,51 @@
+<div class="dashboard">
+  <div class="busca-topo">
+    <form (ngSubmit)="buscarContratos()" class="busca-form" autocomplete="off">
+      <label for="documento" class="visually-hidden">CPF ou CNPJ</label>
+      <input id="documento" [formControl]="documento" placeholder="Digite um CPF ou CNPJ" required autocomplete="off"
+        class="input-cpf-cnpj" aria-label="Campo para buscar contratos por CPF ou CNPJ" />
+      <button type="submit" class="btn-primary" [disabled]="!documento.value"
+        aria-label="Buscar contratos pelo CPF ou CNPJ informado">
+        Buscar
+      </button>
+    </form>
+    <div class="contratos-lista">
+      @for (contrato of contratos(); track contrato.numero) {
+      <app-contract-card [contrato]="contrato" (click)="selecionarContrato(contrato)"
+        style="cursor:pointer; margin-bottom: 1rem;" />
+      } @empty {
+      @if (buscouContratos()) {
+      <p class="empty-state" role="status">
+        Nenhum contrato encontrado. Informe o CPF ou CNPJ para buscar.
+      </p>
+      }
+      }
+    </div>
+  </div>
+
+  <div class="dashboard-header">
+    <h1>Painel de Acompanhamento</h1>
+  </div>
+
+  <div class="solicitacoes-lista" role="region" aria-label="Solicitações já realizadas">
+    <h2 class="section-title">Solicitações já realizadas</h2>
+    @for (solicitacao of solicitacoesUsuario(); track solicitacao.id) {
+    <article class="solicitacao-card" [attr.aria-label]="'Solicitação ' + solicitacao.protocolo">
+      <p><strong>Protocolo:</strong> {{ solicitacao.protocolo }}</p>
+      <p><strong>Cliente:</strong> {{ solicitacao.cliente }}</p>
+      <p><strong>CPF/CNPJ:</strong> {{ solicitacao.cpfCnpj }}</p>
+      <p><strong>Contrato:</strong> {{ solicitacao.numeroContrato }}</p>
+      <p><strong>Produto:</strong> {{ solicitacao.produto }}</p>
+      <p><strong>Valor:</strong> {{ solicitacao.valorTotalFormatado }}</p>
+      <p><strong>Data da solicitação:</strong> {{ solicitacao.dataInicio }}</p>
+      <p><strong>Status:</strong> {{ statusLabel[solicitacao.status] }}</p>
+      <button type="button" class="btn-danger" (click)="excluirSolicitacao(solicitacao.protocolo)"
+        [attr.aria-label]="'Excluir solicitação ' + solicitacao.protocolo">
+        Excluir
+      </button>
+    </article>
+    } @empty {
+    <p class="empty-state" role="status">Nenhuma solicitação encontrada para o usuário.</p>
+    }
+  </div>
+</div>

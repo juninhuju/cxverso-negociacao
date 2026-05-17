@@ -1,0 +1,37 @@
+<div class="step-card">
+  <header class="step-header">
+    <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Formalização"</button>
+    <h2>Conformidade</h2>
+    <p class="step-subtitle">Confirmação final de aderência às regras e documentação</p>
+  </header>
+
+  <div class="step-content">
+    @if (contrato() && simulacao()) {
+    <section class="conformidade-checks" aria-label="Checklist de conformidade">
+      <h3>Checklist</h3>
+      <ul>
+        <li><mat-icon aria-hidden="true">check_circle</mat-icon> Documentos do cliente conferidos</li>
+        <li><mat-icon aria-hidden="true">check_circle</mat-icon> Aprovação jurídica anexada</li>
+        <li><mat-icon aria-hidden="true">check_circle</mat-icon> Critérios de alçada validados</li>
+        <li><mat-icon aria-hidden="true">check_circle</mat-icon> Regras de garantia verificadas</li>
+      </ul>
+    </section>
+    } @else {
+    <p class="empty-state">Dados insuficientes para análise de conformidade.</p>
+    }
+
+    @if (loading()) {
+    <div class="loading-state" role="status" aria-label="Validando conformidade">
+      <div class="spinner"></div>
+      <p>Processando conformidade...</p>
+    </div>
+    }
+  </div>
+
+  <div class="step-actions">
+    <button class="btn-secondary" [disabled]="loading()" (click)="voltar()">Voltar</button>
+    <button class="btn-primary" [disabled]="loading() || !contrato() || !simulacao()" (click)="concluirConformidade()">
+      Concluir conformidade
+    </button>
+  </div>
+</div>

@@ -1,0 +1,237 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.shell-sidenav-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-sidenav {
+  width: 320px;
+  background: var(--color-primary-blue);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.shell-sidenav-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.sidenav-top-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.sidenav-brand-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.brand-search-icon {
+  color: var(--color-secondary-orange);
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.sidenav-brand-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.2px;
+}
+
+.sidenav-brand-subtitle {
+  margin: var(--spacing-xs) 0 0;
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  transition: background 0.2s;
+
+  &:hover,
+  &.sidebar-link--active {
+    background: var(--color-secondary-orange);
+    color: var(--color-primary-blue);
+  }
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.sidenav-user {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  padding-top: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  button[mat-icon-button] {
+    color: #fff;
+  }
+}
+
+.user-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  object-fit: cover;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-matricula {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.shell-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  height: 100%;
+}
+
+.page-header {
+  background: #f6f8fb;
+  border-bottom: 1px solid #d7deea;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  flex-shrink: 0;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  button[mat-icon-button] {
+    color: var(--color-primary-blue);
+  }
+}
+
+.ca-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--color-primary-blue);
+  color: #fff;
+  font-weight: var(--font-weight-bold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corp-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.corp-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: #12366f;
+}
+
+.corp-subtitle {
+  font-size: 0.75rem;
+  color: #4d5f82;
+}
+
+.page-header-right {
+  color: #264a82;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-transform: capitalize;
+}
+
+.page-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.app-footer {
+  margin: 0;
+  padding: 8px 0;
+  border-top: 1px solid var(--dsc-color-bg-highlight-6);
+  text-align: center;
+  background: var(--dsc-color-bg-highlight-1);
+  flex-shrink: 0;
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--dsc-color-content-highlight-1);
+    line-height: 1.5;
+
+    strong {
+      font-weight: 600;
+      color: var(--dsc-color-content-highlight-2);
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .shell-sidenav {
+    width: 280px;
+  }
+
+  .page-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .corp-title {
+    font-size: var(--font-size-sm);
+  }
+
+  .page-header-right {
+    font-size: 0.75rem;
+  }
+}

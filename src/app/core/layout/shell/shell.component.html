@@ -1,0 +1,78 @@
+<mat-sidenav-container class="shell-sidenav-container" [hasBackdrop]="true" (backdropClick)="closeSidenav()">
+  <mat-sidenav #sidenav class="shell-sidenav" mode="over" [opened]="isSidenavOpen()" [disableClose]="false"
+    [autoFocus]="false">
+    <div class="shell-sidenav-inner">
+      <section class="sidenav-top-brand" aria-label="Identidade do sistema">
+        <div class="sidenav-brand-row">
+          <mat-icon aria-hidden="true" class="brand-search-icon">search</mat-icon>
+          <span class="sidenav-brand-title">Negocia.CAIXA</span>
+        </div>
+        <p class="sidenav-brand-subtitle">Sistema de Renegociação</p>
+      </section>
+
+      <nav class="sidebar-nav" aria-label="Navegação">
+        <a class="sidebar-link" routerLink="/renegociacao" routerLinkActive="sidebar-link--active"
+          [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <span>Negociar aqui</span>
+        </a>
+        <a class="sidebar-link" routerLink="/acompanhamento" routerLinkActive="sidebar-link--active"
+          [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
+          <mat-icon aria-hidden="true">apps</mat-icon>
+          <span>Painel de acompanhamento</span>
+        </a>
+        <a class="sidebar-link" routerLink="/chatbot" routerLinkActive="sidebar-link--active"
+          [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
+          <mat-icon aria-hidden="true">smart_toy</mat-icon>
+          <span>Chatbot</span>
+        </a>
+        <a class="sidebar-link" routerLink="/sobre" routerLinkActive="sidebar-link--active"
+          [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
+          <mat-icon aria-hidden="true">info</mat-icon>
+          <span>Sobre</span>
+        </a>
+      </nav>
+
+      <section class="sidenav-user" aria-label="Dados do usuário">
+        <img src="/assets/user-avatar.svg" class="user-photo" alt="Foto do usuário logado" />
+        <div class="user-meta">
+          <span class="user-name">{{ username() }}</span>
+          <span class="user-matricula">{{ matricula() }}</span>
+        </div>
+        <button mat-icon-button type="button" aria-label="Sair do sistema" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </section>
+    </div>
+  </mat-sidenav>
+
+  <main class="shell-content" role="main">
+    <header class="page-header" aria-label="Cabeçalho corporativo">
+      <div class="page-header-left">
+        <button mat-icon-button type="button" (click)="toggleSidenav()"
+          [attr.aria-label]="isSidenavOpen() ? 'Fechar menu lateral' : 'Abrir menu lateral'"
+          [attr.aria-pressed]="isSidenavOpen()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="ca-badge" aria-hidden="true">CA</span>
+        <div class="corp-title-group">
+          <span class="corp-title">Sistema Corporativo CAIXA</span>
+          <span class="corp-subtitle">Ambiente de Produção</span>
+        </div>
+      </div>
+
+      <div class="page-header-right">
+        <span class="date-label">{{ dataAtual() }}</span>
+      </div>
+    </header>
+
+    <section class="page-body">
+      <router-outlet />
+    </section>
+
+    <footer class="app-footer" aria-label="Créditos da equipe">
+      <p>Construído pela equipe <strong>FacilitAÍ</strong> — Arthur, Fernanda, Gabriela, Ivson, Mari, Vitoria e Wilson.
+      </p>
+    </footer>
+  </main>
+</mat-sidenav-container>

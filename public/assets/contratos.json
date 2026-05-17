@@ -1,0 +1,123 @@
+[
+  {
+    "numero": "100000001",
+    "cliente": "Ana Paula Souza",
+    "cpfCnpj": "12345678900",
+    "produto": "Crédito Pessoal",
+    "valorDevido": 15000.00,
+    "dataVencimento": "2026-06-10",
+    "status": "EXECUCAO_EXTRAJUDICIAL",
+    "diasAtraso": 124,
+    "garantia": "Sem garantia"
+  },
+  {
+    "numero": "100000002",
+    "cliente": "Ana Paula Souza",
+    "cpfCnpj": "12345678900",
+    "produto": "Cartão de Crédito",
+    "valorDevido": 3500.00,
+    "dataVencimento": "2026-07-15",
+    "status": "CEDIDO",
+    "diasAtraso": 32,
+    "garantia": "Fiança"
+  },
+  {
+    "numero": "100000003",
+    "cliente": "João Carlos Lima",
+    "cpfCnpj": "98765432100",
+    "produto": "Capital de Giro",
+    "valorDevido": 45000.00,
+    "dataVencimento": "2026-08-15",
+    "status": "INADIMPLENTE",
+    "diasAtraso": 98,
+    "garantia": "Alienação fiduciária"
+  },
+  {
+    "numero": "100000004",
+    "cliente": "Empresa XPTO Ltda",
+    "cpfCnpj": "12345678000199",
+    "produto": "Financiamento Empresarial",
+    "valorDevido": 120000.50,
+    "dataVencimento": "2026-09-20",
+    "status": "CEDIDO",
+    "diasAtraso": 14,
+    "garantia": "Hipoteca"
+  },
+  {
+    "numero": "100000005",
+    "cliente": "Empresa XPTO Ltda",
+    "cpfCnpj": "12345678000199",
+    "produto": "Cheque Especial PJ",
+    "valorDevido": 8000.00,
+    "dataVencimento": "2026-10-10",
+    "status": "INADIMPLENTE",
+    "diasAtraso": 64,
+    "garantia": "Aval dos sócios"
+  },
+  {
+    "numero": "100000006",
+    "cliente": "Construtora Alpha S.A.",
+    "cpfCnpj": "98765432000111",
+    "produto": "Financiamento Imobiliário",
+    "valorDevido": 250000.00,
+    "dataVencimento": "2026-11-05",
+    "status": "EXECUCAO_EXTRAJUDICIAL",
+    "diasAtraso": 142,
+    "garantia": "Imóvel financiado"
+  },
+  {
+    "numero": "100000007",
+    "cliente": "Carlos Alberto Torres",
+    "cpfCnpj": "45678912300",
+    "produto": "Empréstimo Consignado",
+    "valorDevido": 9000.00,
+    "dataVencimento": "2026-12-01",
+    "status": "CEDIDO",
+    "diasAtraso": 10,
+    "garantia": "Consignação em folha"
+  },
+  {
+    "numero": "100000008",
+    "cliente": "Padaria Pão Quente ME",
+    "cpfCnpj": "23456789000155",
+    "produto": "Crédito Empresarial",
+    "valorDevido": 18000.00,
+    "dataVencimento": "2027-01-10",
+    "status": "INADIMPLENTE",
+    "diasAtraso": 87,
+    "garantia": "Recebíveis"
+  },
+  {
+    "numero": "100000009",
+    "cliente": "Padaria Pão Quente ME",
+    "cpfCnpj": "23456789000155",
+    "produto": "Antecipação de Recebíveis",
+    "valorDevido": 5000.00,
+    "dataVencimento": "2027-02-15",
+    "status": "EXECUCAO_EXTRAJUDICIAL",
+    "diasAtraso": 119,
+    "garantia": "Recebíveis"
+  },
+  {
+    "numero": "100000010",
+    "cliente": "Fernanda Ribeiro",
+    "cpfCnpj": "65432198700",
+    "produto": "Crédito Pessoal",
+    "valorDevido": 7000.00,
+    "dataVencimento": "2027-03-20",
+    "status": "INADIMPLENTE",
+    "diasAtraso": 45,
+    "garantia": "Sem garantia"
+  },
+  {
+    "numero": "100000011",
+    "cliente": "Transportes Rápido Ltda",
+    "cpfCnpj": "34567890000122",
+    "produto": "Financiamento de Veículos",
+    "valorDevido": 95000.00,
+    "dataVencimento": "2027-04-10",
+    "status": "EXECUCAO_EXTRAJUDICIAL",
+    "diasAtraso": 101,
+    "garantia": "Veículos financiados"
+  }
+]

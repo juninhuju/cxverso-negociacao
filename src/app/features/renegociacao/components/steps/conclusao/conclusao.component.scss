@@ -1,0 +1,109 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.conclusao-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--spacing-md) 0;
+  width: 100%;
+}
+
+.step-card {
+  padding: var(--spacing-lg);
+  margin: 0;
+  width: 100%;
+  max-width: 760px;
+
+  &--success {
+    border-left: 6px solid var(--color-success-green);
+  }
+}
+
+.success-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background-color: var(--color-success-green-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+
+  &__icon {
+    font-size: 2rem;
+    color: var(--color-success-green);
+  }
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-success-green);
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-800);
+  }
+}
+
+.rejection-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background-color: var(--color-error-red-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+
+  &__icon {
+    font-size: 2rem;
+    color: var(--color-error-red);
+  }
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-error-red);
+  }
+
+  &__reason {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-800);
+  }
+}
+
+.protocol-info {
+  margin-bottom: var(--spacing-md);
+
+  .protocol-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .protocol-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-900);
+  }
+
+  .protocol-value {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-blue);
+  }
+}
+
+.info-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-700);
+  margin-bottom: var(--spacing-md);
+}
+
+.step-actions {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}

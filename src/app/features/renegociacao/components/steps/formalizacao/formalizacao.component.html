@@ -1,0 +1,74 @@
+<div class="step-card">
+  <header class="step-header">
+    <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Resultado"</button>
+    <h2>Formalização da Renegociação</h2>
+    <p class="step-subtitle">Revise os dados e confirme para formalizar o acordo</p>
+  </header>
+
+  <div class="step-content">
+    @if (contrato() && simulacao()) {
+    <section class="result-block result-block--contrato" aria-label="Dados do contrato">
+      <h3 class="block-title">Dados do Contrato</h3>
+      <div class="condicoes-grid">
+        <article class="condicao-item">
+          <span class="label">Número</span>
+          <span class="valor">{{ contrato()!.numero }}</span>
+        </article>
+        <article class="condicao-item">
+          <span class="label">Cliente</span>
+          <span class="valor">{{ contrato()!.cliente }}</span>
+        </article>
+        <article class="condicao-item">
+          <span class="label">Produto</span>
+          <span class="valor">{{ contrato()!.produto }}</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="result-block result-block--condicoes" aria-label="Condições acordadas">
+      <h3 class="block-title">Condições Acordadas</h3>
+      <div class="condicoes-grid">
+        <article class="condicao-item">
+          <span class="label">Entrada</span>
+          <span class="valor">{{ simulacao()!.valorEntrada | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </article>
+        <article class="condicao-item">
+          <span class="label">Parcelamento</span>
+          <span class="valor">{{ simulacao()!.numeroParcelas }}x de {{ simulacao()!.valorParcela |
+            currency:'BRL':'symbol':'1.2-2' }}</span>
+        </article>
+        <article class="condicao-item condicao-item--warning">
+          <span class="label">Taxa de juros</span>
+          <span class="valor">{{ simulacao()!.taxaJuros | percent:'1.2-2' }} a.m.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="total-operacao" aria-label="Resumo total da formalização">
+      <span class="label">Total a Pagar</span>
+      <strong class="valor">{{ simulacao()!.totalPago | currency:'BRL':'symbol':'1.2-2' }}</strong>
+    </section>
+
+    <section class="alerta-formalizacao" aria-label="Aviso de confirmação">
+      <h3 class="block-title">Antes de confirmar</h3>
+      <p>Ao confirmar, o acordo será formalizado com as condições acima e você seguirá para a etapa de conformidade.</p>
+    </section>
+    } @else {
+    <p class="empty-state" role="status">
+      Dados insuficientes para formalização. Retorne à etapa de resultado.
+    </p>
+    }
+
+    @if (loading()) {
+    <div class="loading-state" role="status" aria-label="Formalizando renegociação">
+      <div class="spinner"></div>
+      <p>Finalizando renegociação...</p>
+    </div>
+    }
+  </div>
+
+  <div class="step-actions">
+    <button class="btn-secondary" [disabled]="loading()" (click)="voltar()">Voltar</button>
+    <button class="btn-primary" [disabled]="loading()" (click)="formalizar()">Confirmar e Finalizar</button>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="wizard-container">
+  <aside class="wizard-sidebar" aria-label="Progresso da renegociação">
+    <h1 class="sidebar-title">Renegociação</h1>
+
+    <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="progressPercent" aria-valuemin="0"
+      aria-valuemax="100">
+      <div class="progress-bar__fill" [style.width.%]="progressPercent"></div>
+    </div>
+    <p class="progress-label">{{ progressPercent }}% concluído</p>
+
+    <ol class="steps-list" role="list">
+      @for (step of steps; track step.path; let i = $index) {
+      <li class="step-item" [class.step-done]="i < stepAtual()" [class.step-current]="i === stepAtual()"
+        [attr.aria-current]="i === stepAtual() ? 'step' : null">
+        <span class="step-number" aria-hidden="true">{{ i + 1 }}</span>
+        <span class="step-label">{{ step.label }}</span>
+      </li>
+      } @empty {
+      <li class="step-item" aria-live="polite">Nenhuma etapa disponível.</li>
+      }
+    </ol>
+  </aside>
+
+  <main class="wizard-content" role="main">
+    @if (loading()) {
+    <div class="progress-bar progress-bar--indeterminate" aria-label="Carregando"></div>
+    }
+    <router-outlet />
+  </main>
+</div>

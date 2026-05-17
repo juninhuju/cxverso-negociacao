@@ -1,0 +1,112 @@
+<div class="step-card">
+  <header class="step-header">
+    <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Simulação"</button>
+    <h2>Resultado da Simulação</h2>
+    <p class="step-subtitle">Contrato {{ contrato()?.numero }} • {{ contrato()?.cliente }}</p>
+  </header>
+
+  <div class="step-content">
+    @if (error()) {
+    <p class="error-message" role="alert"><mat-icon aria-hidden="true">warning</mat-icon> {{ error() }}</p>
+    }
+
+    @if (simulacao(); as simAtual) {
+    <section class="result-block" aria-label="Condições da renegociação">
+      <h3 class="block-title">Condições da renegociação</h3>
+
+      <div class="condicoes-grid">
+        <div class="condicao-col">
+          <article class="condicao-item">
+            <span class="label">Entrada</span>
+            <span class="valor">{{ simAtual.valorEntrada | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+          <article class="condicao-item">
+            <span class="label">Taxa de juros</span>
+            <span class="valor">{{ simAtual.taxaJuros | percent:'1.2-2' }} a.m.</span>
+          </article>
+          <article class="condicao-item">
+            <span class="label">Tarifa de renegociação</span>
+            <span class="valor">{{ tarifaRenegociacao | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+          <article class="condicao-item">
+            <span class="label">Saldo renegociado</span>
+            <span class="valor">{{ saldoRenegociado() | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+          <article class="condicao-item">
+            <span class="label">Prazo</span>
+            <span class="valor">{{ simAtual.numeroParcelas }} meses</span>
+          </article>
+        </div>
+
+        <div class="condicao-col">
+          <article class="condicao-item">
+            <span class="label">Carência</span>
+            <span class="valor">{{ carenciaDias }} dias</span>
+          </article>
+          <article class="condicao-item">
+            <span class="label">IOF (0,38%)</span>
+            <span class="valor">{{ iofValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+          <article class="condicao-item condicao-item--danger">
+            <span class="label">Custas e Honorários</span>
+            <span class="valor">{{ custasHonorarios() | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+          <article class="condicao-item">
+            <span class="label">CET Estimado ({{ cetTaxa() | percent:'1.2-2' }} a.m.)</span>
+            <span class="valor">{{ cetValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+          <article class="condicao-item condicao-item--blue">
+            <span class="label">Parcela estimada</span>
+            <span class="valor">{{ simAtual.valorParcela | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="total-operacao" aria-label="Total da operação">
+      <span class="label">Total da Operação</span>
+      <strong class="valor">{{ totalOperacao() | currency:'BRL':'symbol':'1.2-2' }}</strong>
+    </section>
+
+    <section class="detalhamento-financeiro" aria-label="Detalhamento financeiro">
+      <h3 class="block-title">Detalhamento Financeiro</h3>
+      <div class="detalhamento-grid">
+        <article>
+          <span class="label">Saldo a financiar</span>
+          <span class="valor">{{ saldoAFinanciar() | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </article>
+        <article>
+          <span class="label">Valor do juros (taxa {{ simAtual.taxaJuros | percent:'1.2-2' }} a.m.)</span>
+          <span class="valor">{{ simAtual.totalJuros | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </article>
+        <article>
+          <span class="label">IOF (0,38%)</span>
+          <span class="valor">{{ iofValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </article>
+        <article>
+          <span class="label">CET (taxa {{ cetTaxa() | percent:'1.2-2' }} a.m.)</span>
+          <span class="valor">{{ cetValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="pagamento-entrada" aria-label="Pagamento da entrada">
+      <h3 class="block-title">Pagamento da entrada</h3>
+      <div class="pagamento-box">
+        <span class="label">Total a pagar</span>
+        <span class="valor">{{ simAtual.valorEntrada | currency:'BRL':'symbol':'1.2-2' }}</span>
+        <p class="hint">Inclui {{ custasHonorarios() | currency:'BRL':'symbol':'1.2-2' }} de custas.</p>
+      </div>
+    </section>
+    } @else {
+    <p class="empty-state" role="status">
+      Nenhuma simulação disponível. Retorne e realize a simulação.
+    </p>
+    }
+  </div>
+
+  <div class="step-actions">
+    <button class="btn-secondary" (click)="voltar()">Voltar</button>
+    <button class="btn-primary" [disabled]="!simulacao()" (click)="continuar()">Prosseguir para Formalização</button>
+  </div>
+</div>

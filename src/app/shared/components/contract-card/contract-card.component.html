@@ -1,0 +1,34 @@
+<div class="contract-card">
+  <header class="contract-card__header">
+    <div>
+      <h3 class="contract-card__title">Contrato {{ contrato().numero }}</h3>
+      <p class="contract-card__subtitle">{{ contrato().produto }}</p>
+    </div>
+    <div class="status-slot">
+      <app-status-badge [status]="contrato().status"></app-status-badge>
+    </div>
+  </header>
+
+  <hr class="divider" />
+
+  <div class="contract-details">
+    <dl class="detail-grid">
+      <div class="detail-item">
+        <dt>Cliente</dt>
+        <dd>{{ contrato().cliente }}</dd>
+      </div>
+      <div class="detail-item">
+        <dt>CPF / CNPJ</dt>
+        <dd>{{ contrato().cpfCnpj }}</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Valor Devido</dt>
+        <dd>{{ contrato().valorDevido | currency:'BRL' }}</dd>
+      </div>
+      <div class="detail-item">
+        <dt>Vencimento</dt>
+        <dd>{{ contrato().dataVencimento | date:'dd/MM/yyyy' }}</dd>
+      </div>
+    </dl>
+  </div>
+</div>
