@@ -1,0 +1,13 @@
+{  
+   "baseJuridico" : [
+   {
+    "cpfCnpj": 12345678000190,
+     "nome": "Empresa XYZ Ltda",
+     "contrato": 456789123,
+     "ajuizado": "Sim",
+     "numProcesso": 2026010203040506,
+     "custas": 1090.00,
+     "honorarios": 4000.00
+   }
+]
+}
