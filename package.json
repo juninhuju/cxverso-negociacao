@@ -8,7 +8,8 @@
     "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:coverage": "ng test --watch=false --code-coverage"
+    "test:coverage": "ng test --watch=false --code-coverage",
+    "mock-api": "json-server --watch src/app/core/mocks/db.json --port 3000"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,7 @@
     "angular-eslint": "21.0.1",
     "eslint": "^9.39.1",
     "jasmine-core": "~5.6.0",
+    "json-server": "^0.17.4",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
