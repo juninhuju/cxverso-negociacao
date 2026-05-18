@@ -1,4 +1,108 @@
 :root {
+  /* DSC CAIXA - Accent (Laranja institucional) */
+  --dsc-color-bg-accent-7: #663a00;
+  --dsc-color-bg-accent-6: #a65e00;
+  --dsc-color-bg-accent-5: #d87b00;
+  --dsc-color-bg-accent-4: #f39200;
+  --dsc-color-bg-accent-3: #fdb548;
+  --dsc-color-bg-accent-2: #ffd392;
+  --dsc-color-bg-accent-1: #ffefd6;
+
+  /* DSC CAIXA - Neutral (Cinzas institucionais) */
+  --dsc-color-bg-neutral-7: #404b52;
+  --dsc-color-bg-neutral-6: #64747a;
+  --dsc-color-bg-neutral-5: #9eb2b8;
+  --dsc-color-bg-neutral-4: #d0e0e3;
+  --dsc-color-bg-neutral-3: #ebf1f2;
+  --dsc-color-bg-neutral-2: #f7fafa;
+  --dsc-color-bg-neutral-1: #ffffff;
+
+  /* DSC CAIXA - Decorative (Turquesa institucional) */
+  --dsc-color-bg-decorative-5: #359485;
+  --dsc-color-bg-decorative-4: #54bbab;
+  --dsc-color-bg-decorative-3: #81d6c8;
+  --dsc-color-bg-decorative-2: #b9ebe3;
+  --dsc-color-bg-decorative-1: #e4f7f4;
+
+  /* DSC CAIXA - Feedback (Estados) */
+  --dsc-color-bg-success-6: #179231;
+  --dsc-color-bg-success-5: #0d581c;
+  --dsc-color-bg-success-4: #127527;
+  --dsc-color-bg-success-3: #5cb26e;
+  --dsc-color-bg-success-2: #a2d3ad;
+  --dsc-color-bg-success-1: #e7f4e4;
+
+  --dsc-color-bg-warning-6: #fcbe05;
+  --dsc-color-bg-warning-5: #977203;
+  --dsc-color-bg-warning-4: #ca9804;
+  --dsc-color-bg-warning-3: #fdd150;
+  --dsc-color-bg-warning-2: #fee59b;
+  --dsc-color-bg-warning-1: #fff9e6;
+
+  --dsc-color-bg-danger-6: #d93636;
+  --dsc-color-bg-danger-5: #8c2323;
+  --dsc-color-bg-danger-4: #b22c2c;
+  --dsc-color-bg-danger-3: #e47272;
+  --dsc-color-bg-danger-2: #f0afaf;
+  --dsc-color-bg-danger-1: #fbebeb;
+
+  --dsc-color-bg-informative-6: #04a2bf;
+  --dsc-color-bg-informative-5: #026173;
+  --dsc-color-bg-informative-4: #038299;
+  --dsc-color-bg-informative-3: #4fbed2;
+  --dsc-color-bg-informative-2: #9bdae5;
+  --dsc-color-bg-informative-1: #e5f6f8;
+
+  /* DSC CAIXA - Content (Textos) */
+  --dsc-color-content-accent-2: #663a00;
+  --dsc-color-content-accent-1: #a65e00;
+  --dsc-color-content-neutral-2: #404b52;
+  --dsc-color-content-neutral-1: #64747a;
+  --dsc-color-content-decorative-2: #359485;
+  --dsc-color-content-decorative-1: #54bbab;
+  --dsc-color-content-feedback-success: #179231;
+  --dsc-color-content-feedback-warning: #fcbe05;
+  --dsc-color-content-feedback-danger: #d93636;
+  --dsc-color-content-feedback-informative: #04a2bf;
+
+  /* DSC CAIXA - Border */
+  --dsc-color-border-accent-1: #f39200;
+  --dsc-color-border-neutral-1: #64747a;
+  --dsc-color-border-decorative-1: #54bbab;
+  --dsc-color-border-feedback-success: #179231;
+  --dsc-color-border-feedback-warning: #fcbe05;
+  --dsc-color-border-feedback-danger: #d93636;
+  --dsc-color-border-feedback-informative: #04a2bf;
+
+  /* DSC CAIXA - Flexíveis (Céu, Uva, Limão, Tangerina, Goiaba) */
+  --dsc-color-uva-130: #3c003c;
+  --dsc-color-uva-110: #640064;
+  --dsc-color-uva-90: #8c008c;
+  --dsc-color-uva-70: #b400b4;
+  --dsc-color-uva-50: #d92ed9;
+  --dsc-color-uva-30: #fa6efa;
+  --dsc-color-uva-10: #ffd0ff;
+  --dsc-color-limao-130: #3c4d00;
+  --dsc-color-limao-110: #648000;
+  --dsc-color-limao-90: #8cb200;
+  --dsc-color-limao-70: #b4e600;
+  --dsc-color-limao-50: #c8f32e;
+  --dsc-color-limao-30: #e6fa6e;
+  --dsc-color-limao-10: #f5ffd0;
+  --dsc-color-tangerina-130: #663a00;
+  --dsc-color-tangerina-110: #a65e00;
+  --dsc-color-tangerina-90: #d87b00;
+  --dsc-color-tangerina-70: #f39200;
+  --dsc-color-tangerina-50: #fdb548;
+  --dsc-color-tangerina-30: #ffd392;
+  --dsc-color-tangerina-10: #ffefd6;
+  --dsc-color-goiaba-130: #4d003c;
+  --dsc-color-goiaba-110: #800064;
+  --dsc-color-goiaba-90: #b2008c;
+  --dsc-color-goiaba-70: #e600b4;
+  --dsc-color-goiaba-50: #f32ec8;
+  --dsc-color-goiaba-30: #fa6edb;
+  --dsc-color-goiaba-10: #ffd0f5;
   /* DSC CAIXA - Highlight */
   --dsc-color-bg-highlight-7: #002747;
   --dsc-color-bg-highlight-6: #00437a;
