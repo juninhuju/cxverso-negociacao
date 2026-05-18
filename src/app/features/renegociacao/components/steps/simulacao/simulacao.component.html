@@ -122,6 +122,9 @@
         <span class="detalhe-label">CET (taxa {{ cetTaxa() | percent:'1.2-2' }} a.m.)</span>
         <span class="detalhe-valor detalhe-valor--highlight">{{ cetValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
       </article>
+      <!-- Botão de simulação -->
+      <button class="btn-primary" (click)="simular()">Simular</button>
+
     </div>
   </section>
 

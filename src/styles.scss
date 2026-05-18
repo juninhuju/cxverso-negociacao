@@ -1,13 +1,41 @@
 :root {
-  /* Cores institucionais */
-  --color-primary-blue: #003d7a;
-  --color-primary-blue-dark: #003580;
-  --color-primary-blue-light: #eaf2fb;
-  --color-step-bg: #f3f9ff;
+  /* DSC CAIXA - Highlight */
+  --dsc-color-bg-highlight-7: #002747;
+  --dsc-color-bg-highlight-6: #00437a;
+  --dsc-color-bg-highlight-5: #005ca9;
+  --dsc-color-bg-highlight-4: #2d8ad8;
+  --dsc-color-bg-highlight-3: #6dbafa;
+  --dsc-color-bg-highlight-2: #a0d2fc;
+  --dsc-color-bg-highlight-1: #e5f2fc;
+
+  --dsc-color-content-highlight-2: #00437a;
+  --dsc-color-content-highlight-1: #005ca9;
+  --dsc-color-border-highlight-1: #005ca9;
+
+  /* DSC CAIXA - Flexivel (Ceu) */
+  --dsc-color-ceu-130: #003c4d;
+  --dsc-color-ceu-110: #006480;
+  --dsc-color-ceu-90: #008cb2;
+  --dsc-color-ceu-70: #00b4e6;
+  --dsc-color-ceu-50: #2ec8f3;
+  --dsc-color-ceu-30: #6edbfa;
+  --dsc-color-ceu-10: #d0f5ff;
+
+  /* Gradientes oficiais */
+  --dsc-color-gradient-gelo: linear-gradient(180deg, #ffffff 0%, #d0e0e3 100%);
+  --dsc-color-gradient-oceano: linear-gradient(180deg, #005ca9 0%, #54bbab 100%);
+
+  /* Alias legados do projeto */
+  --color-primary-blue: var(--dsc-color-bg-highlight-5);
+  --color-primary-blue-dark: var(--dsc-color-bg-highlight-6);
+  --color-primary-blue-light: var(--dsc-color-bg-highlight-1);
+  --color-step-bg: var(--dsc-color-bg-highlight-1);
 
   --color-secondary-orange: #f58220;
-  --color-secondary-orange-dark: #d96b1a;
+  --color-secondary-orange-dark: #b85e1c;
   --color-secondary-orange-light: #fde3cd;
+  --color-secondary-orange-text: #8f4715;
+  --color-on-secondary-orange: var(--dsc-color-bg-highlight-7);
 
   --color-success-green: #27ae60;
   --color-success-green-light: #e6f4ea;
@@ -28,6 +56,11 @@
 
   --color-surface: #ffffff;
   --color-background: var(--color-gray-100);
+  --color-border-on-brand-25: rgba(255, 255, 255, 0.25);
+  --color-text-on-brand-86: rgba(255, 255, 255, 0.86);
+  --color-border-on-brand-70: rgba(255, 255, 255, 0.7);
+  --color-border-on-brand-40: rgba(255, 255, 255, 0.4);
+  --color-text-on-brand-92: rgba(255, 255, 255, 0.92);
 
   /* Tipografia */
   --font-family-base: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -72,6 +105,13 @@
   --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 6px 14px rgba(0, 0, 0, 0.12);
+  --shadow-soft-brand: 0 1px 4px 0 rgba(44, 62, 80, 0.07);
+  --shadow-login-card: 0 18px 36px rgba(0, 67, 122, 0.14), 0 6px 14px rgba(0, 0, 0, 0.08);
+  --gradient-login-bg:
+    radial-gradient(circle at 12% 18%, rgba(0, 92, 169, 0.12) 0%, rgba(0, 92, 169, 0) 40%),
+    radial-gradient(circle at 88% 84%, rgba(245, 130, 32, 0.12) 0%, rgba(245, 130, 32, 0) 36%),
+    linear-gradient(165deg, #e5f2fc 0%, #f7f9fc 52%, #d0f5ff 100%);
+  --gradient-login-strip: linear-gradient(90deg, var(--dsc-color-bg-highlight-5) 0%, var(--dsc-color-bg-highlight-4) 100%);
 
   /* Estrutura */
   --toolbar-height: 64px;
@@ -169,7 +209,7 @@ ol {
   background-color: var(--color-gray-disabled);
   color: var(--color-gray-700);
   border: 1px solid var(--color-gray-400);
-  box-shadow: 0 1px 4px 0 rgba(44, 62, 80, 0.07);
+  box-shadow: var(--shadow-soft-brand);
   cursor: not-allowed;
   opacity: 1;
 }

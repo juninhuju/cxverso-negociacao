@@ -3,171 +3,203 @@
   height: 100%;
 }
 
+/* 🔷 CONTAINER */
 .wizard-container {
   display: flex;
-  width: 100%;
+  flex-direction: column;
   height: 100%;
-  background-color: var(--color-background);
-  max-width: 100%;
-  justify-content: flex-start;
+  background-color: var(--dsc-color-bg-highlight-1);
 }
 
+/* 🔷 SIDEBAR (HEADER) */
 .wizard-sidebar {
-  width: 280px;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-md);
-  flex-shrink: 0;
-  overflow-y: auto;
+  gap: var(--spacing-md);
+
+  padding: var(--spacing-md);
+  width: 100%;
+
+  /* ✅ gradiente melhora muito o visual */
+  background: linear-gradient(180deg,
+      var(--dsc-color-bg-highlight-5),
+      var(--dsc-color-bg-highlight-6));
+
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--color-border-on-brand-25);
 }
 
+.wizard-sidebar .progress-label {
+  color: var(--color-text-on-brand-92);
+}
+
+/* 🔷 HEADER */
+.sidebar-header {
+  width: 100%;
+}
+
+/* 🔷 TITULO */
 .sidebar-title {
-  font-size: var(--font-size-xl);
+  margin: 0;
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary-blue);
-  margin: 0 0 var(--spacing-md) 0;
+
+  /* ✅ contraste correto */
+  color: var(--color-text-on-brand-92);
 }
 
+/* 🔷 LINHA 2 */
+.sidebar-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+/* 🔷 PROGRESSO (ESQUERDA) */
+.sidebar-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+
+  width: 220px;
+  flex-shrink: 0;
+}
+
+/* 🔷 STEPS (DIREITA) */
+.sidebar-steps {
+  margin-left: auto;
+  overflow-x: auto;
+}
+
+/* 🔷 BARRA */
 .progress-bar {
   width: 100%;
-  height: 12px;
-  background-color: var(--color-gray-200);
+  height: 10px;
+
+  /* ✅ fundo mais visível */
+  background-color: rgba(255, 255, 255, 0.2);
+
   border-radius: var(--border-radius-md);
   overflow: hidden;
-  margin-bottom: var(--spacing-sm);
 
   &__fill {
     height: 100%;
-    background-color: var(--color-primary-blue);
+
+    /* ✅ azul mais vivo para contraste */
+    background-color: var(--dsc-color-bg-highlight-3);
+
     transition: width 0.3s ease;
   }
-
-  &--indeterminate {
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      width: 40%;
-      height: 100%;
-      background-color: var(--color-primary-blue);
-      animation: indeterminate 1.5s infinite;
-    }
-  }
 }
 
-@keyframes indeterminate {
-  0% {
-    left: -40%;
-  }
-
-  50% {
-    left: 60%;
-  }
-
-  100% {
-    left: 100%;
-  }
-}
-
+/* 🔷 LABEL */
 .progress-label {
-  font-size: var(--font-size-base);
-  color: var(--color-gray-700);
-  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+  margin: 0;
+
+  /* ✅ branco suave */
+  color: var(--color-text-on-brand-92) !important;
 }
 
+/* 🔷 STEPS */
 .steps-list {
+  display: flex;
+  gap: var(--spacing-md);
+
   list-style: none;
+  margin: 0;
   padding: 0;
-  margin: 0;
-
-  .step-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-xs) 0;
-    font-size: var(--font-size-lg);
-    color: var(--color-gray-700);
-
-    &.step-done {
-      color: var(--color-success-green);
-      font-weight: var(--font-weight-medium);
-    }
-
-    &.step-current {
-      color: var(--color-primary-blue);
-      font-weight: var(--font-weight-bold);
-    }
-
-    .step-number {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background-color: var(--color-gray-300);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-bold);
-    }
-
-    &.step-done .step-number {
-      background-color: var(--color-success-green);
-      color: #fff;
-    }
-
-    &.step-current .step-number {
-      background-color: var(--color-primary-blue);
-      color: #fff;
-    }
-  }
 }
 
+/* 🔷 ITEM */
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+
+  /* ✅ texto base */
+  color: var(--color-text-on-brand-70);
+
+  &.step-done {
+    color: var(--color-text-on-brand-86);
+  }
+
+  &.step-current {
+    color: #ffffff;
+    font-weight: var(--font-weight-bold);
+  }
+
+}
+
+
+/* Cor da label igual ao título de negociação */
+.step-label {
+  margin: 0;
+  color: var(--color-text-on-brand-92) !important;
+}
+
+/* 🔷 NÚMERO */
+.step-number {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+
+  /* ✅ fundo neutro sem perder visibilidade */
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--color-border-on-brand-40);
+
+  color: #ffffff;
+}
+
+/* ✅ concluído */
+.step-done .step-number {
+  background-color: var(--dsc-color-bg-highlight-3);
+  color: var(--dsc-color-bg-highlight-7);
+}
+
+/* ✅ atual */
+.step-current .step-number {
+  background-color: #ffffff;
+  color: var(--dsc-color-bg-highlight-6);
+}
+
+/* 🔷 CONTEÚDO */
 .wizard-content {
-  --step-inline-padding: var(--spacing-lg);
   flex: 1;
-  height: 100%;
   padding: var(--spacing-lg);
-  display: block;
   overflow-y: auto;
-  box-sizing: border-box;
+  background-color: var(--color-gray-100);
 }
 
-.wizard-content>router-outlet {
-  display: contents;
-}
-
-.wizard-content> :not(router-outlet) {
-  display: block;
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding-inline: var(--step-inline-padding);
-  box-sizing: border-box;
-}
-
+/* ✅ RESPONSIVO */
 @media (max-width: 960px) {
-  .wizard-container {
+
+  .sidebar-content {
     flex-direction: column;
-    gap: var(--spacing-md);
+    align-items: flex-start;
   }
 
-  .wizard-sidebar {
+  .sidebar-progress {
     width: 100%;
-    height: auto;
-    max-height: none;
-    padding: var(--spacing-md);
-    position: static;
-    top: unset;
   }
 
-  .wizard-content {
-    --step-inline-padding: var(--spacing-md);
+  .sidebar-steps {
     width: 100%;
-    flex-basis: auto;
-    padding: 0;
+    margin-left: 0;
+  }
+
+  .steps-list {
+    flex-wrap: wrap;
   }
 }

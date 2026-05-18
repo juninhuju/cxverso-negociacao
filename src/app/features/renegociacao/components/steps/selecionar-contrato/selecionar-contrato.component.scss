@@ -190,7 +190,7 @@
   justify-content: center;
   font-size: 0.75rem;
   font-weight: var(--font-weight-bold);
-  color: #fff;
+  color: var(--color-surface);
 }
 
 .atraso-badge--critico {
@@ -199,10 +199,12 @@
 
 .atraso-badge--atencao {
   background: var(--color-secondary-orange);
+  color: var(--color-on-secondary-orange);
 }
 
 .atraso-badge--normal {
   background: var(--color-success-green);
+  color: var(--dsc-color-bg-highlight-7);
 }
 
 .status-badge {
@@ -213,17 +215,17 @@
 
   &--execucao_extrajudicial {
     background-color: var(--color-warning-yellow);
-    color: #fff;
+    color: var(--dsc-color-bg-highlight-7);
   }
 
   &--inadimplente {
     background-color: var(--color-error-red);
-    color: #fff;
+    color: var(--color-surface);
   }
 
   &--concluida {
     background-color: var(--color-success-green);
-    color: #fff;
+    color: var(--dsc-color-bg-highlight-7);
   }
 }
 
