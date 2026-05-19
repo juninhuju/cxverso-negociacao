@@ -166,6 +166,8 @@
   color: var(--color-gray-700);
   text-align: left;
   line-height: 1.4;
+  display: flex;
+  justify-content: center;
 }
 
 .search-error {

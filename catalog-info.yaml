@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hackathon-frontend-facilitai
+  description: Código Frontend
+  annotations:
+    argocd/app-selector: 'appName=hackathon-frontend-facilitai'
+    argocd/instance-name: 'gitops-sandbox'
+    backstage.io/kubernetes-id: hackathon-frontend-facilitai
+    github.com/project-slug: caixasandbox/hackathon-frontend-facilitai
+    backstage.io/source-location: url:https://github.com/caixasandbox/hackathon-frontend-facilitai
+    backstage.io/techdocs-ref: url:https://github.com/caixasandbox/hackathon-frontend-facilitai/tree/main
+    backstage.io/managed-by-location: url:github.com/caixasandbox/hackathon-frontend-facilitai
+    sonarqube.org/project-key: sonarqube-produtos4/hackathon-frontend-facilitai
+    feedback/type: 'MAIL'
+    feedback/email-to: 'cxnde04@corp.caixa.gov.br'
+spec:
+  type: frontend
+  lifecycle: hackathon
+  owner: group:default/g_az_hackathont12026
+  system: HACKATHON

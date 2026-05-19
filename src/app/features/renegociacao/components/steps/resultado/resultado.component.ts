@@ -26,6 +26,7 @@ export class ResultadoComponent {
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
 
+  readonly stepAtual = this.facade.stepAtual;
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly contrato = this.facade.contrato;
@@ -53,7 +54,7 @@ export class ResultadoComponent {
 
   continuar(): void {
     this.facade.avancarStep();
-    this.router.navigate(['/renegociacao/conformidade']);
+    this.router.navigate(['/renegociacao/conclusao']);
   }
 
   voltar(): void {

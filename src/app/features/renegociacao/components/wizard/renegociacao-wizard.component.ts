@@ -10,7 +10,6 @@ import { RenegociacaoFacade } from '../../../../states/renegociacao/renegociacao
     { label: 'Validação', path: 'validacao' },
     { label: 'Simulação', path: 'simulacao' },
     { label: 'Resultado', path: 'resultado' },
-    { label: 'Conformidade', path: 'conformidade' },
     { label: 'Conclusão', path: 'conclusao' },
   ] as const;
 
@@ -31,6 +30,6 @@ import { RenegociacaoFacade } from '../../../../states/renegociacao/renegociacao
 
     get progressPercent(): number {
         const stepAtual = Math.max(0, this.stepAtual() ?? 0);
-        return Math.round((stepAtual / (STEPS.length - 1)) * 100);
+        return Math.round((stepAtual / STEPS.length) * 100);
     }
   }

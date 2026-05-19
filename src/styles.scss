@@ -368,3 +368,34 @@ ol {
   outline-offset: 2px;
   border-radius: var(--border-radius-sm);
 }
+
+.snackbar-success {
+  --mdc-snackbar-container-color: var(--dsc-color-bg-success-5);
+  --mdc-snackbar-supporting-text-color: var(--dsc-color-bg-neutral-1);
+  --mat-snack-bar-button-color: var(--dsc-color-bg-success-2);
+
+  border: 1px solid var(--dsc-color-bg-success-4);
+  border-left: 4px solid var(--dsc-color-bg-success-2);
+  border-radius: var(--border-radius-md);
+}
+
+.snackbar-success .mdc-snackbar__surface {
+  box-shadow: var(--shadow-md);
+}
+
+.snackbar-success .mat-mdc-snack-bar-action .mdc-button {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: var(--border-radius-sm);
+  background-color: rgba(255, 255, 255, 0.08);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.snackbar-success .mat-mdc-snack-bar-action .mdc-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.snackbar-success .mat-mdc-snack-bar-action .mdc-button:focus-visible {
+  outline: 2px solid var(--dsc-color-bg-neutral-1);
+  outline-offset: 2px;
+}

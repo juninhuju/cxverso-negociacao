@@ -10,7 +10,14 @@ export const renegociacaoReducer = createReducer(
     ...state,
     loading: false,
     error: null,
-    session: { ...state.session, contrato },
+    session: {
+      ...state.session,
+      contrato,
+      validacaoOperacional: null,
+      consultaJuridica: null,
+      simulacao: null,
+      resultado: null,
+    },
   })),
 
   // Busca de contrato
@@ -18,7 +25,14 @@ export const renegociacaoReducer = createReducer(
   on(RenegociacaoActions.buscarContratoSuccess, (state, { contrato }) => ({
     ...state,
     loading: false,
-    session: { ...state.session, contrato },
+    session: {
+      ...state.session,
+      contrato,
+      validacaoOperacional: null,
+      consultaJuridica: null,
+      simulacao: null,
+      resultado: null,
+    },
   })),
   on(RenegociacaoActions.buscarContratoFailure, (state, { error }) => ({
     ...state,

@@ -23,11 +23,11 @@ describe('RenegociacaoWizardComponent', () => {
     }).compileComponents();
   });
 
-  testCase('deve expor os 7 steps esperados', () => {
+  testCase('deve expor os 5 steps esperados', () => {
     const fixture = TestBed.createComponent(RenegociacaoWizardComponent);
     const component = fixture.componentInstance;
 
-    expect(component.steps.length).toBe(7);
+    expect(component.steps.length).toBe(5);
   });
 
   testCase('deve calcular progresso em 0% no primeiro step', () => {

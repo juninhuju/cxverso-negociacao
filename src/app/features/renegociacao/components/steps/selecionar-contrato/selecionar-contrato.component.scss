@@ -1,247 +1,213 @@
-:host {
-  display: block;
-  width: 100%;
-}
-
-.step-card {
-  padding: 0;
-  margin: 0;
-  min-height: auto;
-  width: 100%;
+.step-layout {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  box-sizing: border-box;
-  background-color: transparent;
-  border-radius: 0;
-  box-shadow: none;
+  gap: var(--spacing-md);
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-.step-header h2 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary-blue);
-}
-
-.step-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-700);
-  margin-top: var(--spacing-xs);
-}
-
-.error-message {
-  color: var(--color-error-red);
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.loading-state {
+/* CLIENTE */
+.cliente-card {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
 
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--color-gray-200);
-    border-top-color: var(--color-primary-blue);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  background: var(--dsc-color-bg-highlight-1);
+  border: 1px solid var(--dsc-color-border-highlight-1);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+
+  strong {
+    color: var(--dsc-color-content-highlight-1);
   }
 
-  p {
+  span {
     font-size: var(--font-size-sm);
-    color: var(--color-gray-700);
+    color: var(--dsc-color-content-neutral-1);
   }
+
+
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.contract-details {
-  margin-bottom: var(--spacing-lg);
-
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--spacing-sm) 0;
-    border-bottom: 1px solid var(--color-gray-400);
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
-  .detail-label {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-900);
-    font-size: var(--font-size-base);
-  }
-
-  .detail-value {
-    color: var(--color-gray-700);
-    font-size: var(--font-size-base);
-
-    &--highlight {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-primary-blue);
-    }
-  }
-}
-
-.contracts-summary {
+.cliente {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  color: var(--color-gray-900);
-  font-weight: var(--font-weight-medium);
+  flex-direction: column;
+  gap: 4px;
 }
 
-.summary-divider {
-  color: var(--color-gray-500);
-}
-
-.client-card {
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  background-color: var(--color-primary-blue-light);
-}
-
-.client-label {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-700);
-}
-
-.client-name {
-  margin: var(--spacing-xs) 0;
-  font-size: var(--font-size-lg);
-  color: var(--color-primary-blue);
-  font-weight: var(--font-weight-bold);
-}
-
-.client-document {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-800);
-}
-
+/* CARD */
 .contract-card {
-  width: 100%;
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+
+  border: 1px solid var(--dsc-color-bg-neutral-4);
+  border-radius: var(--border-radius-lg);
+  background: var(--dsc-color-bg-neutral-1);
+
   padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+}
+
+/* LINHA SUPERIOR */
+.contract-row-top {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto;
   gap: var(--spacing-md);
   align-items: center;
-  background-color: var(--color-surface);
 }
 
-.contract-col {
+/* LINHA INFERIOR */
+.contract-row-bottom {
+  border-top: 1px solid var(--dsc-color-bg-neutral-3);
+  padding-top: var(--spacing-sm);
+
+  .label {
+    font-size: var(--font-size-xs);
+    color: var(--dsc-color-content-neutral-1);
+  }
+
+  strong {
+    margin-top: 4px;
+    display: block;
+    color: var(--dsc-color-content-neutral-2);
+  }
+}
+
+/* COLUNA */
+.col {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 4px;
 }
 
-.contract-col--atraso {
-  align-items: flex-start;
+.col-atraso {
+  .label {
+    font-size: var(--font-size-xs);
+    color: var(--dsc-color-content-neutral-1);
+  }
+
+  strong {
+    margin-top: 4px;
+    display: block;
+    color: var(--dsc-color-content-neutral-2);
+  }
+
+  &.critico {
+
+    .label,
+    strong {
+      color: var(--dsc-color-content-danger);
+    }
+  }
+
+  &.atencao {
+
+    .label,
+    strong {
+      color: var(--dsc-color-content-accent-1);
+    }
+  }
 }
 
-.contract-col--action {
-  align-items: flex-end;
+.label {
+  font-size: var(--font-size-xs);
+  color: var(--dsc-color-content-neutral-1);
 }
 
-.contract-col__label {
-  font-size: 0.75rem;
-  color: var(--color-gray-600);
-  text-transform: uppercase;
-}
-
-.contract-col__value {
+.sub {
   font-size: var(--font-size-sm);
-  color: var(--color-gray-900);
-  font-weight: var(--font-weight-medium);
+  color: var(--dsc-color-content-neutral-1);
 }
 
-.contract-col__value--money {
-  color: var(--color-primary-blue);
+/* VALOR */
+.valor {
+  color: var(--dsc-color-content-highlight-1);
   font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
 }
 
-.contract-col__hint {
-  font-size: 0.75rem;
-  color: var(--color-gray-600);
-}
-
-.atraso-badge {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: inline-flex;
+/* ATRASO */
+.atraso-box {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-surface);
+  gap: 6px;
 }
 
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* CORES ATRASO */
 .atraso-badge--critico {
-  background: var(--color-error-red);
+  background: var(--dsc-color-bg-danger-6);
 }
 
 .atraso-badge--atencao {
-  background: var(--color-secondary-orange);
-  color: var(--color-on-secondary-orange);
+  background: var(--dsc-color-bg-accent-4);
 }
 
 .atraso-badge--normal {
-  background: var(--color-success-green);
-  color: var(--dsc-color-bg-highlight-7);
+  background: var(--dsc-color-bg-success-4);
 }
 
-.status-badge {
-  padding: var(--spacing-xs) var(--spacing-sm);
+/* STATUS */
+.status {
+  padding: 6px 12px;
   border-radius: var(--border-radius-md);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-
-  &--execucao_extrajudicial {
-    background-color: var(--color-warning-yellow);
-    color: var(--dsc-color-bg-highlight-7);
-  }
-
-  &--inadimplente {
-    background-color: var(--color-error-red);
-    color: var(--color-surface);
-  }
-
-  &--concluida {
-    background-color: var(--color-success-green);
-    color: var(--dsc-color-bg-highlight-7);
-  }
+  width: 120px;
 }
 
-.step-actions {
-  margin-top: var(--spacing-lg);
+/* variações */
+.status.execucao_extrajudicial {
+  background: var(--dsc-color-bg-danger-1);
+  color: var(--dsc-color-bg-danger-4);
+  font-size: var(--font-size-base);
+}
+
+.status.execucao_judicial {
+  background: var(--dsc-color-bg-danger-2);
+  color: var(--dsc-color-content-feedback-danger);
+}
+
+.status.inadimplente {
+  background: var(--dsc-color-bg-highlight-2);
+  color: var(--dsc-color-content-highlight-1);
+}
+
+.status.cedido {
+  background: var(--dsc-color-bg-neutral-2);
+  color: var(--dsc-color-content-neutral-1);
+}
+
+/* BOTÃO */
+.action {
   display: flex;
   justify-content: flex-end;
-  gap: var(--spacing-sm);
 }
 
-@media (max-width: 1200px) {
-  .contract-card {
-    grid-template-columns: 1fr 1fr;
+.btn-negociar {
+  padding: 8px 16px;
+  font-size: var(--font-size-sm);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.btn-negociar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVO */
+@media (max-width: 1024px) {
+  .contract-row-top {
+    grid-template-columns: 1fr;
   }
 
-  .contract-col--action {
-    align-items: flex-start;
+  .action {
+    justify-content: flex-start;
   }
 }

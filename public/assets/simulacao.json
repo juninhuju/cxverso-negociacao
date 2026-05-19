@@ -22,26 +22,6 @@
         "valorParcela": 425,
         "economiaTotal": 3250,
         "detalhes": "Melhor taxa com parcelamento moderado"
-      },
-      {
-        "id": 3,
-        "descricao": "Entrada de 10.000 - Parcelado em 12x",
-        "valorEntrada": 10000,
-        "numeroParcelas": 12,
-        "taxaJuros": 0.9,
-        "valorParcela": 380,
-        "economiaTotal": 4500,
-        "detalhes": "Taxa preferencial com prazo reduzido"
-      },
-      {
-        "id": 4,
-        "descricao": "Entrada de 15.000 - Parcelado em 6x",
-        "valorEntrada": 15000,
-        "numeroParcelas": 6,
-        "taxaJuros": 0.5,
-        "valorParcela": 350,
-        "economiaTotal": 5500,
-        "detalhes": "Maior entrada com taxa mínima"
       }
     ]
   },

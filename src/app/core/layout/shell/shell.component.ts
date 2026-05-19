@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, NgZone, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
+import { filter, map, take } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -22,11 +26,27 @@ import { AuthService } from '../../auth/auth.service';
 export class ShellComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly document = inject(DOCUMENT);
+  private readonly ngZone = inject(NgZone);
+  readonly pageBodyRef = viewChild<ElementRef<HTMLElement>>('pageBodyRef');
+
+  private readonly navigationTick = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => Date.now()),
+    ),
+    { initialValue: Date.now() },
+  );
 
   readonly username = signal('CAIXA');
   readonly isSidenavOpen = signal(false);
   readonly matricula = signal('123456');
   readonly dataAtual = computed(() => this.formatarDataAtual());
+
+  private readonly scrollToTopOnNavigation = effect(() => {
+    this.navigationTick();
+    this.resetScrollPosition();
+  });
 
   toggleSidenav(): void {
     this.isSidenavOpen.update((value) => !value);
@@ -36,9 +56,43 @@ export class ShellComponent {
     this.isSidenavOpen.set(false);
   }
 
+  onRouteActivate(): void {
+    this.resetScrollPosition();
+    this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+      this.resetScrollPosition();
+    });
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  private resetScrollPosition(): void {
+    const scrollToTop = (): void => {
+      const pageBody = this.pageBodyRef()?.nativeElement;
+      if (pageBody) {
+        pageBody.scrollTop = 0;
+      }
+
+      const shellContainers = this.document.querySelectorAll<HTMLElement>(
+        '.page-body, .mat-drawer-content, .mat-sidenav-content, .shell-content, main',
+      );
+      shellContainers.forEach((container) => {
+        container.scrollTop = 0;
+      });
+
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      this.document.documentElement.scrollTop = 0;
+      this.document.body.scrollTop = 0;
+    };
+
+    scrollToTop();
+    queueMicrotask(scrollToTop);
+    requestAnimationFrame(() => {
+      scrollToTop();
+      requestAnimationFrame(scrollToTop);
+    });
   }
 
   private formatarDataAtual(): string {

@@ -29,6 +29,11 @@ export class BuscaContratoComponent {
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
 
+  constructor() {
+    // Resetar sessão quando volta/entra na tela de busca
+    this.facade.reiniciarSessao();
+  }
+
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly termoBusca = signal(localStorage.getItem('renegociacao_cpf_busca') ?? '');

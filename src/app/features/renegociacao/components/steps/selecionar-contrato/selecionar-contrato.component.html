@@ -1,82 +1,92 @@
-<div class="step-card">
-  <header class="step-header">
-    <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Busca"</button>
-    <h2>Central de Contratos</h2>
-    <p class="step-subtitle">Selecione o contrato para continuar a renegociação</p>
-  </header>
+<div class="step-layout">
 
-  <div class="step-content">
-    @if (error()) {
-    <p class="error-message" role="alert"><mat-icon aria-hidden="true">warning</mat-icon> {{ error() }}</p>
-    }
+  <button class="step-back-link" (click)="voltar()">
+    ← Voltar ao Negocie Aqui
+  </button>
 
-    @if (loading()) {
-    <div class="loading-state" role="status" aria-label="Carregando dados do contrato">
-      <div class="spinner"></div>
-      <p>Carregando dados do contrato...</p>
+  <h2>Central de Contratos</h2>
+  <p class="step-subtitle">
+    Selecione um contrato para renegociação
+  </p>
+
+  <!-- CLIENTE -->
+  @if (contrato()) {
+  <section class="cliente-card">
+    <mat-icon>business</mat-icon>
+
+    <div class="cliente">
+      <strong>Cliente: {{ contrato()!.cliente }}</strong>
+      <span>CNPJ: {{ contrato()!.cpfCnpj }}</span>
     </div>
-    } @else if (contrato()) {
-    <div class="contracts-summary" role="status" aria-label="Resumo de contratos do cliente">
-      <span>{{ totalContratos() }} contratos</span>
-      <span class="summary-divider">|</span>
-      <span>Total {{ formatarMoeda(totalSaldoDevedor()) }}</span>
-    </div>
+  </section>
+  }
 
-    <section class="client-card" aria-label="Dados do cliente">
-      <p class="client-label">Cliente</p>
-      <p class="client-name">{{ contrato()!.cliente }}</p>
-      <p class="client-document">{{ contrato()!.cpfCnpj }}</p>
-    </section>
+  <!-- LISTA -->
+  @for (item of contratosCliente(); track item.numero) {
 
-    @for (item of contratosCliente(); track item.numero) {
-    <article class="contract-card" [attr.aria-label]="'Contrato ' + item.numero">
-      <div class="contract-col">
-        <span class="contract-col__label">Número do Contrato</span>
-        <span class="contract-col__value">{{ item.numero }}</span>
-        <span class="contract-col__label">Produto</span>
-        <span class="contract-col__value">{{ item.produto }}</span>
+  <article class="contract-card">
+
+    <!-- LINHA SUPERIOR -->
+    <div class="contract-row-top">
+
+      <!-- CONTRATO -->
+      <div class="col">
+        <span class="label">Número do Contrato</span>
+        <strong>{{ item.numero }}</strong>
+        <span class="label">Produto</span>
+        <strong class="sub">{{ item.produto }}</strong>
       </div>
 
-      <div class="contract-col">
-        <span class="contract-col__label">Saldo Devedor</span>
-        <span class="contract-col__value contract-col__value--money">{{ formatarMoeda(item.valorDevido) }}</span>
+      <!-- SALDO -->
+      <div class="col">
+        <span class="label">Saldo Devedor</span>
+        <strong class="valor">
+          {{ formatarMoeda(item.valorDevido) }}
+        </strong>
       </div>
 
-      <div class="contract-col contract-col--atraso">
-        <span class="contract-col__label">Dias de atraso</span>
-        <span class="atraso-badge" [class]="'atraso-badge ' + obterClasseDiasAtraso(item.diasAtraso)">
-          {{ item.diasAtraso ?? 0 }}
+      <!-- ATRASO -->
+      <div class="col atraso">
+        <span class="label">Dias em Atraso</span>
+
+        <div class="atraso-box">
+          <span class="dot" [class]="obterClasseDiasAtraso(item.diasAtraso)"></span>
+          <strong>{{ item.diasAtraso }} dias</strong>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="col">
+        <span class="label status">Status</span>
+
+        <span class="status" [ngClass]="getStatusClasse(item.status)">
+          {{ formatarStatus(item.status) }}
         </span>
-        <span class="contract-col__hint">dias</span>
       </div>
 
-      <div class="contract-col">
-        <span class="contract-col__label">Status</span>
-        <span class="contract-col__value">{{ formatarStatus(item.status) }}</span>
+      <!-- LINHA INFERIOR -->
+      <div class="contract-row-bottom">
+        <span class="label">Garantia</span>
+        <strong>{{ item.garantia || 'Não informado' }}</strong>
       </div>
 
-      <div class="contract-col">
-        <span class="contract-col__label">Garantia</span>
-        <span class="contract-col__value">{{ item.garantia ?? 'Não informada' }}</span>
-      </div>
 
-      <div class="contract-col contract-col--action">
-        <button class="btn-primary" type="button" (click)="selecionarContrato(item)">
-          Selecionar Contrato
+      <!-- BOTÃO -->
+      <div class="col action">
+        <button class="btn-primary btn-negociar" (click)="selecionarContrato(item)"
+          [disabled]="!isContratoElegivel(item)">
+          Negociar<br>contrato
         </button>
       </div>
-    </article>
-    } @empty {
-    <p class="empty-state" role="status">Nenhum contrato encontrado para este cliente.</p>
-    }
-    } @else {
-    <p class="empty-state" role="status">
-      Nenhum contrato encontrado. Retorne e realize uma nova busca.
-    </p>
-    }
-  </div>
 
-  <div class="step-actions">
-    <button class="btn-secondary" [disabled]="loading()" (click)="voltar()">Voltar</button>
-  </div>
+
+    </div>
+
+
+  </article>
+
+  } @empty {
+  <p class="empty-state">Nenhum contrato encontrado.</p>
+  }
+
 </div>

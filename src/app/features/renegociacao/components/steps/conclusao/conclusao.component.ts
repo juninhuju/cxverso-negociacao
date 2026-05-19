@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 
@@ -14,24 +15,31 @@ import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegocia
 export class ConclusaoComponent {
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
 
+  readonly stepAtual = this.facade.stepAtual;
   readonly loading = this.facade.loading;
 
-  /**
-   * Ação principal do card “Documentos da Renegociação”.
-   * Aqui você pode:
-   *  - chamar um método do facade (ex.: this.facade.gerarDocumentos())
-   *  - ou navegar para uma rota/tela responsável pela geração/download.
-   */
+
   gerarContratoEBoleto(): void {
-    // Sugestão segura (sem assumir API existente): navegar para a etapa de documentos.
-    // Ajuste a rota para a real do seu fluxo.
-    this.router.navigate(['/renegociacao/documentos']);
+    this.router.navigate(['/renegociacao/busca']);
+    this.facade.reiniciarSessao();
+
+
+    // Emitir aviso de sucesso
+    this.snackBar.open('Contrato e Boleto gerados com sucesso!', 'Fechar', {
+      duration: 6000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success'],
+    });
   }
 
   /** Botão “Nova Busca” */
   novaBusca(): void {
-    // Ajuste para a rota real da sua “busca”/início de atendimento.
+    // Reset do progresso da sidebar
+    this.facade.reiniciarSessao();
+    // Ajuste para a rota real da sua "busca"/início de atendimento.
     this.router.navigate(['/renegociacao/busca']);
   }
 
@@ -39,5 +47,9 @@ export class ConclusaoComponent {
   verPainel(): void {
     // Ajuste para o painel do seu produto/sistema.
     this.router.navigate(['/acompanhamento']);
+  }
+
+  concluir(): void {
+    this.novaBusca();
   }
 }

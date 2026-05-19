@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -14,6 +15,7 @@ import { Contrato } from '../../../models/renegociacao.model';
   selector: 'app-selecionar-contrato',
   standalone: true,
   imports: [
+    CommonModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -24,88 +26,151 @@ import { Contrato } from '../../../models/renegociacao.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelecionarContratoComponent {
+
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
 
-  private readonly statusLabel: Record<string, string> = {
-    APTO: 'Apto',
-    EXECUCAO_EXTRAJUDICIAL: 'Execução Extrajudicial',
-    INADIMPLENTE: 'Inadimplente',
-    EM_ACORDO: 'Em Acordo',
-    REGULARIZADO: 'Regularizado',
-    CEDIDO: 'Cedido',
-  };
+  // ============================
+  // 📌 STATE
+  // ============================
 
+  readonly stepAtual = this.facade.stepAtual;
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly contrato = this.facade.contrato;
+
   readonly todosContratos = toSignal(
-    this.http.get<Contrato[]>('/assets/contratos.json').pipe(catchError(() => of([]))),
+    this.http.get<Contrato[]>('/assets/contratos.json')
+      .pipe(catchError(() => of([]))),
     { initialValue: [] }
   );
 
+  // ============================
+  // 📌 COMPUTEDS
+  // ============================
+
   readonly contratosCliente = computed(() => {
     const contratoAtual = this.contrato();
-    if (!contratoAtual) {
-      return [] as Contrato[];
-    }
+    if (!contratoAtual) return [];
 
-    return this.todosContratos().filter((item: Contrato) => item.cpfCnpj === contratoAtual.cpfCnpj);
+    return this.todosContratos()
+      .filter(c => c.cpfCnpj === contratoAtual.cpfCnpj)
+      .sort((a, b) => (b.diasAtraso ?? 0) - (a.diasAtraso ?? 0)); // ✅ ordena por risco
   });
 
   readonly totalContratos = computed(() => this.contratosCliente().length);
+
   readonly totalSaldoDevedor = computed(() =>
-    this.contratosCliente().reduce((acc: number, item: Contrato) => acc + item.valorDevido, 0)
+    this.contratosCliente()
+      .reduce((acc, c) => acc + c.valorDevido, 0)
   );
 
-  confirmar(): void {
-    const contrato = this.contrato();
-    if (!contrato) return;
+  readonly contratoMaisCritico = computed(() =>
+    this.contratosCliente()[0] ?? null
+  );
 
-    // Validar elegibilidade: regra status !== 'CEDIDO'
-    if (!this.facade.validarContratoElegibilidade(contrato.status)) {
-      return; // Template já exibe o aviso
-    }
-
-    this.facade.solicitarValidacaoOperacional(contrato.numero);
-    this.facade.avancarStep();
-    this.router.navigate(['/renegociacao/validacao']);
-  }
+  // ============================
+  // 📌 ACTIONS
+  // ============================
 
   selecionarContrato(contratoSelecionado: Contrato): void {
-    if (!this.facade.validarContratoElegibilidade(contratoSelecionado.status)) {
-      return;
-    }
+    if (!this.validarElegibilidade(contratoSelecionado)) return;
 
     this.facade.definirContrato(contratoSelecionado);
     this.facade.solicitarValidacaoOperacional(contratoSelecionado.numero);
     this.facade.avancarStep();
+
     this.router.navigate(['/renegociacao/validacao']);
-  }
-
-  formatarStatus(status: string): string {
-    return this.statusLabel[status] ?? status;
-  }
-
-  formatarMoeda(valor: number): string {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
-  }
-
-  obterClasseDiasAtraso(diasAtraso: number | undefined): string {
-    if (!diasAtraso || diasAtraso <= 0) {
-      return 'atraso-badge--normal';
-    }
-
-    if (diasAtraso > 91) {
-      return 'atraso-badge--critico';
-    }
-
-    return 'atraso-badge--atencao';
   }
 
   voltar(): void {
     this.facade.voltarStep();
     this.router.navigate(['/renegociacao/busca']);
   }
+
+  confirmar(): void {
+    const contratoAtual = this.contrato();
+    if (!contratoAtual) {
+      return;
+    }
+
+    if (!this.validarElegibilidade(contratoAtual)) {
+      return;
+    }
+
+    this.facade.solicitarValidacaoOperacional(contratoAtual.numero);
+    this.facade.avancarStep();
+    this.router.navigate(['/renegociacao/validacao']);
+  }
+
+  private validarElegibilidade(contrato: Contrato): boolean {
+    return this.facade.validarContratoElegibilidade(contrato.status);
+  }
+
+  isContratoElegivel(contrato: Contrato): boolean {
+    return this.validarElegibilidade(contrato);
+  }
+
+  // ============================
+  // 📌 FORMATADORES
+  // ============================
+
+  formatarMoeda(valor: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
+  }
+
+  formatarStatus(status: string): string {
+    return this.statusLabelMap[status] ?? status;
+  }
+
+  private readonly statusLabelMap: Record<string, string> = {
+    APTO: 'Apto',
+    EXECUCAO_EXTRAJUDICIAL: 'Execução Extrajudicial',
+    EXECUCAO_JUDICIAL: 'Execução Judicial',
+    INADIMPLENTE: 'Inadimplente',
+    EM_ACORDO: 'Em Acordo',
+    REGULARIZADO: 'Regularizado',
+    CEDIDO: 'Cedido',
+  };
+
+  // ============================
+  // 📌 VISUAL: STATUS
+  // ============================
+
+  getStatusClasse(status: string): string {
+    const mapa: Record<string, string> = {
+      EXECUCAO_EXTRAJUDICIAL: 'execucao_extrajudicial',
+      EXECUCAO_JUDICIAL: 'execucao_judicial',
+      INADIMPLENTE: 'inadimplente',
+      REGULARIZADO: 'regularizado',
+      CEDIDO: 'cedido',
+    };
+
+    return mapa[status] ?? '';
+  }
+
+  // ============================
+  // 📌 VISUAL: ATRASO
+  // ============================
+
+  obterClasseDiasAtraso(diasAtraso?: number): string {
+    if (!diasAtraso || diasAtraso <= 0) {
+      return 'atraso-badge--normal';
+    }
+
+    if (diasAtraso > 90) {
+      return 'atraso-badge--critico';
+    }
+
+    return 'atraso-badge--atencao';
+  }
+
+  isContratoCritico(item: Contrato): boolean {
+    return this.contratoMaisCritico()?.numero === item.numero;
+  }
+
 }

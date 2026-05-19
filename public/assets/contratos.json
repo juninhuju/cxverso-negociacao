@@ -8,7 +8,7 @@
     "dataVencimento": "2026-06-10",
     "status": "EXECUCAO_EXTRAJUDICIAL",
     "diasAtraso": 124,
-    "garantia": "Sem garantia"
+    "garantia": "Alienação Fiduciária de Bem imóvel"
   },
   {
     "numero": "100000002",
@@ -30,7 +30,7 @@
     "dataVencimento": "2026-08-15",
     "status": "INADIMPLENTE",
     "diasAtraso": 98,
-    "garantia": "Alienação fiduciária"
+    "garantia": "Alienação Fiduciária de Bem imóvel"
   },
   {
     "numero": "100000004",
@@ -63,7 +63,7 @@
     "dataVencimento": "2026-11-05",
     "status": "EXECUCAO_EXTRAJUDICIAL",
     "diasAtraso": 142,
-    "garantia": "Imóvel financiado"
+    "garantia": "Alienação Fiduciária de Bem imóvel"
   },
   {
     "numero": "100000007",

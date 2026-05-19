@@ -1,0 +1,7 @@
+.angular/
+.git/
+.github/
+doc/
+docs/
+node_modules/
+.s2i/

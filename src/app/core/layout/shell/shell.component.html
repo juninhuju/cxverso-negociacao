@@ -12,17 +12,17 @@
       <nav class="sidebar-nav" aria-label="Navegação">
         <a class="sidebar-link" routerLink="/renegociacao" routerLinkActive="sidebar-link--active"
           [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
-          <mat-icon aria-hidden="true">search</mat-icon>
+          <mat-icon aria-hidden="true" class="mat-icon">handshake</mat-icon>
           <span>Negociar aqui</span>
         </a>
         <a class="sidebar-link" routerLink="/acompanhamento" routerLinkActive="sidebar-link--active"
           [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
-          <mat-icon aria-hidden="true">apps</mat-icon>
+          <mat-icon aria-hidden="true" class="mat-icon">apps</mat-icon>
           <span>Painel de acompanhamento</span>
         </a>
         <a class="sidebar-link" routerLink="/chatbot" routerLinkActive="sidebar-link--active"
           [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
-          <mat-icon aria-hidden="true">smart_toy</mat-icon>
+          <mat-icon aria-hidden="true" class="mat-icon">support_agent</mat-icon>
           <span>Chatbot</span>
         </a>
       </nav>
@@ -48,10 +48,8 @@
           [attr.aria-pressed]="isSidenavOpen()">
           <mat-icon>menu</mat-icon>
         </button>
-        <span class="ca-badge" aria-hidden="true">CA</span>
         <div class="corp-title-group">
           <span class="corp-title">Sistema Corporativo CAIXA</span>
-          <span class="corp-subtitle">Ambiente de Produção</span>
         </div>
       </div>
 
@@ -60,8 +58,8 @@
       </div>
     </header>
 
-    <section class="page-body">
-      <router-outlet />
+    <section #pageBodyRef class="page-body">
+      <router-outlet (activate)="onRouteActivate()" />
     </section>
   </main>
 </mat-sidenav-container>

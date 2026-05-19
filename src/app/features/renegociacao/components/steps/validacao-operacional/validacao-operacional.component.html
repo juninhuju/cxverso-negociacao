@@ -76,18 +76,9 @@
           </span>
           <ng-container
             *ngIf="v.label === 'Custas extrajudiciais identificadas' && contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'">
-            <span class="valor-custas destaque-custas">{{ custasTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
           </ng-container>
         </section>
       </section>
-
-      <section class="card">
-        <h2>Entrada mínima: </h2>
-        <span class="entrada-aviso">{{ entradaMinima |
-          currency:'BRL':'symbol':'1.2-2' }}</span>
-
-      </section>
-
 
 
       <!-- Card 2: Status Operacional -->
@@ -115,7 +106,7 @@
   <div class="step-actions-end">
     <button type="button" class="btn-primary" (click)="prosseguirSimulacao()"
       [disabled]="!validacao()?.aptoParaRenegociacao" aria-label="Simular renegociação">
-      Prosseguir para simulação
+      Simulação
     </button>
   </div>
   } @else {

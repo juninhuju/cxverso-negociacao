@@ -28,6 +28,7 @@ export class ValidacaoOperacionalComponent {
   private readonly dialog = inject(MatDialog);
 
 
+  readonly stepAtual = this.facade.stepAtual;
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly contrato = this.facade.contrato;

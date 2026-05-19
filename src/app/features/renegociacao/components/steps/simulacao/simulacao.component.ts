@@ -1,17 +1,23 @@
-import { CurrencyPipe, PercentPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { CommonModule, CurrencyPipe, PercentPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap } from 'rxjs';
+
 import { RenegociacaoApiService } from '../../../../../core/auth/renegociacao-api.service';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { Contrato, OpcaoSimulacao, SimulacoesDisponiveis } from '../../../models/renegociacao.model';
@@ -20,15 +26,14 @@ import { Contrato, OpcaoSimulacao, SimulacoesDisponiveis } from '../../../models
   selector: 'app-simulacao',
   standalone: true,
   imports: [
+    CommonModule,
     CurrencyPipe,
     PercentPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,
     MatDividerModule,
-    MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
     MatProgressSpinnerModule,
     MatTableModule,
   ],
@@ -38,65 +43,80 @@ import { Contrato, OpcaoSimulacao, SimulacoesDisponiveis } from '../../../models
 })
 export class SimulacaoComponent {
   private readonly facade = inject(RenegociacaoFacade);
+  readonly stepAtual = this.facade.stepAtual;
   private readonly router = inject(Router);
   private readonly api = inject(RenegociacaoApiService);
 
+  // =========================
+  // STATE
+  // =========================
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly simulacao = this.facade.simulacao;
   readonly contrato = this.facade.contrato;
   readonly consulta = this.facade.consultaJuridica;
 
+  readonly opcaoSelecionada = signal<OpcaoSimulacao | null>(null);
+  readonly valorEntrada = signal(0);
+  readonly numeroParcelas = signal(12);
+
+  // =========================
+  // OPÇÕES (API)
+  // =========================
   readonly opcoesDisponiveis = toSignal(
     toObservable(this.contrato).pipe(
       switchMap((contrato: Contrato | null) => {
-        if (!contrato) {
-          return of([] as OpcaoSimulacao[]);
-        }
+        if (!contrato) return of([] as OpcaoSimulacao[]);
 
         return this.api.carregarOpcoesSimulacao(contrato.numero).pipe(
-          map((simulacoes: SimulacoesDisponiveis | null) => simulacoes?.opcoes ? [...simulacoes.opcoes] : []),
+          map((resp: SimulacoesDisponiveis | null) => (resp?.opcoes ? [...resp.opcoes] : [])),
           catchError(() => of([] as OpcaoSimulacao[])),
         );
       }),
     ),
     { initialValue: [] },
   );
-  readonly opcaoSelecionada = signal<OpcaoSimulacao | null>(null);
 
-  readonly valorEntrada = signal(0);
-  readonly numeroParcelas = signal(12);
+  readonly opcoesVisiveis = computed(() => this.opcoesDisponiveis());
 
-  readonly opcoesVisiveis = computed(() => this.opcoesDisponiveis().slice(0, 2));
-
+  // =========================
+  // CÁLCULOS
+  // =========================
   readonly saldoDevedor = computed(() => this.contrato()?.valorDevido ?? 0);
   readonly descontoAplicado = computed(() => this.opcaoSelecionada()?.economiaTotal ?? 0);
   readonly custasObrigatorias = computed(() => this.consulta()?.custasObrigatorias ?? 5090);
+
   readonly saldoRenegociado = computed(() =>
-    Math.max(0, this.saldoDevedor() - this.descontoAplicado()) + this.custasObrigatorias()
+    Math.max(0, this.saldoDevedor() - this.descontoAplicado()) + this.custasObrigatorias(),
   );
-
-  readonly parcelaMensalPreview = computed(() => {
-    const simulacaoAtual = this.simulacao();
-    if (simulacaoAtual) {
-      return simulacaoAtual.valorParcela;
-    }
-
-    const parcelas = Math.max(1, this.numeroParcelas());
-    return this.saldoAFinanciar() / parcelas;
-  });
-
-  readonly taxaJurosDinamica = computed(() => this.simulacao()?.taxaJuros ?? this.opcaoSelecionada()?.taxaJuros ?? 0.018);
 
   readonly saldoAFinanciar = computed(() => Math.max(0, this.saldoRenegociado() - this.valorEntrada()));
   readonly boletoUnico = computed(() => this.valorEntrada());
 
-  readonly jurosValor = computed(() => {
-    const simulacaoAtual = this.simulacao();
-    if (simulacaoAtual) {
-      return simulacaoAtual.totalJuros;
+  readonly taxaJurosDinamica = computed(() =>
+    this.normalizarTaxa(this.simulacaoCompativel()?.taxaJuros ?? this.opcaoSelecionada()?.taxaJuros ?? 0.018),
+  );
+
+  readonly simulacaoCompativel = computed(() => {
+    const simulacao = this.simulacao();
+    if (!simulacao) {
+      return null;
     }
 
+    const mesmaEntrada = simulacao.valorEntrada === this.valorEntrada();
+    const mesmasParcelas = simulacao.numeroParcelas === this.numeroParcelas();
+    return mesmaEntrada && mesmasParcelas ? simulacao : null;
+  });
+
+  readonly parcelaMensalPreview = computed(() => {
+    const s = this.simulacaoCompativel();
+    if (s) return s.valorParcela;
+    return this.saldoAFinanciar() / Math.max(1, this.numeroParcelas());
+  });
+
+  readonly jurosValor = computed(() => {
+    const s = this.simulacaoCompativel();
+    if (s) return s.totalJuros;
     return this.saldoAFinanciar() * this.taxaJurosDinamica();
   });
 
@@ -108,25 +128,101 @@ export class SimulacaoComponent {
 
   readonly colunasTabela = ['numero', 'vencimento', 'valor'] as const;
 
+  // =========================
+  // ✅ PREFILL (sem auto-simular para evitar reflow agressivo)
+  // =========================
+  private readonly prefillEffect = effect(
+    () => {
+      const contratoAtual = this.contrato();
+      const opcoes = this.opcoesDisponiveis();
+      const simulacaoAtual = this.simulacao();
+
+      if (!contratoAtual) return;
+
+      // Se existe simulação anterior, restaura parâmetros
+      if (simulacaoAtual) {
+        this.valorEntrada.set(simulacaoAtual.valorEntrada);
+        this.numeroParcelas.set(simulacaoAtual.numeroParcelas);
+
+        if (!this.opcaoSelecionada()) {
+          const correspondente = opcoes.find(
+            (o) => o.valorEntrada === simulacaoAtual.valorEntrada && o.numeroParcelas === simulacaoAtual.numeroParcelas,
+          );
+          if (correspondente) this.opcaoSelecionada.set(correspondente);
+        }
+        return;
+      }
+
+      // Se chegou opções e não tem seleção, seleciona a primeira (SEM simular automaticamente)
+      if (opcoes.length > 0 && !this.opcaoSelecionada()) {
+        const primeira = opcoes[0];
+        this.opcaoSelecionada.set(primeira);
+        this.valorEntrada.set(primeira.valorEntrada);
+        this.numeroParcelas.set(primeira.numeroParcelas);
+      }
+    },
+  );
+
+  private normalizarTaxa(taxa: number): number {
+    return taxa > 1 ? taxa / 100 : taxa;
+  }
+
+  taxaJurosPercentual(opcao: OpcaoSimulacao): number {
+    return this.normalizarTaxa(opcao.taxaJuros);
+  }
+
+  atualizarValorEntrada(valor: number | string | null): void {
+    const numero = this.converterParaNumero(valor, 0);
+    this.valorEntrada.set(Math.max(0, numero));
+  }
+
+  atualizarNumeroParcelas(valor: number | string | null): void {
+    const numero = this.converterParaNumero(valor, 1);
+    this.numeroParcelas.set(Math.max(1, Math.round(numero)));
+  }
+
+  private converterParaNumero(valor: number | string | null, fallback: number): number {
+    if (typeof valor === 'number' && Number.isFinite(valor)) {
+      return valor;
+    }
+
+    if (typeof valor === 'string') {
+      const normalizado = valor.replace(',', '.').trim();
+      if (!normalizado) {
+        return fallback;
+      }
+      const convertido = Number(normalizado);
+      return Number.isFinite(convertido) ? convertido : fallback;
+    }
+
+    return fallback;
+  }
+
+  // =========================
+  // AÇÕES
+  // =========================
   selecionarOpcao(opcao: OpcaoSimulacao): void {
     this.opcaoSelecionada.set(opcao);
     this.valorEntrada.set(opcao.valorEntrada);
     this.numeroParcelas.set(opcao.numeroParcelas);
+
+    // ✅ aqui sim simula (ação do usuário)
     this.simular();
   }
 
   simular(): void {
-    this.facade.simular(this.valorEntrada(), this.numeroParcelas());
+    const entrada = Math.max(0, this.valorEntrada());
+    const parcelas = Math.max(1, this.numeroParcelas());
+    this.facade.simular(entrada, parcelas);
+
+    // opcional: se quiser, após simular, volta o topo do container de resultado (não do page)
+    // this.forceScrollTop('simular');
   }
 
-   continuar(): void {
-    // Simula com os parâmetros atuais antes de avançar
+  continuar(): void {
     this.simular();
-    // Agenda navegação para após a simulação ser enviada
-    setTimeout(() => {
-      this.facade.avancarStep();
-      this.router.navigate(['/renegociacao/conformidade']);
-    }, 500);
+    this.facade.avancarStep();
+    this.router.navigate(['/renegociacao/resultado']);
   }
 
   voltar(): void {

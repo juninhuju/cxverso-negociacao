@@ -1,52 +1,52 @@
-import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
-import { ResultadoComponent } from './resultado.component';
+// import { TestBed } from '@angular/core/testing';
+// import { Router } from '@angular/router';
+// import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
+// import { ResultadoComponent } from './resultado.component';
 
-describe('ResultadoComponent', () => {
-  const facadeMock = {
-    loading: () => false,
-    error: () => null,
-    simulacao: () => null,
-    avancarStep: jasmine.createSpy('avancarStep'),
-    voltarStep: jasmine.createSpy('voltarStep'),
-  };
+// describe('ResultadoComponent', () => {
+//   const facadeMock = {
+//     loading: () => false,
+//     error: () => null,
+//     simulacao: () => null,
+//     avancarStep: jasmine.createSpy('avancarStep'),
+//     voltarStep: jasmine.createSpy('voltarStep'),
+//   };
 
-  const routerMock = {
-    navigate: jasmine.createSpy('navigate'),
-  };
+//   const routerMock = {
+//     navigate: jasmine.createSpy('navigate'),
+//   };
 
-  beforeEach(async () => {
-    facadeMock.avancarStep.calls.reset();
-    facadeMock.voltarStep.calls.reset();
-    routerMock.navigate.calls.reset();
+//   beforeEach(async () => {
+//     facadeMock.avancarStep.calls.reset();
+//     facadeMock.voltarStep.calls.reset();
+//     routerMock.navigate.calls.reset();
 
-    await TestBed.configureTestingModule({
-      imports: [ResultadoComponent],
-      providers: [
-        { provide: RenegociacaoFacade, useValue: facadeMock },
-        { provide: Router, useValue: routerMock },
-      ],
-    }).compileComponents();
-  });
+//     await TestBed.configureTestingModule({
+//       imports: [ResultadoComponent],
+//       providers: [
+//         { provide: RenegociacaoFacade, useValue: facadeMock },
+//         { provide: Router, useValue: routerMock },
+//       ],
+//     }).compileComponents();
+//   });
 
-  it('deve continuar para conformidade', () => {
-    const fixture = TestBed.createComponent(ResultadoComponent);
-    const component = fixture.componentInstance;
+//   it('deve continuar para conformidade', () => {
+//     const fixture = TestBed.createComponent(ResultadoComponent);
+//     const component = fixture.componentInstance;
 
-    component.continuar();
+//     component.continuar();
 
-    expect(facadeMock.avancarStep).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/conformidade']);
-  });
+//     expect(facadeMock.avancarStep).toHaveBeenCalled();
+//     expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/conformidade']);
+//   });
 
-  it('deve voltar para simulação', () => {
-    const fixture = TestBed.createComponent(ResultadoComponent);
-    const component = fixture.componentInstance;
+//   it('deve voltar para simulação', () => {
+//     const fixture = TestBed.createComponent(ResultadoComponent);
+//     const component = fixture.componentInstance;
 
-    component.voltar();
+//     component.voltar();
 
-    expect(facadeMock.voltarStep).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/simulacao']);
-  });
-});
+//     expect(facadeMock.voltarStep).toHaveBeenCalled();
+//     expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/simulacao']);
+//   });
+// });

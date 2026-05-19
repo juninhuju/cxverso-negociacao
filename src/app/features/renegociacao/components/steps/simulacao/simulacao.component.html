@@ -1,138 +1,169 @@
 <div class="step-layout">
-  <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Validação"</button>
-  <header class="step-header">
-    <h2>Simulação Financeira</h2>
-    <p class="step-subtitle">Contrato {{ contrato()?.numero }} • {{ contrato()?.cliente }}</p>
+
+  <!-- BACK -->
+  <button class="step-back-link" (click)="voltar()" aria-label="Voltar">← Voltar</button>
+
+  <header>
+    <h2 class="step-title">Simulação Financeira</h2>
+    <p class="step-subtitle">
+      Contrato {{ contrato()?.numero }} • {{ contrato()?.cliente }}
+    </p>
   </header>
 
-  <section class="step-card resumo-card" aria-label="Resumo financeiro da proposta">
-    <div class="resumo-grid">
-      <article class="resumo-item">
-        <span class="resumo-label">Saldo devedor</span>
-        <span class="resumo-valor">{{ saldoDevedor() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="resumo-item">
-        <span class="resumo-label">Desconto Aplicado</span>
-        <span class="resumo-valor resumo-valor--success">{{ descontoAplicado() | currency:'BRL':'symbol':'1.2-2'
-          }}</span>
-      </article>
-      <article class="resumo-item">
-        <span class="resumo-label">Saldo Renegociado</span>
-        <span class="resumo-valor">{{ saldoRenegociado() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="resumo-item">
-        <span class="resumo-label">Custas obrigatórias</span>
-        <span class="resumo-valor resumo-valor--warning">{{ custasObrigatorias() | currency:'BRL':'symbol':'1.2-2'
-          }}</span>
-      </article>
-    </div>
-  </section>
+  <!-- SIMULAÇÃO SUGERIDA -->
+  <section class="card">
 
-  <section class="opcoes-section">
-    <header class="section-header">
-      <h3>Simulações disponíveis para o cliente</h3>
-    </header>
-    <div class="opcoes-grid">
+    <h3 class="card-title">Simulação sugerida</h3>
+
+    @if (opcoesVisiveis().length === 0) {
+    <p class="empty-state">Nenhuma simulação disponível</p>
+    } @else {
+    <div class="opcoes-container">
       @for (opcao of opcoesVisiveis(); track opcao.id) {
-      <div class="opcao-card" [class.opcao-card--selected]="opcaoSelecionada()?.id === opcao.id">
-        <button type="button" class="opcao-button" (click)="selecionarOpcao(opcao)"
-          [attr.aria-pressed]="opcaoSelecionada()?.id === opcao.id">
-          <div class="opcao-header">
-            <h4 class="opcao-titulo">{{ opcao.descricao }}</h4>
-            <p class="opcao-detalhes">{{ opcao.detalhes }}</p>
+      <div class="opcao-card" [class.opcao-card--selected]="opcaoSelecionada()?.id === opcao.id"
+        (click)="selecionarOpcao(opcao)" role="button" tabindex="0"
+        [attr.aria-selected]="opcaoSelecionada()?.id === opcao.id" (keydown.enter)="selecionarOpcao(opcao)"
+        (keydown.space)="selecionarOpcao(opcao)">
+
+        <div class="opcao-header">
+          <strong class="opcao-descricao">{{ opcao.descricao }}</strong>
+          @if (opcaoSelecionada()?.id === opcao.id) {
+          <span class="opcao-badge">Selecionado</span>
+          }
+        </div>
+
+        <div class="opcao-grid">
+          <div class="opcao-item">
+            <span class="label">Entrada</span>
+            <strong class="value">{{ opcao.valorEntrada | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
           </div>
-          <div class="opcao-valores">
-            <span>Entrada: {{ opcao.valorEntrada | currency:'BRL' }}</span>
-            <span>Parcelas: {{ opcao.numeroParcelas }}x</span>
-            <span>Taxa: {{ opcao.taxaJuros | percent:'1.2-2' }} a.m.</span>
+
+          <div class="opcao-item">
+            <span class="label">Parcelas</span>
+            <strong class="value">{{ opcao.numeroParcelas }}x</strong>
           </div>
-        </button>
+
+          <div class="opcao-item">
+            <span class="label">Taxa</span>
+            <strong class="value">{{ taxaJurosPercentual(opcao) | percent:'1.2-2' }}
+              a.a.</strong>
+          </div>
+
+          <div class="opcao-item">
+            <span class="label">Total</span>
+            <strong class="value value--highlight">{{ saldoDevedor() | currency:'BRL':undefined:undefined:'pt-BR'
+              }}</strong>
+          </div>
+        </div>
       </div>
-      } @empty {
-      <p class="empty-state">Nenhuma simulação disponível para este contrato.</p>
       }
     </div>
-  </section>
-
-  <section class="step-card personalizada-card">
-    <header class="section-header">
-      <h3>Simulação personalizada</h3>
-    </header>
-
-    @if (error()) {
-    <p class="error-message" role="alert"><mat-icon aria-hidden="true">warning</mat-icon> {{ error() }}</p>
     }
 
-    <div class="form-grid">
-      <div class="form-group full-width">
-        <label for="valorEntrada">Valor de Entrada (R$)</label>
-        <input id="valorEntrada" type="number" [ngModel]="valorEntrada()" (ngModelChange)="valorEntrada.set($event)"
-          placeholder="Ex: 1500.00" min="0" aria-label="Valor de entrada em reais" />
+  </section>
+  <!-- SIMULAÇÃO PERSONALIZADA -->
+  <section class="card">
+    <h3 class="card-title">Simulação personalizada</h3>
+
+    <form class="form-grid">
+
+      <div class="form-field">
+        <label for="valorEntradaInput">Entrada Mínima</label>
+        <input id="valorEntradaInput" type="number" name="valorEntrada" [ngModel]="valorEntrada()"
+          (ngModelChange)="atualizarValorEntrada($event)" inputmode="decimal" min="0" aria-label="Entrada mínima" />
       </div>
 
-      <div class="form-group full-width">
-        <label for="numeroParcelas">Número de Parcelas</label>
-        <input id="numeroParcelas" type="number" [ngModel]="numeroParcelas()"
-          (ngModelChange)="numeroParcelas.set($event)" placeholder="Ex: 12" min="1" max="120"
+      <div class="form-field">
+        <label for="numeroParcelasInput">Número de parcelas</label>
+        <input id="numeroParcelasInput" type="number" name="numeroParcelas" [ngModel]="numeroParcelas()"
+          (ngModelChange)="atualizarNumeroParcelas($event)" inputmode="numeric" min="1"
           aria-label="Número de parcelas" />
       </div>
-    </div>
-  </section>
 
-  <section class="step-card preview-card" aria-label="Preview da simulação">
-    <header class="section-header">
-      <h3>Preview da simulação</h3>
-    </header>
+    </form>
 
-    <div class="preview-grid">
-      <article class="preview-item">
-        <span class="preview-label">Boleto único</span>
-        <span class="preview-valor">{{ boletoUnico() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="preview-item">
-        <span class="preview-label">Parcela Mensal</span>
-        <span class="preview-valor">{{ parcelaMensalPreview() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="preview-item">
-        <span class="preview-label">Saldo a Financiar</span>
-        <span class="preview-valor">{{ saldoAFinanciar() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-    </div>
-  </section>
-
-  <section class="step-card detalhamento-card" aria-label="Detalhamento financeiro">
-    <header class="section-header">
-      <h3>Detalhamento financeiro</h3>
-    </header>
-
-    <div class="detalhamento-grid">
-      <article class="detalhe-item">
-        <span class="detalhe-label">Saldo a financiar</span>
-        <span class="detalhe-valor">{{ saldoAFinanciar() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="detalhe-item">
-        <span class="detalhe-label">Valor do juros (taxa {{ taxaJurosDinamica() | percent:'1.2-2' }} a.m.)</span>
-        <span class="detalhe-valor">{{ jurosValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="detalhe-item">
-        <span class="detalhe-label">IOF (0,38%)</span>
-        <span class="detalhe-valor">{{ iofValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <article class="detalhe-item">
-        <span class="detalhe-label">CET (taxa {{ cetTaxa() | percent:'1.2-2' }} a.m.)</span>
-        <span class="detalhe-valor detalhe-valor--highlight">{{ cetValor() | currency:'BRL':'symbol':'1.2-2' }}</span>
-      </article>
-      <!-- Botão de simulação -->
-      <button class="btn-primary" (click)="simular()">Simular</button>
-
-    </div>
-  </section>
-
-  <div class="step-actions">
-    <button class="btn-secondary" (click)="voltar()">Voltar</button>
-    <button class="btn-primary" [disabled]="loading() || valorEntrada() < 0 || numeroParcelas() < 1"
-      (click)="continuar()">
-      Ir para Resultado
+    <button class="btn-primary" (click)="simular()" aria-label="Simular negociação">
+      Simular
     </button>
-  </div>
+
+  </section>
+
+  <!-- RESULTADO COMPLETO -->
+  <section class="card card--resultado">
+
+    <h3 class="card-title">Resultado da Simulação</h3>
+
+    <!-- KPIs -->
+    <div class="resultado-kpis">
+      <div class="kpi-item">
+        <span class="kpi-label">Valor da Parcela</span>
+        <strong class="kpi-value">{{ parcelaMensalPreview() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+      </div>
+
+      <div class="kpi-item">
+        <span class="kpi-label">Total Negociação</span>
+        <strong class="kpi-value">{{ cetValor() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+      </div>
+
+    </div>
+
+    <!-- DETALHAMENTO -->
+    <div class="detalhamento">
+
+      <h4 class="detalhamento-title">DETALHAMENTO FINANCEIRO</h4>
+
+      <div class="detalhamento-grid">
+        <div class="grid-item">
+          <span class="label">Saldo Devedor</span>
+          <strong class="value">{{ saldoDevedor() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+        <div class="grid-item">
+          <span class="label">Entrada + Custas</span>
+          <strong class="value">{{ (valorEntrada() + custasObrigatorias()) | currency:'BRL':undefined:undefined:'pt-BR'
+            }}</strong>
+        </div>
+        <div class="grid-item">
+          <span class="label">Custas</span>
+          <strong class="value">{{ custasObrigatorias() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+        <div class="grid-item">
+          <span class="label">Parcelas</span>
+          <strong class="value">{{ numeroParcelas() }}x</strong>
+        </div>
+        <div class="grid-item">
+          <span class="label">Juros</span>
+          <strong class="value-secondary">
+            {{ taxaJurosDinamica() | percent:'1.2-2':'pt-BR' }} a.a.
+          </strong>
+        </div>
+        <div class="grid-item">
+          <span class="label">Total</span>
+          <strong class="value">{{ cetValor() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+      </div>
+
+      <h4 class="detalhamento-title detalhamento-title--secondary">RESUMO DO FINANCIAMENTO</h4>
+
+      <div class="detalhamento-grid detalhamento-grid--resume">
+        <div class="grid-item">
+          <span class="label">Saldo Original</span>
+          <strong class="value">{{ saldoDevedor() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+        <div class="grid-item">
+          <span class="label">Entrada</span>
+          <strong class="value">{{ valorEntrada() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ACTIONS -->
+  <footer class="step-actions">
+    <button class="btn-secondary" (click)="voltar()" aria-label="Voltar para etapa anterior">Voltar</button>
+    <button class="btn-primary" (click)="continuar()"
+      aria-label="Finalizar renegociação e ir para próxima etapa">Finalizar Renegociação</button>
+  </footer>
+
 </div>

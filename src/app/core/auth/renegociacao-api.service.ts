@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
@@ -100,16 +101,19 @@ export class RenegociacaoApiService {
     numeroParcelas: number,
   ): Observable<SimulacaoRenegociacao> {
     if (this.isDev) {
-      return this.http.get<Record<string, SimulacaoRenegociacao>>(
-        `/assets/resultado-simulacao.json`
-      ).pipe(
-        map((dados) => {
-          const resultado = dados[numeroContrato];
-          if (resultado) {
-            return resultado;
-          }
-          // Fallback: calcula resultado padrão se não encontrar dados específicos
-          return this.calcularSimulacao(valorEntrada, numeroParcelas);
+      return forkJoin({
+        simulacoes: this.http.get<SimulacoesDisponiveis[]>(`/assets/simulacao.json`),
+        contratos: this.http.get<Contrato[]>(`/assets/contratos.json`),
+      }).pipe(
+        map(({ simulacoes, contratos }) => {
+          const contrato = contratos.find((item) => item.numero === numeroContrato) ?? null;
+          const simulacaoContrato = simulacoes.find((item) => item.numeroContrato === numeroContrato) ?? null;
+          return this.calcularSimulacaoPersonalizada(
+            valorEntrada,
+            numeroParcelas,
+            contrato,
+            simulacaoContrato,
+          );
         }),
       );
     }
@@ -120,6 +124,73 @@ export class RenegociacaoApiService {
         numeroParcelas,
       })
       .pipe(map((res) => res.data));
+  }
+
+  private calcularSimulacaoPersonalizada(
+    valorEntrada: number,
+    numeroParcelas: number,
+    contrato: Contrato | null,
+    simulacaoContrato: SimulacoesDisponiveis | null,
+  ): SimulacaoRenegociacao {
+    const entrada = Math.max(0, valorEntrada);
+    const parcelas = Math.max(1, Math.round(numeroParcelas));
+    const saldoOriginal = Math.max(entrada, contrato?.valorDevido ?? entrada);
+    const saldoFinanciado = Math.max(0, saldoOriginal - entrada);
+
+    const opcaoExata = simulacaoContrato?.opcoes.find(
+      (opcao) => opcao.valorEntrada === entrada && opcao.numeroParcelas === parcelas,
+    );
+
+    const taxaReferencia = opcaoExata?.taxaJuros ?? simulacaoContrato?.opcoes[0]?.taxaJuros ?? 1.2;
+    const taxaNormalizada = taxaReferencia > 1 ? taxaReferencia / 100 : taxaReferencia;
+    const valorParcela = this.calcularParcelaComJuros(saldoFinanciado, parcelas, taxaNormalizada);
+
+    const totalParcelado = valorParcela * parcelas;
+    const totalPago = entrada + totalParcelado;
+    const totalJuros = Math.max(0, totalParcelado - saldoFinanciado);
+
+    const parcelasArray: Parcela[] = [];
+    const dataInicial = new Date(2026, 4, 15);
+
+    for (let i = 1; i <= parcelas; i++) {
+      const data = new Date(dataInicial);
+      data.setMonth(data.getMonth() + i);
+      const vencimento = data.toISOString().split('T')[0];
+
+      parcelasArray.push({
+        numero: i,
+        valor: valorParcela,
+        vencimento,
+      });
+    }
+
+    return {
+      valorEntrada: entrada,
+      numeroParcelas: parcelas,
+      valorParcela,
+      taxaJuros: taxaReferencia,
+      totalPago,
+      totalJuros,
+      parcelas: parcelasArray,
+    };
+  }
+
+  private calcularParcelaComJuros(saldo: number, parcelas: number, taxaMensal: number): number {
+    if (parcelas <= 0) {
+      return 0;
+    }
+
+    if (saldo <= 0) {
+      return 0;
+    }
+
+    if (taxaMensal <= 0) {
+      return Math.round((saldo / parcelas) * 100) / 100;
+    }
+
+    const fator = Math.pow(1 + taxaMensal, parcelas);
+    const parcela = (saldo * taxaMensal * fator) / (fator - 1);
+    return Math.round(parcela * 100) / 100;
   }
 
   private calcularSimulacao(valorEntrada: number, numeroParcelas: number): SimulacaoRenegociacao {

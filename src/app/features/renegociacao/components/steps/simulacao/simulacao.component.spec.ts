@@ -6,6 +6,10 @@ import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegocia
 import { OpcaoSimulacao } from '../../../models/renegociacao.model';
 import { SimulacaoComponent } from './simulacao.component';
 
+const testCase = (globalThis as unknown as {
+  it: (description: string, specFn: () => void) => void;
+}).it;
+
 describe('SimulacaoComponent', () => {
   let contratoAtual: {
     numero: string;
@@ -55,7 +59,7 @@ describe('SimulacaoComponent', () => {
     }).compileComponents();
   });
 
-  it('deve carregar opções quando contrato existir', () => {
+  testCase('deve carregar opções quando contrato existir', () => {
     contratoAtual = {
       numero: 'CN-1', cliente: 'A', cpfCnpj: '1', produto: 'CDC', valorDevido: 10, dataVencimento: '2026-01-01', status: 'APTO'
     };
@@ -71,7 +75,7 @@ describe('SimulacaoComponent', () => {
     expect(apiMock.carregarOpcoesSimulacao).toHaveBeenCalledWith('CN-1');
   });
 
-  it('deve selecionar opção e disparar simulação', () => {
+  testCase('deve selecionar opção e disparar simulação', () => {
     const fixture = TestBed.createComponent(SimulacaoComponent);
     const component = fixture.componentInstance;
     const opcao: OpcaoSimulacao = {
@@ -93,7 +97,7 @@ describe('SimulacaoComponent', () => {
     expect(facadeMock.simular).toHaveBeenCalledWith(500, 12);
   });
 
-  it('deve simular com os valores atuais', () => {
+  testCase('deve simular com os valores atuais', () => {
     const fixture = TestBed.createComponent(SimulacaoComponent);
     const component = fixture.componentInstance;
     component.valorEntrada.set(700);
@@ -104,27 +108,18 @@ describe('SimulacaoComponent', () => {
     expect(facadeMock.simular).toHaveBeenCalledWith(700, 24);
   });
 
-  it('deve avançar para resultado após timeout no continuar', () => {
-    jasmine.clock().install();
-    try {
-      const fixture = TestBed.createComponent(SimulacaoComponent);
-      const component = fixture.componentInstance;
+  testCase('deve avançar para resultado ao continuar', () => {
+    const fixture = TestBed.createComponent(SimulacaoComponent);
+    const component = fixture.componentInstance;
 
-      component.continuar();
+    component.continuar();
 
-      expect(facadeMock.simular).toHaveBeenCalled();
-      expect(facadeMock.avancarStep).not.toHaveBeenCalled();
-
-      jasmine.clock().tick(500);
-
-      expect(facadeMock.avancarStep).toHaveBeenCalled();
-      expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/resultado']);
-    } finally {
-      jasmine.clock().uninstall();
-    }
+    expect(facadeMock.simular).toHaveBeenCalled();
+    expect(facadeMock.avancarStep).toHaveBeenCalled();
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/resultado']);
   });
 
-  it('deve voltar para jurídico', () => {
+  testCase('deve voltar para jurídico', () => {
     const fixture = TestBed.createComponent(SimulacaoComponent);
     const component = fixture.componentInstance;
 
