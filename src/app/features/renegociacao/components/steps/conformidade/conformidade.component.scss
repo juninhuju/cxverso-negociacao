@@ -1,3 +1,13 @@
+// Verde institucional SIDSC para ícones de sucesso no checklist
+.conformidade-checks mat-icon {
+  color: var(--dsc-color-bg-success-6) !important;
+}
+
+li {
+  color: var(--dsc-color-bg-success-6) !important;
+  font-weight: var(--font-weight-bold);
+}
+
 :host {
   display: block;
   width: 100%;
@@ -35,7 +45,7 @@
   border: 1px solid var(--color-gray-400);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  background-color: var(--color-primary-blue-light);
+  background-color: var(--color-surface);
 }
 
 .conformidade-checks h3 {

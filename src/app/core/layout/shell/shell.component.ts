@@ -23,9 +23,9 @@ export class ShellComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  readonly username = this.authService.username;
+  readonly username = signal('CAIXA');
   readonly isSidenavOpen = signal(false);
-  readonly matricula = signal('Matrícula 00981234');
+  readonly matricula = signal('123456');
   readonly dataAtual = computed(() =>
     new Intl.DateTimeFormat('pt-BR', {
       dateStyle: 'full',

@@ -31,7 +31,7 @@ export class BuscaContratoComponent {
 
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
-  readonly termoBusca = signal('');
+  readonly termoBusca = signal(localStorage.getItem('renegociacao_cpf_busca') ?? '');
   readonly erroSync = signal<string | null>(null);
   private readonly buscaPendente = signal(false);
   private readonly termoBuscaPendente = signal('');
@@ -79,6 +79,7 @@ export class BuscaContratoComponent {
 
   onTermoBuscaChange(value: string): void {
     this.termoBusca.set(value);
+    localStorage.setItem('renegociacao_cpf_busca', value);
   }
 
   buscar(): void {

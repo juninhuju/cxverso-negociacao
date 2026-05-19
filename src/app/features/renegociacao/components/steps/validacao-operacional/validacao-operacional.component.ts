@@ -29,13 +29,58 @@ export class ValidacaoOperacionalComponent {
   readonly contrato = this.facade.contrato;
   readonly validacao = this.facade.validacaoOperacional;
 
-  // Mocks para template (substitua por dados reais do backend/facade se disponível)
-  readonly custas = {
-    total: 1500.00,
-    entrada: 0
+
+  // Mock de contrato atual (substitua por this.contrato() real)
+  contratoAtual = {
+    numero: '100000001',
+    cliente: 'Ana Paula Souza',
+    produto: 'Crédito Pessoal',
+    valorDevido: 15000.00,
+    status: 'EXECUCAO_EXTRAJUDICIAL',
+    diasAtraso: 124,
+    garantia: 'Imóvel',
   };
+
+  // Custas e entrada dinâmicas
+  get entradaMinima(): number {
+    return Math.round((this.contratoAtual.valorDevido * 0.10) * 100) / 100;
+  }
+
+  get custasTotal(): number {
+    return this.contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'
+      ? Math.round((this.contratoAtual.valorDevido * 0.125) * 100) / 100
+      : 0;
+  }
+
+  entrada = 0;
+
+  // Validações automáticas (mock)
+  readonly validacoes = [
+    {
+      label: 'Sem impedimentos jurídicos identificados',
+      valido: true
+    },
+    {
+      label: 'Sem impedimentos relativos à execução extrajudicial',
+      valido: true
+    },
+    {
+      label: 'Critérios de risco e crédito validados',
+      valido: true
+    },
+    {
+      label: 'Custas extrajudiciais identificadas',
+      valido: this.contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'
+    },
+    {
+      label: 'Laudo',
+      valido: true // ou false para testar cor vermelha
+    }
+  ];
+
+  // Garantia mock
   readonly garantia = {
-    tipo: 'Imóvel',
+    tipo: this.contratoAtual.garantia,
     valor: 200000.00,
     registro: 'Matrícula 12345',
     endereco: 'Rua Exemplo, 123, Centro, Cidade/UF',

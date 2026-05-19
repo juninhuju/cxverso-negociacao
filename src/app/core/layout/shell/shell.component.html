@@ -4,7 +4,6 @@
     <div class="shell-sidenav-inner">
       <section class="sidenav-top-brand" aria-label="Identidade do sistema">
         <div class="sidenav-brand-row">
-          <mat-icon aria-hidden="true" class="brand-search-icon">search</mat-icon>
           <span class="sidenav-brand-title">Negocia.CAIXA</span>
         </div>
         <p class="sidenav-brand-subtitle">Sistema de Renegociação</p>
@@ -26,18 +25,13 @@
           <mat-icon aria-hidden="true">smart_toy</mat-icon>
           <span>Chatbot</span>
         </a>
-        <a class="sidebar-link" routerLink="/sobre" routerLinkActive="sidebar-link--active"
-          [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
-          <mat-icon aria-hidden="true">info</mat-icon>
-          <span>Sobre</span>
-        </a>
       </nav>
 
       <section class="sidenav-user" aria-label="Dados do usuário">
         <img src="/assets/user-avatar.svg" class="user-photo" alt="Foto do usuário logado" />
         <div class="user-meta">
-          <span class="user-name">{{ username() }}</span>
-          <span class="user-matricula">{{ matricula() }}</span>
+          <span class="user-name">Funcionário {{ username() }}</span>
+          <span class="user-matricula">Matrícula {{ matricula() }}</span>
         </div>
         <button mat-icon-button type="button" aria-label="Sair do sistema" (click)="logout()">
           <mat-icon>logout</mat-icon>

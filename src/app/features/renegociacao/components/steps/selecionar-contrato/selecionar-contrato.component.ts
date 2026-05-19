@@ -78,7 +78,7 @@ export class SelecionarContratoComponent {
       return;
     }
 
-    this.facade.buscarContrato(contratoSelecionado.numero);
+    this.facade.definirContrato(contratoSelecionado);
     this.facade.solicitarValidacaoOperacional(contratoSelecionado.numero);
     this.facade.avancarStep();
     this.router.navigate(['/renegociacao/validacao']);

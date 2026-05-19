@@ -35,6 +35,9 @@ export const RenegociacaoActions = createActionGroup({
     'Formalizar Renegociacao Success': props<{ resultado: ResultadoRenegociacao }>(),
     'Formalizar Renegociacao Failure': props<{ error: string }>(),
 
+    // Definir contrato diretamente (sem HTTP)
+    'Definir Contrato': props<{ contrato: Contrato }>(),
+
     // Navegação
     'Avancar Step': emptyProps(),
     'Voltar Step': emptyProps(),

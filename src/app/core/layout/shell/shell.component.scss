@@ -11,7 +11,7 @@
 
 .shell-sidenav {
   width: 320px;
-  background: var(--color-primary-blue);
+  background: var(--dsc-color-bg-highlight-6);
   color: var(--color-surface);
   box-shadow: var(--shadow-md);
 }
@@ -33,13 +33,6 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-}
-
-.brand-search-icon {
-  color: var(--color-secondary-orange-light);
-  font-size: 28px;
-  width: 28px;
-  height: 28px;
 }
 
 .sidenav-brand-title {
@@ -114,7 +107,7 @@
 }
 
 .user-name {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   white-space: nowrap;
   overflow: hidden;
@@ -122,7 +115,7 @@
 }
 
 .user-matricula {
-  font-size: 0.75rem;
+  font-size: var(--font-size-sm);
   color: var(--color-text-on-brand-92);
 }
 

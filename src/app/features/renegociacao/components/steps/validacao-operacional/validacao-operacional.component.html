@@ -22,7 +22,7 @@
           <dt>Cliente</dt>
           <dd>{{ contratoAtual.cliente }}</dd>
           <dt>Saldo Devedor</dt>
-          <dd>{{ custas.total | currency:'BRL':'symbol':'1.2-2' }}</dd>
+          <dd>{{ contratoAtual.valorDevido | currency:'BRL':'symbol':'1.2-2' }}</dd>
           <dt>Dias de Atraso</dt>
           <dd>{{ contratoAtual.diasAtraso }}</dd>
           <dt>Status</dt>
@@ -31,12 +31,12 @@
       </section>
 
       <!-- Card 2: Informações da garantia -->
-      <section class="card">
+      <section class="card garantia-card">
         <h2>Informações da garantia</h2>
-        <div>Rastreabilidade e segurança jurídica</div>
-        <section class="garantia-section">
-          <span>Garantia</span>
-          <div>{{ garantia.tipo }}</div>
+        <div class="card-intro">Rastreabilidade e segurança jurídica</div>
+        <section class="microcopy-custas">
+          <span class="garantia-label">Garantia</span>
+          <div class="garantia-valor">{{ garantia.tipo }}</div>
         </section>
         <div class="garantia-valor-registro">
           <span>Valor da garantia: {{ garantia.valor | currency:'BRL':'symbol':'1.2-2' }}</span>
@@ -45,55 +45,50 @@
         <div class="garantia-endereco">
           <span>{{ garantia.endereco }}</span>
         </div>
-        <section class="laudo-section" [ngClass]="garantia.valida ? 'valida' : 'invalida'">
-          <strong>Laudo {{ garantia.valida ? 'válido' : 'inválido' }}</strong>
-          @if (garantia.valida) {
-          <p>Não é necessário gerar novo laudo.</p>
-          } @else {
-          <p>Necessário gerar novo laudo.</p>
-          }
-        </section>
       </section>
 
       <!-- Card 3: Custas Identificadas -->
-      <section class="card">
+      @if (contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL') {
+      <section class="card custas-card">
         <h2>Custas Identificadas</h2>
-        <section>
-          <span>Total de custas e Honorários</span>
-          <div class="valor-custas">{{ custas.total | currency:'BRL':'symbol':'1.2-2' }}</div>
+        <section class="custas-resumo">
+          <span>Total de custas</span>
+          <div class="valor-custas">{{ custasTotal | currency:'BRL':'symbol':'1.2-2' }}</div>
         </section>
-        <section>
-          <label for="entradaObrigatoria">Entrada obrigatória</label>
-          <input id="entradaObrigatoria" class="entrada-input" type="number" [(ngModel)]="custas.entrada" min="0" />
+        <section class="custas-aviso">
+          <div class="microcopy-custas">Custas do processo de execução extrajudicial obrigatoriamente pagos na entrada.
+            Parcelamento não permitido.</div>
         </section>
       </section>
+      }
     </div>
+
     <!-- Coluna 2 -->
     <div class="coluna">
       <!-- Card 1: Validações Automáticas -->
-      <section class="card">
+      <section class="card validacoes-card">
         <h2>Validações Automáticas</h2>
-        <section class="validacao-item">
-          <mat-icon color="primary">check_circle</mat-icon>
-          <span>Sem impedimentos jurídicos identificados</span>
-        </section>
-        <section class="validacao-item">
-          <mat-icon color="primary">check_circle</mat-icon>
-          <span>Sem impedimentos relativos à execução extrajudicial</span>
-        </section>
-        <section class="validacao-item">
-          <mat-icon color="primary">check_circle</mat-icon>
-          <span>Custas extrajudiciais identificadas</span>
-        </section>
-        <section class="valor-custas-section">
-          <span class="valor-custas">{{ custas.total | currency:'BRL':'symbol':'1.2-2' }}</span>
-          <span class="custas-label">Custas obrigatórias</span>
-        </section>
-        <section class="validacao-item">
-          <mat-icon color="primary">check_circle</mat-icon>
-          <span>Contrato apto para renegociação</span>
+        <section *ngFor="let v of validacoes" class="validacao-item" [ngClass]="v.valido ? 'valida' : 'invalida'">
+          <mat-icon>check_circle</mat-icon>
+          <span class="validacao-item-texto">
+            {{ v.label }}
+            <ng-container *ngIf="v.label === 'Laudo'">{{ v.valido ? ' válido' : ' inválido' }}</ng-container>
+          </span>
+          <ng-container
+            *ngIf="v.label === 'Custas extrajudiciais identificadas' && contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'">
+            <span class="valor-custas destaque-custas">{{ custasTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </ng-container>
         </section>
       </section>
+
+      <section class="card">
+        <h2>Entrada mínima: </h2>
+        <span class="entrada-aviso">{{ entradaMinima |
+          currency:'BRL':'symbol':'1.2-2' }}</span>
+
+      </section>
+
+
 
       <!-- Card 2: Status Operacional -->
       <section class="card" [ngClass]="validacao()?.aptoParaRenegociacao ? 'aprovado' : 'reprovado'">
@@ -109,9 +104,9 @@
           Todas as validações foram concluídas com sucesso.
         </div>
         <div class="botoes-status">
-          <button type="button" class="btn-primary" (click)="abrirConsultaJuridica()">Abrir consulta jurídica</button>
+          <button type="button" class="btn-primary" (click)="abrirConsultaJuridica()">Abrir
+            consulta jurídica</button>
           <button type="button" class="btn-primary">Consulta Normativo</button>
-          <button type="button" class="btn-warning" (click)="prosseguirSimulacao()">Prosseguir para simulação</button>
         </div>
       </section>
     </div>
@@ -120,7 +115,7 @@
   <div class="step-actions-end">
     <button type="button" class="btn-primary" (click)="prosseguirSimulacao()"
       [disabled]="!validacao()?.aptoParaRenegociacao" aria-label="Simular renegociação">
-      Simular
+      Prosseguir para simulação
     </button>
   </div>
   } @else {

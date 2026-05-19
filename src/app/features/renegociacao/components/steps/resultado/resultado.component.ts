@@ -53,7 +53,7 @@ export class ResultadoComponent {
 
   continuar(): void {
     this.facade.avancarStep();
-    this.router.navigate(['/renegociacao/formalizacao']);
+    this.router.navigate(['/renegociacao/conformidade']);
   }
 
   voltar(): void {

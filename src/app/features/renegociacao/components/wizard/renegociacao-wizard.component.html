@@ -1,5 +1,6 @@
 <div class="wizard-container">
 
+  @if (stepAtual() > 0) {
   <aside class="wizard-sidebar">
 
     <!-- 🔷 LINHA 1 -->
@@ -36,6 +37,7 @@
     </div>
 
   </aside>
+  }
 
   <main class="wizard-content">
     <router-outlet></router-outlet>

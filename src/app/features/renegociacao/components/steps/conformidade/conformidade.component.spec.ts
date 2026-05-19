@@ -47,6 +47,6 @@ describe('ConformidadeComponent', () => {
     component.voltar();
 
     expect(facadeMock.voltarStep).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/formalizacao']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/resultado']);
   });
 });

@@ -30,14 +30,14 @@ describe('ResultadoComponent', () => {
     }).compileComponents();
   });
 
-  it('deve continuar para formalização', () => {
+  it('deve continuar para conformidade', () => {
     const fixture = TestBed.createComponent(ResultadoComponent);
     const component = fixture.componentInstance;
 
     component.continuar();
 
     expect(facadeMock.avancarStep).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/formalizacao']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/conformidade']);
   });
 
   it('deve voltar para simulação', () => {

@@ -29,6 +29,6 @@ export class ConformidadeComponent {
 
   voltar(): void {
     this.facade.voltarStep();
-    this.router.navigate(['/renegociacao/formalizacao']);
+    this.router.navigate(['/renegociacao/resultado']);
   }
 }

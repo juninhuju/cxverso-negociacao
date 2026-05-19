@@ -119,13 +119,13 @@ export class SimulacaoComponent {
     this.facade.simular(this.valorEntrada(), this.numeroParcelas());
   }
 
-  continuar(): void {
+   continuar(): void {
     // Simula com os parâmetros atuais antes de avançar
     this.simular();
     // Agenda navegação para após a simulação ser enviada
     setTimeout(() => {
       this.facade.avancarStep();
-      this.router.navigate(['/renegociacao/resultado']);
+      this.router.navigate(['/renegociacao/conformidade']);
     }, 500);
   }
 

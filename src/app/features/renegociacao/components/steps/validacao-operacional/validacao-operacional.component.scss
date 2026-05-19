@@ -18,6 +18,7 @@
   color: var(--color-primary-blue);
 }
 
+/* INFO */
 .contrato-info {
   display: flex;
   flex-wrap: wrap;
@@ -36,6 +37,7 @@
   }
 }
 
+/* GRID */
 .colunas {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -48,11 +50,12 @@
   gap: var(--spacing-md);
 }
 
+/* CARD */
 .card {
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-gray-200);
   box-shadow: var(--shadow-sm);
-  background-color: var(--color-step-bg);
+  background-color: var(--color-surface);
   padding: var(--padding-card);
 
   h2 {
@@ -63,6 +66,25 @@
   }
 }
 
+.garantia-card,
+.custas-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.validacoes-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.card-intro {
+  color: var(--color-gray-700);
+  line-height: 1.5;
+}
+
+/* DL */
 dl {
   margin: 0;
   display: grid;
@@ -73,122 +95,144 @@ dl {
 
 dt {
   color: var(--color-gray-700);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
 }
 
 dd {
   margin: 0;
   color: var(--color-gray-900);
-  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
 }
 
+/* GARANTIA */
 .garantia-section {
   margin-top: var(--spacing-sm);
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-md);
   background-color: var(--color-gray-200);
+}
 
-  label {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    color: var(--color-gray-700);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-  }
+/* LAUDO */
+.laudo-section {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+}
+
+.validacao-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  min-height: 2.5rem;
+  line-height: 1.5;
+}
+
+.validacao-item mat-icon {
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.validacao-item-texto {
+  flex: 1;
+  line-height: 1.5;
+}
+
+
+.validacao-item.valida {
+  color: var(--dsc-color-content-feedback-success);
+}
+
+.validacao-item.invalida {
+  color: var(--dsc-color-content-feedback-danger);
+}
+
+.validacao-item.valida mat-icon {
+  color: var(--dsc-color-content-feedback-success);
+}
+
+.validacao-item.invalida mat-icon {
+  color: var(--dsc-color-content-feedback-danger);
+}
+
+.destaque-garantia {
+  background: var(--dsc-color-bg-accent-2);
+  border: 2px solid var(--dsc-color-bg-accent-4);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.1em;
+}
+
+.garantia-destaque {
+  background: var(--dsc-color-bg-accent-2);
+  border: 2px solid var(--dsc-color-bg-accent-4);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
 }
 
 .garantia-valor-registro,
 .garantia-endereco {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-xs);
-  margin-top: var(--spacing-sm);
-  color: var(--color-gray-800);
-  font-size: var(--font-size-sm);
+  line-height: 1.5;
 }
 
-.laudo-section {
-  margin-top: var(--spacing-sm);
+.custas-resumo,
+.custas-aviso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.garantia-label {
+  color: var(--dsc-color-content-accent-2);
+  font-weight: var(--font-weight-bold);
+  margin-right: var(--spacing-xs);
+}
+
+.garantia-valor {
+  color: var(--dsc-color-content-accent-1);
+  font-size: 1.15em;
+  font-weight: var(--font-weight-bold);
+}
+
+.entrada-aviso {
+  color: var(--dsc-color-content-feedback-danger);
+  font-weight: var(--font-weight-bold);
+  margin-top: var(--spacing-xs);
+  font-size: 1.15em;
+
+}
+
+.entrada-minima {
+  color: var(--dsc-color-content-feedback-danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.microcopy-custas {
+  color: var(--dsc-color-content-neutral-2);
+  font-size: 0.95em;
+  background: var(--dsc-color-bg-warning-1);
+  border-left: 4px solid var(--dsc-color-bg-warning-4);
+  padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm);
-  border: 1px solid transparent;
-
-  strong {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-  }
-
-  p {
-    margin: 0;
-    font-size: var(--font-size-sm);
-  }
+  line-height: 1.5;
 }
 
-.laudo-section.valida {
-  background-color: var(--color-success-green-light);
-  border-color: var(--color-success-green);
-  color: var(--color-success-green);
-}
-
-.laudo-section.invalida {
-  background-color: var(--color-error-red-light);
-  border-color: var(--color-error-red);
-  color: var(--color-error-red);
-}
-
-.valor-custas {
+.destaque-custas {
   color: var(--color-error-red);
   font-weight: var(--font-weight-bold);
 }
 
+/* INPUT */
 .entrada-input {
   width: 100%;
   border: 1px solid var(--color-gray-300);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-sm);
-  background-color: var(--color-surface);
-  color: var(--color-gray-900);
 }
 
-.entrada-input:focus {
-  outline: 2px solid var(--color-primary-blue);
-  outline-offset: 1px;
-}
-
-.validacao-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-xs);
-  color: var(--color-gray-800);
-  font-size: var(--font-size-sm);
-
-  mat-icon {
-    color: var(--color-success-green);
-  }
-}
-
-.valor-custas-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: var(--spacing-xs) 0 var(--spacing-sm);
-
-  .custas-label {
-    color: var(--color-gray-700);
-    font-size: var(--font-size-sm);
-  }
-}
-
-.card.aprovado {
-  border-color: var(--color-success-green);
-}
-
-.card.reprovado {
-  border-color: var(--color-error-red);
-}
-
+/* STATUS */
 .status-operacional {
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -212,15 +256,21 @@ dd {
   margin-bottom: var(--spacing-sm);
 }
 
+/* ✅ ✅ BOTÕES (CORREÇÃO AQUI) */
 .botoes-status {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
+  display: inline-flex;
+  /* 🔥 correção principal */
+  gap: var(--spacing-sm);
+  align-items: center;
 }
 
+.botoes-status button {
+  white-space: nowrap;
+}
+
+/* botão base */
 .btn-primary,
-.btn-secondary,
-.btn-warning {
+.btn-secondary {
   border: 0;
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xs) var(--spacing-md);
@@ -228,19 +278,16 @@ dd {
   cursor: pointer;
 }
 
+/* primário */
 .btn-primary {
   background-color: var(--color-primary-blue);
   color: var(--color-surface);
 }
 
+/* secundário */
 .btn-secondary {
   background-color: var(--color-gray-300);
   color: var(--color-gray-700);
-}
-
-.btn-warning {
-  background-color: var(--color-warning-orange);
-  color: var(--color-surface);
 }
 
 .btn-secondary:disabled {
@@ -248,19 +295,21 @@ dd {
   cursor: not-allowed;
 }
 
-.empty-state {
-  margin: 0;
-  color: var(--color-gray-700);
-}
-
+/* FOOTER */
 .step-actions-end {
   display: flex;
   justify-content: flex-end;
   margin-top: var(--spacing-lg);
 }
 
+/* RESPONSIVO */
 @media (max-width: 1080px) {
   .colunas {
     grid-template-columns: 1fr;
+  }
+
+  .botoes-status {
+    flex-wrap: wrap;
+    /* ✅ só quebra no mobile */
   }
 }

@@ -52,13 +52,6 @@ export const RENEGOCIACAO_ROUTES: Routes = [
           ),
       },
       {
-        path: 'formalizacao',
-        loadComponent: () =>
-          import('./components/steps/formalizacao/formalizacao.component').then(
-            (c) => c.FormalizacaoComponent,
-          ),
-      },
-      {
         path: 'conformidade',
         loadComponent: () =>
           import('./components/steps/conformidade/conformidade.component').then(

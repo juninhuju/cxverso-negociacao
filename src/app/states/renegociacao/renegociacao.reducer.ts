@@ -5,6 +5,14 @@ import { initialRenegociacaoState } from './renegociacao.state';
 export const renegociacaoReducer = createReducer(
   initialRenegociacaoState,
 
+  // Definir contrato diretamente
+  on(RenegociacaoActions.definirContrato, (state, { contrato }) => ({
+    ...state,
+    loading: false,
+    error: null,
+    session: { ...state.session, contrato },
+  })),
+
   // Busca de contrato
   on(RenegociacaoActions.buscarContrato, (state) => ({ ...state, loading: true, error: null })),
   on(RenegociacaoActions.buscarContratoSuccess, (state, { contrato }) => ({

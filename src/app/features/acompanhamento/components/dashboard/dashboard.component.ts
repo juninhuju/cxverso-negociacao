@@ -61,6 +61,14 @@ export class DashboardComponent {
   readonly solicitacoesUsuario = this._solicitacoes.asReadonly();
 
   constructor() {
+    // Restaurar CPF/CNPJ salvo
+    const docSalvo = localStorage.getItem('cpfBusca') || '';
+    this.documento.setValue(docSalvo);
+    this.documento.valueChanges.subscribe((valor) => {
+      if (valor !== null && valor !== undefined) {
+        localStorage.setItem('cpfBusca', valor);
+      }
+    });
     void this.carregarSolicitacoes();
   }
 

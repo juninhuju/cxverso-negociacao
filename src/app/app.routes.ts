@@ -35,13 +35,6 @@ export const routes: Routes = [
             (m) => m.CHATBOT_ROUTES,
           ),
       },
-      {
-        path: 'sobre',
-        loadChildren: () =>
-          import('./features/sobre/sobre.routes').then(
-            (m) => m.SOBRE_ROUTES,
-          ),
-      },
     ],
   },
   { path: '**', redirectTo: 'login' },

@@ -10,7 +10,6 @@ import { RenegociacaoFacade } from '../../../../states/renegociacao/renegociacao
     { label: 'Validação', path: 'validacao' },
     { label: 'Simulação', path: 'simulacao' },
     { label: 'Resultado', path: 'resultado' },
-    { label: 'Formalização', path: 'formalizacao' },
     { label: 'Conformidade', path: 'conformidade' },
     { label: 'Conclusão', path: 'conclusao' },
   ] as const;

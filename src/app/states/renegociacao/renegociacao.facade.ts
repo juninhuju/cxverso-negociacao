@@ -36,6 +36,10 @@ export class RenegociacaoFacade {
     this.store.dispatch(RenegociacaoActions.buscarContrato({ termo }));
   }
 
+  definirContrato(contrato: import('../../features/renegociacao/models/renegociacao.model').Contrato): void {
+    this.store.dispatch(RenegociacaoActions.definirContrato({ contrato }));
+  }
+
   solicitarValidacaoOperacional(numeroContrato: string): void {
     this.store.dispatch(RenegociacaoActions.solicitarValidacaoOperacional({ numeroContrato }));
   }
