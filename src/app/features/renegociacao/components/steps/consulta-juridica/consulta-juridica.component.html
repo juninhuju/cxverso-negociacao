@@ -1,3 +1,51 @@
-<section class="consulta-juridica-host" aria-live="polite">
-  <p>Abrindo consulta jurídica...</p>
-</section>
+<div class="dialog-container">
+
+  <!-- HEADER -->
+  <header class="dialog-header">
+    <div class="header-text">
+      <h2>Consulta Jurídica</h2>
+      <p>
+        Texto gerado automaticamente por IA com base no contrato selecionado<br />
+        O conteúdo pode ser revisado antes do envio
+      </p>
+    </div>
+
+    <button type="button" class="btn-close" (click)="fechar()">✕</button>
+  </header>
+
+  <!-- BODY -->
+  <section class="dialog-body">
+
+    <div *ngIf="aviso" class="alerta">
+      {{ aviso }}
+    </div>
+
+    <div class="email-preview" [class.editando]="modoEdicao">
+      <textarea [(ngModel)]="emailTexto" [readonly]="!modoEdicao" rows="20">
+      </textarea>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="dialog-footer">
+
+    <button type="button" class="btn-secondary" (click)="alternarEdicao()">
+      {{ modoEdicao ? 'Salvar texto' : 'Editar texto' }}
+    </button>
+
+    <button type="button" class="btn-secondary" (click)="copiarTexto()">
+      Copiar
+    </button>
+
+    <button type="button" class="btn-secondary" (click)="fechar()">
+      Voltar
+    </button>
+
+    <button type="button" class="btn-primary" (click)="enviarConsulta()">
+      ✈ Enviar consulta
+    </button>
+
+  </footer>
+
+</div>

@@ -1,51 +1,80 @@
-<div class="dashboard">
-  <div class="busca-topo">
+<div class="validacao-operacional">
+
+  <!-- TÍTULO -->
+  <h1 class="titulo">Painel de Acompanhamento</h1>
+
+  <!-- BUSCA -->
+  <section class="card busca-card">
+    <h2>Buscar contratos</h2>
+
     <form (ngSubmit)="buscarContratos()" class="busca-form" autocomplete="off">
-      <label for="documento" class="visually-hidden">CPF ou CNPJ</label>
       <input id="documento" [formControl]="documento" placeholder="Digite um CPF ou CNPJ" required autocomplete="off"
-        class="input-cpf-cnpj" aria-label="Campo para buscar contratos por CPF ou CNPJ" />
-      <button type="submit" class="btn-primary" [disabled]="!documento.value"
-        aria-label="Buscar contratos pelo CPF ou CNPJ informado">
+        class="input" />
+
+      <button type="submit" class="btn-primary" [disabled]="!documento.value">
         Buscar
       </button>
     </form>
+
+    <!-- LISTA DE CONTRATOS -->
     <div class="contratos-lista">
       @for (contrato of contratos(); track contrato.numero) {
-      <app-contract-card [contrato]="contrato" (click)="selecionarContrato(contrato)"
-        style="cursor:pointer; margin-bottom: 1rem;" />
+      <app-contract-card [contrato]="contrato" (click)="selecionarContrato(contrato)" />
       } @empty {
       @if (buscouContratos()) {
-      <p class="empty-state" role="status">
+      <p class="empty-state">
         Nenhum contrato encontrado. Informe o CPF ou CNPJ para buscar.
       </p>
       }
       }
     </div>
-  </div>
+  </section>
 
-  <div class="dashboard-header">
-    <h1>Painel de Acompanhamento</h1>
-  </div>
+  <!-- SOLICITAÇÕES -->
+  <section class="card">
+    <h2>Solicitações já realizadas</h2>
 
-  <div class="solicitacoes-lista" role="region" aria-label="Solicitações já realizadas">
-    <h2 class="section-title">Solicitações já realizadas</h2>
-    @for (solicitacao of solicitacoesUsuario(); track solicitacao.id) {
-    <article class="solicitacao-card" [attr.aria-label]="'Solicitação ' + solicitacao.protocolo">
-      <p><strong>Protocolo:</strong> {{ solicitacao.protocolo }}</p>
-      <p><strong>Cliente:</strong> {{ solicitacao.cliente }}</p>
-      <p><strong>CPF/CNPJ:</strong> {{ solicitacao.cpfCnpj }}</p>
-      <p><strong>Contrato:</strong> {{ solicitacao.numeroContrato }}</p>
-      <p><strong>Produto:</strong> {{ solicitacao.produto }}</p>
-      <p><strong>Valor:</strong> {{ solicitacao.valorTotalFormatado }}</p>
-      <p><strong>Data da solicitação:</strong> {{ solicitacao.dataInicio }}</p>
-      <p><strong>Status:</strong> {{ statusLabel[solicitacao.status] }}</p>
-      <button type="button" class="btn-danger" (click)="excluirSolicitacao(solicitacao.protocolo)"
-        [attr.aria-label]="'Excluir solicitação ' + solicitacao.protocolo">
-        Excluir
-      </button>
-    </article>
-    } @empty {
-    <p class="empty-state" role="status">Nenhuma solicitação encontrada para o usuário.</p>
-    }
-  </div>
+    <div class="solicitacoes-grid">
+      @for (solicitacao of solicitacoesUsuario(); track solicitacao.id) {
+      <article class="solicitacao-card">
+
+        <dl>
+          <dt>Protocolo</dt>
+          <dd>{{ solicitacao.protocolo }}</dd>
+
+          <dt>Cliente</dt>
+          <dd>{{ solicitacao.cliente }}</dd>
+
+          <dt>CPF/CNPJ</dt>
+          <dd>{{ solicitacao.cpfCnpj }}</dd>
+
+          <dt>Contrato</dt>
+          <dd>{{ solicitacao.numeroContrato }}</dd>
+
+          <dt>Produto</dt>
+          <dd>{{ solicitacao.produto }}</dd>
+
+          <dt>Valor</dt>
+          <dd>{{ solicitacao.valorTotalFormatado }}</dd>
+
+          <dt>Data</dt>
+          <dd>{{ solicitacao.dataInicio }}</dd>
+
+          <dt>Status</dt>
+          <dd>{{ statusLabel[solicitacao.status] }}</dd>
+        </dl>
+
+        <div class="botoes-status">
+          <button type="button" class="btn-delete" (click)="excluirSolicitacao(solicitacao.protocolo)">
+            Excluir
+          </button>
+        </div>
+
+      </article>
+      } @empty {
+      <p class="empty-state">Nenhuma solicitação encontrada para o usuário.</p>
+      }
+    </div>
+  </section>
+
 </div>

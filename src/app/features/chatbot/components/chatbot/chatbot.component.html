@@ -1,34 +1,58 @@
-<section class="chatbot-page" aria-label="Assistente virtual">
+<section class="chatbot-page">
 
-  <aside class="chatbot-sidebar" aria-label="Conversas">
+  <!-- SIDEBAR -->
+  <aside class="chatbot-sidebar">
     <header class="sidebar-header">
       <h2>Conversas</h2>
-      <button type="button" class="new-chat-btn">+ Nova conversa</button>
+
+      <button type="button" class="btn-secondary" (click)="novaConversa()">
+        + Nova conversa
+      </button>
     </header>
 
     <ul class="conversation-list">
-      <li class="conversation-item conversation-item--active">Renegociação contrato 100000012</li>
-      <li class="conversation-item">Dúvidas sobre custas e CET</li>
-      <li class="conversation-item">Simulação com 36 parcelas</li>
-      <li class="conversation-item">Pendências de documentação</li>
-      <li class="conversation-item">Conversa geral</li>
+      @for (c of conversas(); track c.id) {
+      <li class="conversation-item" [class.conversation-item--active]="c.id === conversaAtivaId()"
+        (click)="abrirConversa(c.id)">
+        {{ c.titulo }}
+      </li>
+      } @empty {
+      <li class="empty-state">Nenhuma conversa.</li>
+      }
     </ul>
-
   </aside>
 
-  <section class="chatbot-main" aria-label="Área principal do chatbot">
-    <div class="chatbot-badge" aria-hidden="true">
+  <!-- MAIN -->
+  <section class="chatbot-main">
+
+    <div class="chatbot-header">
       <mat-icon>support_agent</mat-icon>
+      <h1>Chatbot de Apoio</h1>
     </div>
 
-    <h1>Chatbot de Apoio</h1>
-    <p>
-      Assistente para orientar o atendimento de renegociação, com foco em regras,
-      documentação e próximos passos.
-    </p>
-
-    <div class="chatbot-actions">
-      <input class="chatbot-input" type="text" placeholder="inciar conversa" aria-label="Iniciar conversa" />
+    <!-- CONVERSA -->
+    <div class="chat-thread">
+      @if (conversaAtiva(); as chat) {
+      @for (m of chat.mensagens; track m.id) {
+      <div class="msg" [class.msg--user]="m.role === 'user'">
+        <div class="bubble">
+          {{ m.texto }}
+          <small>{{ m.hora }}</small>
+        </div>
+      </div>
+      }
+      }
     </div>
+
+    <!-- INPUT -->
+    <form class="chat-actions" (submit)="enviarMensagem($event)">
+      <input type="text" [formControl]="mensagem" placeholder="Digite sua mensagem..." />
+
+      <button class="btn-primary" type="submit" [disabled]="!mensagem.value.trim()">
+        Enviar
+      </button>
+    </form>
+
   </section>
+
 </section>

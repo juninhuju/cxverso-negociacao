@@ -31,6 +31,8 @@
   --dsc-color-bg-success-3: #5cb26e;
   --dsc-color-bg-success-2: #a2d3ad;
   --dsc-color-bg-success-1: #e7f4e4;
+  --dsc-color-bg-success-0: #F0Fdf4;
+
 
   --dsc-color-bg-warning-6: #fcbe05;
   --dsc-color-bg-warning-5: #977203;
@@ -288,8 +290,9 @@ ol {
 }
 
 .btn-primary,
-.btn-secondary {
-  min-height: 44px;
+.btn-secondary,
+.btn-delete {
+  min-height: 57px;
   font-weight: var(--font-weight-medium);
   border-radius: var(--border-radius-md);
   padding: var(--padding-button);
@@ -302,6 +305,11 @@ ol {
 
 .btn-primary {
   background-color: var(--color-primary-blue);
+  color: var(--color-surface);
+}
+
+.btn-delete {
+  background-color: var(--dsc-color-bg-danger-6);
   color: var(--color-surface);
 }
 

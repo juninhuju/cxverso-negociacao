@@ -1,9 +1,12 @@
 import { CommonModule, CurrencyPipe, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
+import { ConsultaJuridicaComponent } from '../consulta-juridica/consulta-juridica.component';
 
 @Component({
   selector: 'app-validacao-operacional',
@@ -22,6 +25,7 @@ import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegocia
 export class ValidacaoOperacionalComponent {
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
 
   readonly loading = this.facade.loading;
@@ -88,8 +92,30 @@ export class ValidacaoOperacionalComponent {
   };
 
 
-  abrirConsultaJuridica(): void {
-    this.router.navigate(['/renegociacao/juridico']);
+  async abrirConsultaJuridica(): Promise<void> {
+    const contrato = this.contrato();
+    if (!contrato) {
+      return;
+    }
+
+    this.facade.solicitarConsultaJuridica(contrato.numero);
+
+    const dialogRef = this.dialog.open(ConsultaJuridicaComponent, {
+      width: '980px',
+      maxWidth: '95vw',
+      disableClose: true,
+      data: {
+        contrato,
+        nomeAnalista: 'Ana Silva',
+        matriculaAnalista: 'C987654',
+      },
+    });
+
+    const resultado = await firstValueFrom(dialogRef.afterClosed());
+    if (resultado === 'continuar') {
+      this.facade.avancarStep();
+      this.router.navigate(['/renegociacao/simulacao']);
+    }
   }
 
   prosseguirSimulacao(): void {
@@ -98,11 +124,7 @@ export class ValidacaoOperacionalComponent {
   }
 
   continuar(): void {
-    const contrato = this.contrato();
-    if (!contrato) return;
-    this.facade.solicitarConsultaJuridica(contrato.numero);
-    this.facade.avancarStep();
-    this.router.navigate(['/renegociacao/juridico']);
+    void this.abrirConsultaJuridica();
   }
 
   voltar(): void {

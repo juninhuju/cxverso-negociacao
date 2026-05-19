@@ -3,112 +3,162 @@
   width: 100%;
 }
 
-.conclusao-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  padding: var(--spacing-md) 0;
+/* Wrapper com fundo verde claro e borda verde */
+.success-wrapper {
   width: 100%;
-}
-
-
-
-.step-card {
   padding: var(--spacing-lg);
-  margin: 0;
+}
+
+.success-surface {
   width: 100%;
-  max-width: 760px;
-
-  background-color: var(--color-surface);
-
-
-  &--success {
-    border-left: 6px solid var(--color-success-green);
-  }
+  border: 2px solid var(--dsc-color-border-feedback-success);
+  background: var(--dsc-color-bg-success-0);
+  border-radius: var(--border-radius-md, 8px);
+  padding: clamp(24px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
 }
 
+/* Ícone circular verde com check branco */
+.success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: var(--dsc-color-bg-success-6);
+  display: grid;
+  place-items: center;
+}
+
+.success-icon mat-icon {
+  color: #ffffff;
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Título central grande */
+.success-title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--dsc-color-bg-success-5);
+}
+
+/* Banner verde claro */
 .success-banner {
+  width: min(820px, 100%);
+  background: var(--dsc-color-bg-success-1);
+  border: 1px solid var(--dsc-color-bg-success-2);
+  border-radius: var(--border-radius-sm, 6px);
+  padding: 14px 16px;
+  text-align: center;
+  color: var(--dsc-color-bg-success-5);
+  font-weight: var(--font-weight-semibold, 600);
+  margin: 50px 0 10px 0;
+}
+
+/* Card branco dos documentos */
+.docs-card {
+  width: min(820px, 100%);
+  background: var(--color-surface);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md, 8px);
+  padding: clamp(20px, 2vw, 28px);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
-  background-color: var(--color-surface);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-
-  &__icon {
-    font-size: 2rem;
-    color: var(--color-success-green);
-  }
-
-  &__title {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-success-green);
-  }
-
-  &__subtitle {
-    font-size: var(--font-size-sm);
-    color: var(--color-gray-800);
-  }
+  gap: 12px;
 }
 
-.rejection-banner {
+.docs-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-gray-900);
+  text-align: center;
+}
+
+.docs-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-gray-500);
+  text-align: center;
+}
+
+/* Botão azul grande central */
+.docs-button {
+  width: min(720px, 100%);
+  height: 52px;
+  border: none;
+  border-radius: var(--border-radius-md, 8px);
+  background: var(--color-primary-blue);
+  color: var(--color-surface);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  margin-top: 10px;
+}
+
+.docs-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.docs-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-gray-500);
+  text-align: center;
+}
+
+/* Botões inferiores */
+.bottom-actions {
+  width: min(820px, 100%);
   display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  background-color: var(--color-error-red-light);
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.btn-primary,
+.btn-secondary {
+  min-width: 140px;
+  height: 44px;
+  padding: var(--spacing-xm) var(--spacing-md);
+  align-items: flex-start;
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-
-  &__icon {
-    font-size: 2rem;
-    color: var(--color-error-red);
-  }
-
-  &__title {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-error-red);
-  }
-
-  &__reason {
-    font-size: var(--font-size-sm);
-    color: var(--color-gray-800);
-  }
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
 }
 
-.protocol-info {
-  margin-bottom: var(--spacing-md);
-
-  .protocol-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--spacing-xs);
-  }
-
-  .protocol-label {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-900);
-  }
-
-  .protocol-value {
-    font-weight: var(--font-weight-bold);
-    color: var(--color-primary-blue);
-  }
+/* “Nova Busca” (azul preenchido) */
+.btn-primary {
+  border: 0;
+  background: var(--color-primary-blue);
+  color: var(--color-surface);
 }
 
-.info-text {
-  font-size: var(--font-size-sm);
+/* “Ver Painel” (outline/clarinho) */
+.btn-secondary {
+  border: 0;
+  background: var(--color-gray-300);
   color: var(--color-gray-700);
-  margin-bottom: var(--spacing-md);
 }
 
-.step-actions {
-  margin-top: var(--spacing-lg);
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-sm);
+/* Responsivo */
+@media (max-width: 600px) {
+  .bottom-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
 }

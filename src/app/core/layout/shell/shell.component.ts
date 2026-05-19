@@ -26,12 +26,7 @@ export class ShellComponent {
   readonly username = signal('CAIXA');
   readonly isSidenavOpen = signal(false);
   readonly matricula = signal('123456');
-  readonly dataAtual = computed(() =>
-    new Intl.DateTimeFormat('pt-BR', {
-      dateStyle: 'full',
-      timeZone: 'America/Sao_Paulo',
-    }).format(new Date())
-  );
+  readonly dataAtual = computed(() => this.formatarDataAtual());
 
   toggleSidenav(): void {
     this.isSidenavOpen.update((value) => !value);
@@ -44,5 +39,33 @@ export class ShellComponent {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  private formatarDataAtual(): string {
+    const dataBase = new Intl.DateTimeFormat('pt-BR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'America/Sao_Paulo',
+    }).format(new Date());
+
+    const [diaSemana, restante] = dataBase.split(', ');
+    if (!diaSemana || !restante) {
+      return dataBase;
+    }
+
+    const diaSemanaFormatado = this.capitalizeFirst(diaSemana);
+    const restanteFormatado = restante.replace(/ de ([a-zà-ú])/i, (_, letra: string) => ` de ${letra.toUpperCase()}`);
+
+    return `${diaSemanaFormatado}, ${restanteFormatado}`;
+  }
+
+  private capitalizeFirst(texto: string): string {
+    if (!texto) {
+      return texto;
+    }
+
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 }

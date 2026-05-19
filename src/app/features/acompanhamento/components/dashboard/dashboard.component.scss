@@ -1,135 +1,133 @@
-.dashboard {
-  --search-scale: 1.7;
-  padding: var(--spacing-lg);
-  background-color: var(--color-background);
-  min-height: 100vh;
-  font-family: var(--font-family-base);
-  max-width: calc(1040px * var(--search-scale));
-  margin: 0 auto;
-}
-
-.busca-topo {
-  margin-bottom: var(--spacing-xl);
-  background: var(--color-surface);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-lg);
-  max-width: calc(900px * var(--search-scale));
+:host {
+  display: block;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.dashboard-header {
-  margin-bottom: var(--spacing-lg);
-
-  h1 {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-primary-blue);
-    justify-content: center;
-    display: flex;
-  }
+/* BASE */
+.validacao-operacional {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
 }
 
-.solicitacoes-lista {
-  margin-top: var(--spacing-lg);
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-.section-title {
-  font-size: var(--font-size-lg);
+/* TÍTULO */
+.titulo {
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary-blue);
-  margin: 0 0 var(--spacing-md);
 }
 
-.solicitacao-card {
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-md);
+/* CARD PADRÃO */
+.card {
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-gray-200);
+  background-color: var(--color-surface);
   padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  background: var(--color-surface);
 
-  p {
-    margin: 0 0 var(--spacing-xs);
-    color: var(--color-gray-800);
-  }
-
-  .btn-danger {
-    margin-top: var(--spacing-sm);
-    background: var(--dsc-color-bg-highlight-7, var(--color-error-red));
-    color: var(--color-surface);
-    border: none;
-    border-radius: var(--border-radius-md);
-    padding: 0.5rem 1.2rem;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-bold);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .btn-danger:hover,
-  .btn-danger:focus {
-    background: var(--dsc-color-bg-highlight-6, var(--color-primary-blue-dark));
+  h2 {
+    margin: 0 0 var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    color: var(--color-primary-blue);
   }
 }
 
-// Removido seletor inválido
-
+/* BUSCA */
 .busca-form {
   display: flex;
   gap: var(--spacing-sm);
-  max-width: calc(760px * var(--search-scale));
-  margin: 0 auto;
-
-  .input-cpf-cnpj {
-    flex: 1;
-    padding: var(--padding-input);
-    border: 1px solid var(--color-gray-400);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-base);
-    font-family: var(--font-family-base);
-    transition: border-color 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border-color: var(--color-primary-blue);
-      box-shadow: 0 0 0 2px var(--color-primary-blue-light);
-    }
-  }
-
+  margin-bottom: var(--spacing-md);
 }
 
+.input {
+  flex: 1;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+}
+
+/* LISTA DE CONTRATOS */
 .contratos-lista {
-  margin-top: var(--spacing-md);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  max-width: calc(760px * var(--search-scale));
-  margin-left: auto;
-  margin-right: auto;
+  gap: var(--spacing-sm);
 }
 
+/* GRID SOLICITAÇÕES */
+.solicitacoes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+/* CARD SOLICITAÇÃO */
+.solicitacao-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* DL PADRÃO (IGUAL AO QUE VOCÊ CURTIU 🔥) */
+dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(120px, 160px) 1fr;
+  gap: var(--spacing-xs);
+}
+
+dt {
+  color: var(--color-gray-700);
+}
+
+dd {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+}
+
+/* BOTÕES */
+.botoes-status {
+  display: inline-flex;
+  gap: var(--spacing-sm);
+}
+
+/* BOTÕES PADRÃO */
+.btn-primary,
+.btn-secondary {
+  border: 0;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xs) var(--spacing-md);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--color-primary-blue);
+  color: var(--color-surface);
+}
+
+.btn-secondary {
+  background-color: var(--color-gray-300);
+}
+
+/* EMPTY STATE */
 .empty-state {
-  margin-top: var(--spacing-md);
+  text-align: center;
   font-size: var(--font-size-sm);
   color: var(--color-gray-700);
-  text-align: center;
-  max-width: calc(760px * var(--search-scale));
-  margin-left: auto;
-  margin-right: auto;
 }
 
-@media (max-width: 768px) {
-  .dashboard {
-    padding: var(--spacing-md);
-  }
-
-  .kpi-card {
-    padding: var(--spacing-md);
+/* RESPONSIVO */
+@media (max-width: 960px) {
+  .solicitacoes-grid {
+    grid-template-columns: 1fr;
   }
 
   .busca-form {

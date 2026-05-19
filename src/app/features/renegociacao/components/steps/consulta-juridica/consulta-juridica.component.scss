@@ -1,12 +1,84 @@
-:host {
-  display: block;
-  width: 100%;
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--dsc-color-bg-neutral-1);
 }
 
-.consulta-juridica-host {
-  width: 100%;
-  margin: 0 auto;
+/* HEADER */
+.dialog-header {
+  background: var(--dsc-color-bg-highlight-5);
+  color: var(--color-surface);
   padding: var(--spacing-md);
-  color: var(--color-gray-700);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-text h2 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.header-text p {
+  margin-top: var(--spacing-xs);
   font-size: var(--font-size-sm);
+  color: var(--color-text-on-brand-86);
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--color-surface);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* BODY */
+.dialog-body {
+  padding: var(--spacing-md);
+  background: var(--dsc-color-bg-neutral-2);
+}
+
+/* ALERTA */
+.alerta {
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--dsc-color-bg-success-1);
+  border: 1px solid var(--dsc-color-border-feedback-success);
+  color: var(--dsc-color-content-feedback-success);
+  font-weight: var(--font-weight-medium);
+}
+
+/* EMAIL */
+.email-preview {
+  background: var(--dsc-color-bg-highlight-1);
+  padding: var(--spacing-md);
+  border: 1px solid var(--dsc-color-bg-highlight-4);
+}
+
+.email-preview textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  background: transparent;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-gray-900);
+}
+
+/* MODO EDIÇÃO */
+.email-preview.editando {
+  background: var(--dsc-color-bg-neutral-1);
+  border: 2px solid var(--dsc-color-border-highlight-1);
+}
+
+/* FOOTER */
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--dsc-color-bg-neutral-2);
 }

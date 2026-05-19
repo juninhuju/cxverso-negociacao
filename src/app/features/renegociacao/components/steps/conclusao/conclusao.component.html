@@ -1,47 +1,41 @@
-<section class="conclusao-page">
-  <mat-card class="step-card step-card--success">
-    <button type="button" class="step-back-link" (click)="voltarEtapaAnterior()">← Voltar para "Conformidade"</button>
-    <div class="step-content">
-      @if (resultado()) {
-      @if (resultado()!.aprovado) {
-      <div class="success-banner" role="status" aria-live="polite">
-        <span class="success-banner__icon"><mat-icon aria-hidden="true">check_circle</mat-icon></span>
-        <div class="success-banner__content">
-          <h2 class="success-banner__title">Renegociação Formalizada com Sucesso!</h2>
-          <p class="success-banner__subtitle">
-            Seu novo contrato foi gerado. Guarde o número para acompanhamento.
-          </p>
-        </div>
-      </div>
-
-      <dl class="protocol-info" aria-label="Dados do novo contrato">
-        <div class="protocol-row">
-          <dt class="protocol-label">Número do Novo Contrato</dt>
-          <dd class="protocol-value">{{ resultado()!.novoContratoNumero }}</dd>
-        </div>
-      </dl>
-
-      <p class="info-text">
-        Os detalhes do acordo foram enviados para o seu e-mail cadastrado.
-        Você pode acompanhar o status pelo sistema de acompanhamento.
-      </p>
-      } @else {
-      <p class="empty-state" role="status">
-        Processando resultado... Por favor, aguarde.
-      </p>
-      }
-      } @else {
-      <p class="empty-state" role="status">
-        Nenhum resultado disponível. Por favor, retorne à busca.
-      </p>
-      }
+<div class="success-wrapper">
+  <section class="success-surface" aria-label="Renegociação formalizada">
+    <!-- Ícone -->
+    <div class="success-icon" aria-hidden="true">
+      <mat-icon>check</mat-icon>
     </div>
 
-    <div class="step-actions">
-      <button class="btn-primary" (click)="concluir()">
-        <mat-icon aria-hidden="true">home</mat-icon>
-        <span>Concluir</span>
+    <!-- Título -->
+    <h2 class="success-title">Renegociação Formalizada com Sucesso</h2>
+
+    <!-- Banner -->
+    <div class="success-banner" role="status" aria-live="polite">
+      Comunicação automática enviada às áreas responsáveis
+    </div>
+
+    <!-- Card documentos -->
+    <div class="docs-card" aria-label="Documentos da renegociação">
+      <h3 class="docs-title">Documentos da Renegociação</h3>
+      <p class="docs-subtitle">Gere o contrato e o boleto da entrada para prosseguir</p>
+
+      <button type="button" class="docs-button" (click)="gerarContratoEBoleto()" [disabled]="loading()">
+        Gerar Contrato e Boleto da Entrada
+      </button>
+
+      <p class="docs-hint">
+        O boleto único da entrada já contempla custas e honorários obrigatórios
+      </p>
+    </div>
+
+    <!-- Ações -->
+    <div class="bottom-actions">
+      <button type="button" class="btn-primary" (click)="novaBusca()">
+        Nova Busca
+      </button>
+
+      <button type="button" class="btn-secondary" (click)="verPainel()">
+        Ver Painel
       </button>
     </div>
-  </mat-card>
-</section>
+  </section>
+</div>
