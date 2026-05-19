@@ -1,116 +1,124 @@
-// import { TestBed } from '@angular/core/testing';
-// import { MatDialog } from '@angular/material/dialog';
-// import { Router } from '@angular/router';
-// import { of } from 'rxjs';
-// import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
-// import { ConsultaJuridicaComponent } from './consulta-juridica.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TestBed } from '@angular/core/testing';
+import { ConsultaJuridicaComponent } from './consulta-juridica.component';
+import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 
-// const testCase = (globalThis as unknown as {
-//   it: (description: string, specFn: () => void | Promise<void>) => void;
-// }).it;
+describe('ConsultaJuridicaComponent', () => {
+  const contratoMock = {
+    numero: '1001',
+    cliente: 'Cliente Teste',
+    cpfCnpj: '12345678901',
+    produto: 'CDC',
+    valorDevido: 10000,
+    dataVencimento: '2026-01-01',
+    status: 'APTO' as const,
+  };
 
-// describe('ConsultaJuridicaComponent', () => {
-//   let contratoAtual: {
-//     numero: string;
-//     cliente: string;
-//     cpfCnpj: string;
-//     produto: string;
-//     valorDevido: number;
-//     dataVencimento: string;
-//     status: 'APTO';
-//   } | null = null;
+  const facadeMock = {
+    loading: () => false,
+    error: () => null,
+    contrato: () => contratoMock,
+    consultaJuridica: () => null,
+    solicitarConsultaJuridica: jasmine.createSpy('solicitarConsultaJuridica'),
+  };
 
-//   const facadeMock = {
-//     loading: () => false,
-//     error: () => null,
-//     contrato: () => contratoAtual,
-//     consultaJuridica: () => null,
-//     solicitarConsultaJuridica: jasmine.createSpy('solicitarConsultaJuridica'),
-//     avancarStep: jasmine.createSpy('avancarStep'),
-//   };
+  const dialogRefMock = {
+    close: jasmine.createSpy('close'),
+  };
 
-//   const routerMock = {
-//     navigate: jasmine.createSpy('navigate'),
-//   };
+  beforeEach(async () => {
+    facadeMock.solicitarConsultaJuridica.calls.reset();
+    dialogRefMock.close.calls.reset();
 
-//   const dialogMock = {
-//     open: jasmine.createSpy('open'),
-//   };
+    await TestBed.configureTestingModule({
+      imports: [ConsultaJuridicaComponent],
+      providers: [
+        { provide: RenegociacaoFacade, useValue: facadeMock },
+        { provide: MatDialogRef, useValue: dialogRefMock },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            contrato: contratoMock,
+            nomeAnalista: 'Ana Silva',
+            matriculaAnalista: 'C123456',
+          },
+        },
+      ],
+    })
+      .overrideComponent(ConsultaJuridicaComponent, { set: { template: '' } })
+      .compileComponents();
+  });
 
-//   beforeEach(async () => {
-//     contratoAtual = null;
-//     facadeMock.solicitarConsultaJuridica.calls.reset();
-//     facadeMock.avancarStep.calls.reset();
-//     routerMock.navigate.calls.reset();
-//     dialogMock.open.calls.reset();
-//     dialogMock.open.and.returnValue({
-//       afterClosed: () => of('voltar'),
-//     });
+  it('deve solicitar consulta juridica e montar texto de email ao inicializar', () => {
+    const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
+    const component = fixture.componentInstance;
 
-//     await TestBed.configureTestingModule({
-//       imports: [ConsultaJuridicaComponent],
-//       providers: [
-//         { provide: RenegociacaoFacade, useValue: facadeMock },
-//         { provide: Router, useValue: routerMock },
-//         { provide: MatDialog, useValue: dialogMock },
-//       ],
-//     }).compileComponents();
-//   });
+    fixture.detectChanges();
 
-//   testCase('deve redirecionar para validação quando não houver contrato', async () => {
-//     const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
-//     const component = fixture.componentInstance;
+    expect(facadeMock.solicitarConsultaJuridica).toHaveBeenCalledWith('1001');
+    expect(component.emailTexto).toContain('Contrato: 1001');
+    expect(component.emailTexto).toContain('Ana Silva (C123456)');
+  });
 
-//     await component.ngOnInit();
+  it('deve alternar modo de edicao e avisos', () => {
+    const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
+    const component = fixture.componentInstance;
 
-//     expect(dialogMock.open).not.toHaveBeenCalled();
-//     expect(facadeMock.solicitarConsultaJuridica).not.toHaveBeenCalled();
-//     expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/validacao']);
-//   });
+    component.alternarEdicao();
+    expect(component.modoEdicao).toBeTrue();
+    expect(component.aviso).toContain('edição habilitado');
 
-//   testCase('deve avançar para simulação quando o dialog retornar continuar', async () => {
-//     contratoAtual = {
-//       numero: 'CN-1',
-//       cliente: 'Cliente',
-//       cpfCnpj: '123',
-//       produto: 'CDC',
-//       valorDevido: 100,
-//       dataVencimento: '2026-01-01',
-//       status: 'APTO',
-//     };
-//     dialogMock.open.and.returnValue({
-//       afterClosed: () => of('continuar'),
-//     });
+    component.alternarEdicao();
+    expect(component.modoEdicao).toBeFalse();
+    expect(component.aviso).toContain('Texto atualizado');
+  });
 
-//     const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
-//     const component = fixture.componentInstance;
+  it('deve fechar dialog ao chamar fechar', () => {
+    const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
+    const component = fixture.componentInstance;
 
-//     await component.ngOnInit();
+    component.fechar();
 
-//     expect(facadeMock.solicitarConsultaJuridica).toHaveBeenCalledWith('CN-1');
-//     expect(facadeMock.avancarStep).toHaveBeenCalled();
-//     expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/simulacao']);
-//   });
+    expect(dialogRefMock.close).toHaveBeenCalledWith('voltar');
+  });
 
-//   testCase('deve voltar para validação quando o dialog não retornar continuar', async () => {
-//     contratoAtual = {
-//       numero: 'CN-1',
-//       cliente: 'Cliente',
-//       cpfCnpj: '123',
-//       produto: 'CDC',
-//       valorDevido: 100,
-//       dataVencimento: '2026-01-01',
-//       status: 'APTO',
-//     };
-//     dialogMock.open.and.returnValue({
-//       afterClosed: () => of('voltar'),
-//     });
+  it('deve enviar consulta e fechar dialog com continuar', () => {
+    const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
+    const component = fixture.componentInstance;
 
-//     const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
-//     const component = fixture.componentInstance;
+    component.enviarConsulta();
 
-//     await component.ngOnInit();
+    expect(component.aviso).toContain('Consulta enviada com sucesso');
+    expect(dialogRefMock.close).toHaveBeenCalledWith('continuar');
+  });
 
-//     expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/validacao']);
-//   });
-// });
+  it('deve copiar texto com sucesso quando clipboard estiver disponível', async () => {
+    const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
+    const component = fixture.componentInstance;
+    component.emailTexto = 'texto teste';
+
+    const writeTextSpy = jasmine.createSpy('writeText').and.resolveTo();
+    spyOnProperty(navigator, 'clipboard', 'get').and.returnValue(
+      { writeText: writeTextSpy } as unknown as Clipboard,
+    );
+
+    await component.copiarTexto();
+
+    expect(writeTextSpy).toHaveBeenCalledWith('texto teste');
+    expect(component.aviso).toContain('Texto copiado');
+  });
+
+  it('deve informar erro quando cópia falhar', async () => {
+    const fixture = TestBed.createComponent(ConsultaJuridicaComponent);
+    const component = fixture.componentInstance;
+
+    const writeTextSpy = jasmine.createSpy('writeText').and.rejectWith(new Error('falha'));
+    spyOnProperty(navigator, 'clipboard', 'get').and.returnValue(
+      { writeText: writeTextSpy } as unknown as Clipboard,
+    );
+
+    await component.copiarTexto();
+
+    expect(component.aviso).toContain('Nao foi possivel copiar');
+  });
+});

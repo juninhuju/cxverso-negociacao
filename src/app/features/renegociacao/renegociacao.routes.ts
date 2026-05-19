@@ -11,6 +11,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'busca' },
       {
         path: 'busca',
+        data: {
+          title: 'Busca de Contrato',
+          description: 'Pesquise contratos elegíveis para renegociação pelo documento do cliente.',
+        },
         loadComponent: () =>
           import('./components/steps/busca-contrato/busca-contrato.component').then(
             (c) => c.BuscaContratoComponent,
@@ -18,6 +22,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       },
       {
         path: 'selecionar',
+        data: {
+          title: 'Seleção de Contrato',
+          description: 'Selecione o contrato e os dados comerciais para continuar a renegociação.',
+        },
         loadComponent: () =>
           import('./components/steps/selecionar-contrato/selecionar-contrato.component').then(
             (c) => c.SelecionarContratoComponent,
@@ -25,6 +33,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       },
       {
         path: 'validacao',
+        data: {
+          title: 'Validação Operacional',
+          description: 'Confira regras operacionais e elegibilidade antes da simulação.',
+        },
         loadComponent: () =>
           import('./components/steps/validacao-operacional/validacao-operacional.component').then(
             (c) => c.ValidacaoOperacionalComponent,
@@ -32,6 +44,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       },
       {
         path: 'juridico',
+        data: {
+          title: 'Consulta Jurídica',
+          description: 'Avalie observações jurídicas relevantes para formalização da proposta.',
+        },
         loadComponent: () =>
           import('./components/steps/consulta-juridica/consulta-juridica.component').then(
             (c) => c.ConsultaJuridicaComponent,
@@ -39,6 +55,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       },
       {
         path: 'simulacao',
+        data: {
+          title: 'Simulação',
+          description: 'Simule condições de pagamento e cenário financeiro da renegociação.',
+        },
         loadComponent: () =>
           import('./components/steps/simulacao/simulacao.component').then(
             (c) => c.SimulacaoComponent,
@@ -46,6 +66,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       },
       {
         path: 'resultado',
+        data: {
+          title: 'Resultado da Simulação',
+          description: 'Veja o detalhamento final da operação e valores calculados.',
+        },
         loadComponent: () =>
           import('./components/steps/resultado/resultado.component').then(
             (c) => c.ResultadoComponent,
@@ -53,6 +77,10 @@ export const RENEGOCIACAO_ROUTES: Routes = [
       },
       {
         path: 'conclusao',
+        data: {
+          title: 'Conclusão da Renegociação',
+          description: 'Confirmação da formalização e próximos passos da renegociação.',
+        },
         loadComponent: () =>
           import('./components/steps/conclusao/conclusao.component').then((c) => c.ConclusaoComponent),
       },

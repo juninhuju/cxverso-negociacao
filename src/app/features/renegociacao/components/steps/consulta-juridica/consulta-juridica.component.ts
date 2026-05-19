@@ -5,11 +5,11 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { Contrato } from '../../../models/renegociacao.model';
 
-type ConsultaJuridicaDialogData = {
+interface ConsultaJuridicaDialogData {
   contrato: Contrato;
   nomeAnalista?: string;
   matriculaAnalista?: string;
-};
+}
 
 @Component({
   selector: 'app-consulta-juridica',

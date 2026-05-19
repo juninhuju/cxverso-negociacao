@@ -31,10 +31,6 @@ export class SelecionarContratoComponent {
   private readonly router = inject(Router);
   private readonly http = inject(HttpClient);
 
-  // ============================
-  // 📌 STATE
-  // ============================
-
   readonly stepAtual = this.facade.stepAtual;
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
@@ -46,17 +42,13 @@ export class SelecionarContratoComponent {
     { initialValue: [] }
   );
 
-  // ============================
-  // 📌 COMPUTEDS
-  // ============================
-
   readonly contratosCliente = computed(() => {
     const contratoAtual = this.contrato();
     if (!contratoAtual) return [];
 
     return this.todosContratos()
       .filter(c => c.cpfCnpj === contratoAtual.cpfCnpj)
-      .sort((a, b) => (b.diasAtraso ?? 0) - (a.diasAtraso ?? 0)); // ✅ ordena por risco
+      .sort((a, b) => (b.diasAtraso ?? 0) - (a.diasAtraso ?? 0));
   });
 
   readonly totalContratos = computed(() => this.contratosCliente().length);
@@ -69,10 +61,6 @@ export class SelecionarContratoComponent {
   readonly contratoMaisCritico = computed(() =>
     this.contratosCliente()[0] ?? null
   );
-
-  // ============================
-  // 📌 ACTIONS
-  // ============================
 
   selecionarContrato(contratoSelecionado: Contrato): void {
     if (!this.validarElegibilidade(contratoSelecionado)) return;
@@ -112,10 +100,6 @@ export class SelecionarContratoComponent {
     return this.validarElegibilidade(contrato);
   }
 
-  // ============================
-  // 📌 FORMATADORES
-  // ============================
-
   formatarMoeda(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -137,10 +121,6 @@ export class SelecionarContratoComponent {
     CEDIDO: 'Cedido',
   };
 
-  // ============================
-  // 📌 VISUAL: STATUS
-  // ============================
-
   getStatusClasse(status: string): string {
     const mapa: Record<string, string> = {
       EXECUCAO_EXTRAJUDICIAL: 'execucao_extrajudicial',
@@ -152,10 +132,6 @@ export class SelecionarContratoComponent {
 
     return mapa[status] ?? '';
   }
-
-  // ============================
-  // 📌 VISUAL: ATRASO
-  // ============================
 
   obterClasseDiasAtraso(diasAtraso?: number): string {
     if (!diasAtraso || diasAtraso <= 0) {

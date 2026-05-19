@@ -21,6 +21,7 @@ describe('BuscaContratoComponent', () => {
     loading: () => false,
     error: errorSignal,
     contrato: contratoSignal,
+    reiniciarSessao: jasmine.createSpy('reiniciarSessao'),
     buscarContrato: jasmine.createSpy('buscarContrato'),
     avancarStep: jasmine.createSpy('avancarStep'),
   };
@@ -32,6 +33,7 @@ describe('BuscaContratoComponent', () => {
   beforeEach(async () => {
     facadeMock.buscarContrato.calls.reset();
     facadeMock.avancarStep.calls.reset();
+    facadeMock.reiniciarSessao.calls.reset();
     routerMock.navigate.calls.reset();
     errorSignal.set(null);
     contratoSignal.set(null);
@@ -95,5 +97,82 @@ describe('BuscaContratoComponent', () => {
     expect(facadeMock.buscarContrato).toHaveBeenCalledWith('123');
     expect(facadeMock.avancarStep).not.toHaveBeenCalled();
     expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('deve reiniciar sessão ao inicializar componente', () => {
+    const fixture = TestBed.createComponent(BuscaContratoComponent);
+    fixture.detectChanges();
+
+    expect(facadeMock.reiniciarSessao).toHaveBeenCalled();
+  });
+
+  it('deve persistir termo de busca no localStorage', () => {
+    const fixture = TestBed.createComponent(BuscaContratoComponent);
+    const component = fixture.componentInstance;
+
+    component.onTermoBuscaChange('123.456.789-01');
+
+    expect(localStorage.getItem('renegociacao_cpf_busca')).toBe('123.456.789-01');
+  });
+
+  it('deve avançar quando retorno de contrato corresponder ao termo', () => {
+    const fixture = TestBed.createComponent(BuscaContratoComponent);
+    const component = fixture.componentInstance;
+
+    component.onTermoBuscaChange('123');
+    component.buscar();
+    contratoSignal.set({
+      numero: '123',
+      cliente: 'A',
+      cpfCnpj: '11111111111',
+      produto: 'CDC',
+      valorDevido: 10,
+      dataVencimento: '2026-01-01',
+      status: 'APTO',
+    });
+    fixture.detectChanges();
+
+    expect(facadeMock.avancarStep).toHaveBeenCalled();
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/selecionar']);
+  });
+
+  it('não deve avançar quando contrato não corresponder ao termo', () => {
+    const fixture = TestBed.createComponent(BuscaContratoComponent);
+    const component = fixture.componentInstance;
+
+    component.onTermoBuscaChange('777');
+    component.buscar();
+    contratoSignal.set({
+      numero: '123',
+      cliente: 'A',
+      cpfCnpj: '11111111111',
+      produto: 'CDC',
+      valorDevido: 10,
+      dataVencimento: '2026-01-01',
+      status: 'APTO',
+    });
+    fixture.detectChanges();
+
+    expect(facadeMock.avancarStep).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('deve exibir e limpar erro temporário quando facade retornar erro', () => {
+    jasmine.clock().install();
+    try {
+      const fixture = TestBed.createComponent(BuscaContratoComponent);
+      const component = fixture.componentInstance;
+
+      component.onTermoBuscaChange('123');
+      component.buscar();
+      errorSignal.set('falha');
+      fixture.detectChanges();
+
+      expect(component.erroSync()).toBe('Contrato não encontrado');
+      jasmine.clock().tick(3000);
+      expect(component.erroSync()).toBeNull();
+    } finally {
+      jasmine.clock().uninstall();
+    }
   });
 });

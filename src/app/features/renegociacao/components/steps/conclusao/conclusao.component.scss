@@ -1,3 +1,61 @@
+/* Barra de sucesso customizada (substitui snackbar Material) */
+.custom-success-bar {
+  position: fixed;
+  top: 32px;
+  right: 32px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--dsc-color-bg-success-6);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  padding: 16px 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  animation: fadeInDown 0.3s;
+}
+
+.custom-success-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.custom-success-close:hover,
+.custom-success-close:focus {
+  background: rgba(255,255,255,0.12);
+  outline: none;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Força a cor do botão de ação do snackbar ("Fechar") para branco */
+.snackbar-success .mat-mdc-snack-bar-action,
+.snackbar-success .mat-mdc-snack-bar-action:focus,
+.snackbar-success .mat-mdc-snack-bar-action:hover {
+  color: #fff !important;
+}
+
+/* Snackbar de sucesso: fonte clara para contraste em todos os estados */
+.snackbar-success,
+.snackbar-success:active,
+.snackbar-success:focus,
+.snackbar-success:hover {
+  color: #fff !important;
+  background: var(--dsc-color-bg-success-6) !important;
+}
+
 :host {
   display: block;
   width: 100%;

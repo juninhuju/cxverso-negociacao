@@ -101,4 +101,90 @@ describe('LoginComponent', () => {
 
     expect(facadeMock.buscarContrato).not.toHaveBeenCalled();
   });
+
+  it('deve navegar quando retorno da busca corresponder ao termo (numero)', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance;
+
+    component.termoBusca.set('123');
+    component.buscarContrato();
+
+    contratoSignal.set({
+      numero: '123',
+      cliente: 'Cliente A',
+      cpfCnpj: '11111111111',
+      produto: 'CDC',
+      valorDevido: 1000,
+      dataVencimento: '2026-01-01',
+      status: 'APTO',
+    });
+    fixture.detectChanges();
+
+    expect(authMock.login).toHaveBeenCalledWith('Cliente A', '');
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao'], {
+      state: { contratoSelecionado: contratoSignal() },
+    });
+  });
+
+  it('deve navegar quando retorno da busca corresponder ao CPF/CNPJ normalizado', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance;
+
+    component.termoBusca.set('123.456.789-01');
+    component.buscarContrato();
+
+    contratoSignal.set({
+      numero: '999',
+      cliente: 'Cliente B',
+      cpfCnpj: '12345678901',
+      produto: 'CDC',
+      valorDevido: 1000,
+      dataVencimento: '2026-01-01',
+      status: 'APTO',
+    });
+    fixture.detectChanges();
+
+    expect(routerMock.navigate).toHaveBeenCalled();
+  });
+
+  it('não deve navegar quando contrato retornado não corresponder ao termo', () => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const component = fixture.componentInstance;
+
+    component.termoBusca.set('777');
+    component.buscarContrato();
+
+    contratoSignal.set({
+      numero: '123',
+      cliente: 'Cliente C',
+      cpfCnpj: '11111111111',
+      produto: 'CDC',
+      valorDevido: 1000,
+      dataVencimento: '2026-01-01',
+      status: 'APTO',
+    });
+    fixture.detectChanges();
+
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('deve exibir e limpar erro temporário quando facade retornar erro', () => {
+    jasmine.clock().install();
+    try {
+      const fixture = TestBed.createComponent(LoginComponent);
+      const component = fixture.componentInstance;
+
+      component.termoBusca.set('123');
+      component.buscarContrato();
+      errorSignal.set('falha');
+      fixture.detectChanges();
+
+      expect(component.erroSync()).toBe('Contrato não encontrado');
+
+      jasmine.clock().tick(3000);
+      expect(component.erroSync()).toBeNull();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });

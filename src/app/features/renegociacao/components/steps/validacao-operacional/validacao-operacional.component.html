@@ -1,5 +1,6 @@
 <section class="validacao-operacional">
-  <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Contrato"</button>
+  <button type="button" class="step-back-link" (click)="voltar()"
+    aria-label="Voltar para etapa de seleção de contrato">← Voltar para contrato</button>
   <h1 class="titulo">Validação Operacional do contrato</h1>
 
   @if (contrato(); as contratoAtual) {
@@ -9,9 +10,7 @@
   </div>
 
   <div class="colunas">
-    <!-- Coluna 1 -->
     <div class="coluna">
-      <!-- Card 1: Dados do contrato -->
       <section class="card">
         <h2>Dados do contrato</h2>
         <dl>
@@ -30,7 +29,6 @@
         </dl>
       </section>
 
-      <!-- Card 2: Informações da garantia -->
       <section class="card garantia-card">
         <h2>Informações da garantia</h2>
         <div class="card-intro">Rastreabilidade e segurança jurídica</div>
@@ -47,7 +45,6 @@
         </div>
       </section>
 
-      <!-- Card 3: Custas Identificadas -->
       @if (contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL') {
       <section class="card custas-card">
         <h2>Custas Identificadas</h2>
@@ -63,25 +60,23 @@
       }
     </div>
 
-    <!-- Coluna 2 -->
     <div class="coluna">
-      <!-- Card 1: Validações Automáticas -->
       <section class="card validacoes-card">
         <h2>Validações Automáticas</h2>
-        <section *ngFor="let v of validacoes" class="validacao-item" [ngClass]="v.valido ? 'valida' : 'invalida'">
-          <mat-icon>check_circle</mat-icon>
+        @for (v of validacoes; track v.label) {
+        <section class="validacao-item" [ngClass]="v.valido ? 'valida' : 'invalida'">
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
           <span class="validacao-item-texto">
             {{ v.label }}
-            <ng-container *ngIf="v.label === 'Laudo'">{{ v.valido ? ' válido' : ' inválido' }}</ng-container>
+            @if (v.label === 'Laudo') {
+            {{ v.valido ? ' válido' : ' inválido' }}
+            }
           </span>
-          <ng-container
-            *ngIf="v.label === 'Custas extrajudiciais identificadas' && contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'">
-          </ng-container>
         </section>
+        }
       </section>
 
 
-      <!-- Card 2: Status Operacional -->
       <section class="card" [ngClass]="validacao()?.aptoParaRenegociacao ? 'aprovado' : 'reprovado'">
         <h2>Status Operacional</h2>
         <div class="status-operacional" [ngClass]="validacao()?.aptoParaRenegociacao ? 'verde' : 'vermelho'">

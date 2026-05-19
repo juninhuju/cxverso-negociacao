@@ -18,7 +18,6 @@
   color: var(--color-primary-blue);
 }
 
-/* INFO */
 .contrato-info {
   display: flex;
   flex-wrap: wrap;
@@ -37,7 +36,6 @@
   }
 }
 
-/* GRID */
 .colunas {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -50,7 +48,6 @@
   gap: var(--spacing-md);
 }
 
-/* CARD */
 .card {
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-gray-200);
@@ -84,7 +81,6 @@
   line-height: 1.5;
 }
 
-/* DL */
 dl {
   margin: 0;
   display: grid;
@@ -103,7 +99,6 @@ dd {
   font-weight: var(--font-weight-bold);
 }
 
-/* GARANTIA */
 .garantia-section {
   margin-top: var(--spacing-sm);
   padding: var(--spacing-sm);
@@ -111,7 +106,6 @@ dd {
   background-color: var(--color-gray-200);
 }
 
-/* LAUDO */
 .laudo-section {
   margin-top: var(--spacing-sm);
   padding: var(--spacing-sm);
@@ -224,7 +218,6 @@ dd {
   font-weight: var(--font-weight-bold);
 }
 
-/* INPUT */
 .entrada-input {
   width: 100%;
   border: 1px solid var(--color-gray-300);
@@ -232,7 +225,6 @@ dd {
   padding: var(--spacing-sm);
 }
 
-/* STATUS */
 .status-operacional {
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -256,10 +248,8 @@ dd {
   margin-bottom: var(--spacing-sm);
 }
 
-/* ✅ ✅ BOTÕES (CORREÇÃO AQUI) */
 .botoes-status {
   display: inline-flex;
-  /* 🔥 correção principal */
   gap: var(--spacing-sm);
   align-items: center;
 }
@@ -268,7 +258,6 @@ dd {
   white-space: nowrap;
 }
 
-/* botão base */
 .btn-primary,
 .btn-secondary {
   border: 0;
@@ -278,13 +267,11 @@ dd {
   cursor: pointer;
 }
 
-/* primário */
 .btn-primary {
   background-color: var(--color-primary-blue);
   color: var(--color-surface);
 }
 
-/* secundário */
 .btn-secondary {
   background-color: var(--color-gray-300);
   color: var(--color-gray-700);
@@ -295,14 +282,12 @@ dd {
   cursor: not-allowed;
 }
 
-/* FOOTER */
 .step-actions-end {
   display: flex;
   justify-content: flex-end;
   margin-top: var(--spacing-lg);
 }
 
-/* RESPONSIVO */
 @media (max-width: 1080px) {
   .colunas {
     grid-template-columns: 1fr;
@@ -310,6 +295,5 @@ dd {
 
   .botoes-status {
     flex-wrap: wrap;
-    /* ✅ só quebra no mobile */
   }
 }

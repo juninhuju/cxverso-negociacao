@@ -5,7 +5,6 @@
   background: var(--dsc-color-bg-neutral-1);
 }
 
-/* HEADER */
 .dialog-header {
   background: var(--dsc-color-bg-highlight-5);
   color: var(--color-surface);
@@ -34,13 +33,11 @@
   cursor: pointer;
 }
 
-/* BODY */
 .dialog-body {
   padding: var(--spacing-md);
   background: var(--dsc-color-bg-neutral-2);
 }
 
-/* ALERTA */
 .alerta {
   margin-bottom: var(--spacing-sm);
   padding: var(--spacing-sm);
@@ -50,7 +47,6 @@
   font-weight: var(--font-weight-medium);
 }
 
-/* EMAIL */
 .email-preview {
   background: var(--dsc-color-bg-highlight-1);
   padding: var(--spacing-md);
@@ -68,17 +64,33 @@
   color: var(--color-gray-900);
 }
 
-/* MODO EDIÇÃO */
 .email-preview.editando {
   background: var(--dsc-color-bg-neutral-1);
   border: 2px solid var(--dsc-color-border-highlight-1);
 }
 
-/* FOOTER */
 .dialog-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
   background: var(--dsc-color-bg-neutral-2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .dialog-footer button {
+    flex: 1 1 100%;
+  }
 }

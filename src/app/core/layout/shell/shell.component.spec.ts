@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { NavigationEnd } from '@angular/router';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { ShellComponent } from './shell.component';
 
@@ -13,6 +15,7 @@ describe('ShellComponent', () => {
     logout: jasmine.createSpy('logout'),
   };
   const routerMock = {
+    events: of(new NavigationEnd(1, '/inicial', '/inicial')),
     navigate: jasmine.createSpy('navigate'),
   };
 
@@ -62,5 +65,45 @@ describe('ShellComponent', () => {
 
     expect(authMock.logout).toHaveBeenCalled();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+  });
+
+  testCase('deve formatar data atual com primeira letra maiúscula', () => {
+    const fixture = TestBed.createComponent(ShellComponent);
+    const component = fixture.componentInstance;
+
+    const valor = component.dataAtual();
+
+    expect(valor.length).toBeGreaterThan(0);
+    expect(valor.charAt(0)).toBe(valor.charAt(0).toUpperCase());
+  });
+
+  testCase('deve executar onRouteActivate sem erro', () => {
+    const fixture = TestBed.createComponent(ShellComponent);
+    const component = fixture.componentInstance as unknown as { onRouteActivate: () => void };
+
+    expect(() => component.onRouteActivate()).not.toThrow();
+  });
+
+  testCase('deve retornar data bruta quando formatador não incluir vírgula', () => {
+    const formatSpy = spyOn(Intl, 'DateTimeFormat').and.returnValue({
+      format: () => 'sem separador',
+    } as unknown as Intl.DateTimeFormat);
+
+    const fixture = TestBed.createComponent(ShellComponent);
+    const component = fixture.componentInstance as unknown as { formatarDataAtual: () => string };
+
+    expect(component.formatarDataAtual()).toBe('sem separador');
+
+    formatSpy.and.callThrough();
+  });
+
+  testCase('deve capitalizar texto e manter vazio sem alteração', () => {
+    const fixture = TestBed.createComponent(ShellComponent);
+    const component = fixture.componentInstance as unknown as {
+      capitalizeFirst: (texto: string) => string;
+    };
+
+    expect(component.capitalizeFirst('')).toBe('');
+    expect(component.capitalizeFirst('teste')).toBe('Teste');
   });
 });

@@ -11,6 +11,9 @@
     "test:coverage": "ng test --watch=false --code-coverage",
     "mock-api": "json-server --watch src/app/core/mocks/db.json --port 3000"
   },
+  "engines": {
+    "node": ">=20 <23"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.2.0",

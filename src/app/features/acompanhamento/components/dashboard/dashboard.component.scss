@@ -3,7 +3,6 @@
   width: 100%;
 }
 
-/* BASE */
 .validacao-operacional {
   display: flex;
   flex-direction: column;
@@ -14,7 +13,6 @@
   padding: var(--spacing-lg);
 }
 
-/* TÍTULO */
 .titulo {
   margin: 0;
   text-align: center;
@@ -23,7 +21,6 @@
   color: var(--color-primary-blue);
 }
 
-/* CARD PADRÃO */
 .card {
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--color-gray-200);
@@ -37,11 +34,21 @@
   }
 }
 
-/* BUSCA */
 .busca-form {
   display: flex;
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 .input {
@@ -51,21 +58,18 @@
   border-radius: var(--border-radius-md);
 }
 
-/* LISTA DE CONTRATOS */
 .contratos-lista {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
 }
 
-/* GRID SOLICITAÇÕES */
 .solicitacoes-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
 }
 
-/* CARD SOLICITAÇÃO */
 .solicitacao-card {
   border: 1px solid var(--color-gray-200);
   border-radius: var(--border-radius-md);
@@ -75,7 +79,6 @@
   gap: var(--spacing-sm);
 }
 
-/* DL PADRÃO (IGUAL AO QUE VOCÊ CURTIU 🔥) */
 dl {
   margin: 0;
   display: grid;
@@ -93,13 +96,11 @@ dd {
   color: var(--color-gray-900);
 }
 
-/* BOTÕES */
 .botoes-status {
   display: inline-flex;
   gap: var(--spacing-sm);
 }
 
-/* BOTÕES PADRÃO */
 .btn-primary,
 .btn-secondary {
   border: 0;
@@ -117,14 +118,12 @@ dd {
   background-color: var(--color-gray-300);
 }
 
-/* EMPTY STATE */
 .empty-state {
   text-align: center;
   font-size: var(--font-size-sm);
   color: var(--color-gray-700);
 }
 
-/* RESPONSIVO */
 @media (max-width: 960px) {
   .solicitacoes-grid {
     grid-template-columns: 1fr;

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 
@@ -15,24 +14,26 @@ import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegocia
 export class ConclusaoComponent {
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
-  private readonly snackBar = inject(MatSnackBar);
 
   readonly stepAtual = this.facade.stepAtual;
   readonly loading = this.facade.loading;
 
 
+  /** Exibe barra de sucesso customizada */
+  sucessoBarraVisivel = false;
+
   gerarContratoEBoleto(): void {
-    this.router.navigate(['/renegociacao/busca']);
-    this.facade.reiniciarSessao();
+    this.sucessoBarraVisivel = true;
+    setTimeout(() => (this.sucessoBarraVisivel = false), 6000);
+    // Executa as ações de navegação e reset depois de exibir a barra
+    setTimeout(() => {
+      this.router.navigate(['/renegociacao/busca']);
+      this.facade.reiniciarSessao();
+    }, 3000);
+  }
 
-
-    // Emitir aviso de sucesso
-    this.snackBar.open('Contrato e Boleto gerados com sucesso!', 'Fechar', {
-      duration: 6000,
-      horizontalPosition: 'end',
-      verticalPosition: 'top',
-      panelClass: ['snackbar-success'],
-    });
+  fecharBarraSucesso(): void {
+    this.sucessoBarraVisivel = false;
   }
 
   /** Botão “Nova Busca” */

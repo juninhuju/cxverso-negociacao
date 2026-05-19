@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -60,7 +60,9 @@ export class ChatbotComponent {
     this.conversas().find(c => c.id === this.conversaAtivaId()) || null
   );
 
-  constructor() {
+
+  // Inicialização do estado da conversa
+  private readonly _initEffect = effect(() => {
     const lista = this._conversas();
     if (lista.length === 0) {
       const id = this.novaConversa();
@@ -68,7 +70,7 @@ export class ChatbotComponent {
     } else {
       this.conversaAtivaId.set(lista[0].id);
     }
-  }
+  });
 
   enviarMensagem(event?: Event) {
     event?.preventDefault();

@@ -1,5 +1,19 @@
 # NegociaCaixa
 
+## Node.js (LTS)
+
+Este projeto deve ser executado com Node.js LTS na faixa `>=20 <23` (recomendado Node 22).
+
+- Arquivo de versao: `.nvmrc` (`22`)
+- Restricao em `package.json`: `"engines": { "node": ">=20 <23" }`
+
+Exemplo com nvm:
+
+```bash
+nvm install 22
+nvm use 22
+```
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.21.
 
 ## Development server

@@ -47,9 +47,6 @@ export class SimulacaoComponent {
   private readonly router = inject(Router);
   private readonly api = inject(RenegociacaoApiService);
 
-  // =========================
-  // STATE
-  // =========================
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly simulacao = this.facade.simulacao;
@@ -60,9 +57,6 @@ export class SimulacaoComponent {
   readonly valorEntrada = signal(0);
   readonly numeroParcelas = signal(12);
 
-  // =========================
-  // OPÇÕES (API)
-  // =========================
   readonly opcoesDisponiveis = toSignal(
     toObservable(this.contrato).pipe(
       switchMap((contrato: Contrato | null) => {
@@ -79,9 +73,6 @@ export class SimulacaoComponent {
 
   readonly opcoesVisiveis = computed(() => this.opcoesDisponiveis());
 
-  // =========================
-  // CÁLCULOS
-  // =========================
   readonly saldoDevedor = computed(() => this.contrato()?.valorDevido ?? 0);
   readonly descontoAplicado = computed(() => this.opcaoSelecionada()?.economiaTotal ?? 0);
   readonly custasObrigatorias = computed(() => this.consulta()?.custasObrigatorias ?? 5090);
@@ -128,9 +119,6 @@ export class SimulacaoComponent {
 
   readonly colunasTabela = ['numero', 'vencimento', 'valor'] as const;
 
-  // =========================
-  // ✅ PREFILL (sem auto-simular para evitar reflow agressivo)
-  // =========================
   private readonly prefillEffect = effect(
     () => {
       const contratoAtual = this.contrato();
@@ -139,7 +127,6 @@ export class SimulacaoComponent {
 
       if (!contratoAtual) return;
 
-      // Se existe simulação anterior, restaura parâmetros
       if (simulacaoAtual) {
         this.valorEntrada.set(simulacaoAtual.valorEntrada);
         this.numeroParcelas.set(simulacaoAtual.numeroParcelas);
@@ -153,7 +140,6 @@ export class SimulacaoComponent {
         return;
       }
 
-      // Se chegou opções e não tem seleção, seleciona a primeira (SEM simular automaticamente)
       if (opcoes.length > 0 && !this.opcaoSelecionada()) {
         const primeira = opcoes[0];
         this.opcaoSelecionada.set(primeira);
@@ -198,15 +184,11 @@ export class SimulacaoComponent {
     return fallback;
   }
 
-  // =========================
-  // AÇÕES
-  // =========================
   selecionarOpcao(opcao: OpcaoSimulacao): void {
     this.opcaoSelecionada.set(opcao);
     this.valorEntrada.set(opcao.valorEntrada);
     this.numeroParcelas.set(opcao.numeroParcelas);
 
-    // ✅ aqui sim simula (ação do usuário)
     this.simular();
   }
 
@@ -215,8 +197,6 @@ export class SimulacaoComponent {
     const parcelas = Math.max(1, this.numeroParcelas());
     this.facade.simular(entrada, parcelas);
 
-    // opcional: se quiser, após simular, volta o topo do container de resultado (não do page)
-    // this.forceScrollTop('simular');
   }
 
   continuar(): void {

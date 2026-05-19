@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { ValidacaoOperacionalComponent } from './validacao-operacional.component';
 
@@ -28,18 +30,25 @@ describe('ValidacaoOperacionalComponent', () => {
     navigate: jasmine.createSpy('navigate'),
   };
 
+  const dialogMock = {
+    open: jasmine.createSpy('open'),
+  };
+
   beforeEach(async () => {
     contratoAtual = null;
     facadeMock.solicitarConsultaJuridica.calls.reset();
     facadeMock.avancarStep.calls.reset();
     facadeMock.voltarStep.calls.reset();
     routerMock.navigate.calls.reset();
+    dialogMock.open.calls.reset();
+    dialogMock.open.and.returnValue({ afterClosed: () => of('continuar') });
 
     await TestBed.configureTestingModule({
       imports: [ValidacaoOperacionalComponent],
       providers: [
         { provide: RenegociacaoFacade, useValue: facadeMock },
         { provide: Router, useValue: routerMock },
+        { provide: MatDialog, useValue: dialogMock },
       ],
     }).compileComponents();
   });
@@ -55,18 +64,19 @@ describe('ValidacaoOperacionalComponent', () => {
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
-  it('deve solicitar consulta jurídica e avançar quando há contrato', () => {
+  it('deve solicitar consulta jurídica e avançar quando há contrato', async () => {
     contratoAtual = {
       numero: 'CN-1', cliente: 'A', cpfCnpj: '1', produto: 'CDC', valorDevido: 10, dataVencimento: '2026-01-01', status: 'APTO'
     };
     const fixture = TestBed.createComponent(ValidacaoOperacionalComponent);
     const component = fixture.componentInstance;
 
-    component.continuar();
+    await component.abrirConsultaJuridica();
 
     expect(facadeMock.solicitarConsultaJuridica).toHaveBeenCalledWith('CN-1');
+    expect(dialogMock.open).toHaveBeenCalled();
     expect(facadeMock.avancarStep).toHaveBeenCalled();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/juridico']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/renegociacao/simulacao']);
   });
 
   it('deve voltar para selecionar', () => {

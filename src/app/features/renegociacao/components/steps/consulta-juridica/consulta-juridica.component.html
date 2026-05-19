@@ -1,33 +1,32 @@
-<div class="dialog-container">
-
-  <!-- HEADER -->
+<div class="dialog-container" role="dialog" aria-modal="true" aria-labelledby="consulta-juridica-titulo">
   <header class="dialog-header">
     <div class="header-text">
-      <h2>Consulta Jurídica</h2>
+      <h2 id="consulta-juridica-titulo">Consulta Jurídica</h2>
       <p>
-        Texto gerado automaticamente por IA com base no contrato selecionado<br />
+        Texto gerado automaticamente com base no contrato selecionado<br />
         O conteúdo pode ser revisado antes do envio
       </p>
     </div>
 
-    <button type="button" class="btn-close" (click)="fechar()">✕</button>
+    <button type="button" class="btn-close" aria-label="Fechar consulta jurídica" (click)="fechar()">✕</button>
   </header>
 
-  <!-- BODY -->
   <section class="dialog-body">
 
-    <div *ngIf="aviso" class="alerta">
+    @if (aviso) {
+    <div class="alerta" role="status" aria-live="polite">
       {{ aviso }}
     </div>
+    }
 
     <div class="email-preview" [class.editando]="modoEdicao">
-      <textarea [(ngModel)]="emailTexto" [readonly]="!modoEdicao" rows="20">
+      <label class="sr-only" for="consulta-juridica-texto">Texto da consulta jurídica</label>
+      <textarea id="consulta-juridica-texto" [(ngModel)]="emailTexto" [readonly]="!modoEdicao" rows="20">
       </textarea>
     </div>
 
   </section>
 
-  <!-- FOOTER -->
   <footer class="dialog-footer">
 
     <button type="button" class="btn-secondary" (click)="alternarEdicao()">

@@ -12,9 +12,11 @@
 
     <ul class="conversation-list">
       @for (c of conversas(); track c.id) {
-      <li class="conversation-item" [class.conversation-item--active]="c.id === conversaAtivaId()"
-        (click)="abrirConversa(c.id)">
-        {{ c.titulo }}
+      <li>
+        <button type="button" class="conversation-item" [class.conversation-item--active]="c.id === conversaAtivaId()"
+          [attr.aria-current]="c.id === conversaAtivaId() ? 'page' : null" (click)="abrirConversa(c.id)">
+          {{ c.titulo }}
+        </button>
       </li>
       } @empty {
       <li class="empty-state">Nenhuma conversa.</li>

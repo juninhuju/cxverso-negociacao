@@ -45,6 +45,9 @@
 }
 
 .conversation-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-md);
   cursor: pointer;

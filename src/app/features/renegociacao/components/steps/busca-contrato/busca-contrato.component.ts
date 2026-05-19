@@ -26,13 +26,15 @@ import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegocia
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuscaContratoComponent {
+
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
 
-  constructor() {
-    // Resetar sessão quando volta/entra na tela de busca
+  // Resetar sessão quando volta/entra na tela de busca
+  // Usar effect() para garantir execução no ciclo de vida correto
+  private readonly _resetEffect = effect(() => {
     this.facade.reiniciarSessao();
-  }
+  });
 
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;

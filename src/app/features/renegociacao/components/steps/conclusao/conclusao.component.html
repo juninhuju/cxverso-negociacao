@@ -1,19 +1,22 @@
 <div class="success-wrapper">
+  @if (sucessoBarraVisivel) {
+  <div class="custom-success-bar" role="status" aria-live="polite">
+    <span>Contrato e Boleto gerados com sucesso!</span>
+    <button type="button" class="custom-success-close" (click)="fecharBarraSucesso()"
+      aria-label="Fechar aviso">Fechar</button>
+  </div>
+  }
   <section class="success-surface" aria-label="Renegociação formalizada">
-    <!-- Ícone -->
     <div class="success-icon" aria-hidden="true">
       <mat-icon>check</mat-icon>
     </div>
 
-    <!-- Título -->
     <h2 class="success-title">Renegociação Formalizada com Sucesso</h2>
 
-    <!-- Banner -->
     <div class="success-banner" role="status" aria-live="polite">
       Comunicação automática enviada às áreas responsáveis
     </div>
 
-    <!-- Card documentos -->
     <div class="docs-card" aria-label="Documentos da renegociação">
       <h3 class="docs-title">Documentos da Renegociação</h3>
       <p class="docs-subtitle">Gere o contrato e o boleto da entrada para prosseguir</p>
@@ -27,7 +30,6 @@
       </p>
     </div>
 
-    <!-- Ações -->
     <div class="bottom-actions">
       <button type="button" class="btn-primary" (click)="novaBusca()">
         Nova Busca

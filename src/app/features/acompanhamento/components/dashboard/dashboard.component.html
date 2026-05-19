@@ -1,22 +1,19 @@
 <div class="validacao-operacional">
-
-  <!-- TÍTULO -->
   <h1 class="titulo">Painel de Acompanhamento</h1>
 
-  <!-- BUSCA -->
   <section class="card busca-card">
     <h2>Buscar contratos</h2>
 
     <form (ngSubmit)="buscarContratos()" class="busca-form" autocomplete="off">
-      <input id="documento" [formControl]="documento" placeholder="Digite um CPF ou CNPJ" required autocomplete="off"
-        class="input" />
+      <label class="sr-only" for="documento">CPF ou CNPJ</label>
+      <input id="documento" class="input" [value]="documento()" (input)="atualizarDocumento($event)"
+        placeholder="Digite um CPF ou CNPJ" required autocomplete="off" />
 
-      <button type="submit" class="btn-primary" [disabled]="!documento.value">
+      <button type="submit" class="btn-primary" [disabled]="!documento().trim()">
         Buscar
       </button>
     </form>
 
-    <!-- LISTA DE CONTRATOS -->
     <div class="contratos-lista">
       @for (contrato of contratos(); track contrato.numero) {
       <app-contract-card [contrato]="contrato" (click)="selecionarContrato(contrato)" />
@@ -30,7 +27,6 @@
     </div>
   </section>
 
-  <!-- SOLICITAÇÕES -->
   <section class="card">
     <h2>Solicitações já realizadas</h2>
 

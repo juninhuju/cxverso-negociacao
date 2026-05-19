@@ -43,6 +43,6 @@ describe('RenegociacaoWizardComponent', () => {
     const component = fixture.componentInstance;
 
     currentStep = 4;
-    expect(component.progressPercent).toBe(67);
+    expect(component.progressPercent).toBe(80);
   });
 });

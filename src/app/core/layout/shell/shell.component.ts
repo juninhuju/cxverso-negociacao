@@ -1,12 +1,11 @@
 import { DOCUMENT } from '@angular/common';
-import { ElementRef } from '@angular/core';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, NgZone, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
-import { filter, map, take } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -58,9 +57,7 @@ export class ShellComponent {
 
   onRouteActivate(): void {
     this.resetScrollPosition();
-    this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-      this.resetScrollPosition();
-    });
+    setTimeout(() => this.resetScrollPosition(), 0);
   }
 
   logout(): void {

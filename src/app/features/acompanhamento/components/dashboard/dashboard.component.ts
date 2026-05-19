@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -35,7 +34,6 @@ const STATUS_LABEL: Record<StatusRenegociacao, string> = {
     MatTableModule,
     MatChipsModule,
     MatIconModule,
-    ReactiveFormsModule,
     ContractCardComponent,
     MatFormFieldModule
 ],
@@ -59,18 +57,11 @@ export class DashboardComponent {
 
   private readonly _solicitacoes = signal<SolicitacaoAcompanhamento[]>([]);
   readonly solicitacoesUsuario = this._solicitacoes.asReadonly();
+  readonly documento = signal<string>(localStorage.getItem('cpfBusca') ?? '');
 
-  constructor() {
-    // Restaurar CPF/CNPJ salvo
-    const docSalvo = localStorage.getItem('cpfBusca') || '';
-    this.documento.setValue(docSalvo);
-    this.documento.valueChanges.subscribe((valor) => {
-      if (valor !== null && valor !== undefined) {
-        localStorage.setItem('cpfBusca', valor);
-      }
-    });
-    void this.carregarSolicitacoes();
-  }
+  private readonly _persistDocumentoEffect = effect(() => {
+    localStorage.setItem('cpfBusca', this.documento());
+  });
 
   excluirSolicitacao(protocolo: string): void {
     const confirm = window.confirm('Tem certeza que deseja excluir esta solicitação? Esta ação não poderá ser desfeita.');
@@ -83,15 +74,22 @@ export class DashboardComponent {
     );
   }
 
-  // Busca de contratos
-  readonly documento = new FormControl('');
   readonly contratos = signal<Contrato[]>([]);
-  readonly contratoSelecionado = signal<Contrato|null>(null);
+  readonly contratoSelecionado = signal<Contrato | null>(null);
   readonly buscouContratos = signal(false);
+
+  constructor() {
+    void this.carregarSolicitacoes();
+  }
+
+  atualizarDocumento(event: Event): void {
+    const target = event.target as HTMLInputElement | null;
+    this.documento.set(target?.value ?? '');
+  }
 
   async buscarContratos(): Promise<void> {
     this.buscouContratos.set(true);
-    const doc = this.documento.value?.replace(/\D/g, '');
+    const doc = this.documento().replace(/\D/g, '');
     if (!doc) {
       this.contratos.set([]);
       return;
@@ -111,6 +109,4 @@ export class DashboardComponent {
     const solicitacoes = await firstValueFrom(this.dashboardService.listarSolicitacoes());
     this._solicitacoes.set(solicitacoes);
   }
-
-  // visualizarSolicitacao removido (não há mais tela seguinte)
 }
