@@ -8,6 +8,8 @@ Comece a escrever sua documentação adicionando mais arquivos markdown (.md) a 
 
 ## Tabela de Conteúdos
 
+- [Checklist WCAG por rota](accessibilidade-wcag-rotas.md)
+
 A Tabela de Conteúdos à direita é gerada automaticamente com base na hierarquia
 de títulos. Use apenas um H1 (`#` no Markdown) por arquivo.
 

@@ -1,6 +1,7 @@
 <div class="step-card">
   <header class="step-header">
-    <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Formalização"</button>
+    <button type="button" class="step-back-link" (click)="voltar()"
+      aria-label="Voltar para a etapa anterior (Formalização)">← Volta à "Formalização"</button>
     <h2>Conformidade</h2>
     <p class="step-subtitle">Confirmação final de aderência às regras e documentação</p>
   </header>
@@ -29,7 +30,8 @@
   </div>
 
   <div class="step-actions">
-    <button class="btn-secondary" [disabled]="loading()" (click)="voltar()">Voltar</button>
+    <button class="btn-secondary" [disabled]="loading()" (click)="voltar()"
+      aria-label="Voltar para a etapa anterior">Voltar</button>
     <button class="btn-primary" [disabled]="loading() || !contrato() || !simulacao()" (click)="concluirConformidade()">
       Concluir conformidade
     </button>

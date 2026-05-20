@@ -201,6 +201,67 @@
   box-sizing: border-box;
 }
 
+.chatbot-fab {
+  position: relative;
+  flex: 0 0 auto;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  padding: 0;
+  margin-left: 20px;
+  background: var(--dsc-color-bg-highlight-6);
+  color: var(--dsc-color-bg-neutral-1);
+  border: 2px solid var(--dsc-color-bg-neutral-1);
+  box-shadow: none;
+  border-radius: 50%;
+}
+
+.chatbot-fab mat-icon {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+  font-size: 34px;
+  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.chatbot-fab:hover {
+  background: var(--dsc-color-bg-highlight-5);
+}
+
+.chatbot-fab:focus-visible {
+  outline: 2px solid var(--dsc-color-bg-accent-4);
+  outline-offset: 2px;
+}
+
+.chatbot-fab-label {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 10px);
+  transform: translateY(-50%);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-primary-blue);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.chatbot-fab:hover .chatbot-fab-label,
+.chatbot-fab:focus-visible .chatbot-fab-label {
+  opacity: 1;
+  visibility: visible;
+}
+
 @media (max-width: 960px) {
   .shell-sidenav {
     width: 280px;
@@ -216,5 +277,9 @@
 
   .page-header-right {
     font-size: 0.75rem;
+  }
+
+  .chatbot-fab-label {
+    display: none;
   }
 }

@@ -252,6 +252,18 @@ app-root {
   height: 100%;
 }
 
+.chatbot-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.chatbot-dialog-panel .mat-mdc-dialog-content {
+  padding: 0;
+  margin: 0;
+  max-height: unset;
+}
+
 img,
 picture,
 video,
