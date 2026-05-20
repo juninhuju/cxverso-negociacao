@@ -1,0 +1,18 @@
+@if (contrato(); as c) {
+<div class="detalhe-contrato">
+  <app-contract-card [contrato]="c"></app-contract-card>
+
+  <div class="acoes">
+    <button class="btn-primary" (click)="iniciarRenegociacao()"
+      [attr.aria-label]="'Iniciar processo de renegociação do contrato ' + c.numero">Iniciar Renegociação</button>
+    <button class="btn-secondary" (click)="voltar()"
+      [attr.aria-label]="'Voltar para lista de contratos'">Voltar</button>
+  </div>
+</div>
+} @else {
+@if (erroApi()) {
+<p class="empty-state" role="alert">{{ erroApi() }}</p>
+} @else {
+<p class="empty-state" role="status">Contrato não encontrado.</p>
+}
+}

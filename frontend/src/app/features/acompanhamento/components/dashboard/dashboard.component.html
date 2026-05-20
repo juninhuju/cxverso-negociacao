@@ -1,0 +1,103 @@
+<div class="validacao-operacional">
+  <h1 class="titulo">Painel de Acompanhamento</h1>
+
+  <section class="card busca-card">
+    <h2>Buscar contratos</h2>
+
+    @if (erroApi()) {
+    <p class="empty-state" role="alert">{{ erroApi() }}</p>
+    }
+
+    <form (ngSubmit)="buscarContratos()" class="busca-form" autocomplete="off">
+      <label class="sr-only" for="documento">CPF ou CNPJ</label>
+      <input id="documento" class="input" [value]="documento()" (input)="atualizarDocumento($event)"
+        placeholder="Digite um CPF ou CNPJ" required autocomplete="off" />
+
+      <button type="submit" class="btn-primary" [disabled]="!documento().trim()">
+        Buscar
+      </button>
+    </form>
+
+    <div class="contratos-lista">
+      @for (contrato of contratos(); track contrato.numero) {
+      <app-contract-card [contrato]="contrato" (click)="selecionarContrato(contrato)" />
+      } @empty {
+      @if (buscouContratos()) {
+      <p class="empty-state">
+        Nenhum contrato encontrado. Informe o CPF ou CNPJ para buscar.
+      </p>
+      }
+      }
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Solicitações já realizadas</h2>
+
+    <div class="solicitacoes-grid">
+      @for (solicitacao of solicitacoesUsuario(); track solicitacao.id) {
+      <article class="solicitacao-card">
+
+        <div class="dados-grid" role="group" aria-label="Dados da solicitação">
+          <div class="dado-item">
+            <span class="dado-label">Protocolo</span>
+            <span class="dado-value">{{ solicitacao.protocolo }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">Cliente</span>
+            <span class="dado-value dado-value--cliente">{{ solicitacao.cliente }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">CPF/CNPJ</span>
+            <span class="dado-value">{{ formatDocumento(solicitacao.cpfCnpj) }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">Contrato</span>
+            <span class="dado-value">{{ solicitacao.numeroContrato }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">Produto</span>
+            <span class="dado-value">{{ solicitacao.produto }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">Valor</span>
+            <span class="dado-value">{{ solicitacao.valorTotalFormatado }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">Data</span>
+            <span class="dado-value">{{ solicitacao.dataInicio }}</span>
+          </div>
+
+          <div class="dado-item">
+            <span class="dado-label">Status</span>
+            <span class="dado-value dado-value--status"
+              [class.status-value--andamento]="solicitacao.status === 'EM_ANDAMENTO'"
+              [class.status-value--concluida]="solicitacao.status === 'CONCLUIDA'"
+              [class.status-value--cancelada]="solicitacao.status === 'CANCELADA'"
+              [class.status-value--juridico]="solicitacao.status === 'AGUARDANDO_JURIDICO'">
+              {{ statusLabel[solicitacao.status] }}
+            </span>
+          </div>
+        </div>
+
+        <div class="botoes-status">
+          <button type="button" class="btn-delete" (click)="excluirSolicitacao(solicitacao.protocolo)"
+            [attr.aria-label]="'Excluir solicitação ' + solicitacao.protocolo">
+            Excluir
+          </button>
+        </div>
+
+      </article>
+      } @empty {
+      <p class="empty-state">Nenhuma solicitação encontrada para o usuário.</p>
+      }
+    </div>
+  </section>
+
+</div>
