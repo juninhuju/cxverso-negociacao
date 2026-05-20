@@ -1,6 +1,7 @@
 <div class="step-card">
   <header class="step-header">
-    <button type="button" class="step-back-link" (click)="voltar()">← Volta à "Simulação"</button>
+    <button type="button" class="step-back-link" (click)="voltar()"
+      aria-label="Voltar para a etapa anterior (Simulação)">← Volta à "Simulação"</button>
     <h2>Resultado da Simulação</h2>
     <p class="step-subtitle">Contrato {{ contrato()?.numero }} • {{ contrato()?.cliente }}</p>
   </header>
@@ -106,7 +107,8 @@
   </div>
 
   <div class="step-actions">
-    <button class="btn-secondary" (click)="voltar()">Voltar</button>
-    <button class="btn-primary" [disabled]="!simulacao()" (click)="continuar()">Finalizar Renegociação</button>
+    <button class="btn-secondary" (click)="voltar()" aria-label="Voltar para a etapa anterior">Voltar</button>
+    <button class="btn-primary" [disabled]="!simulacao()" (click)="continuar()"
+      aria-label="Finalizar a renegociação">Finalizar Renegociação</button>
   </div>
 </div>

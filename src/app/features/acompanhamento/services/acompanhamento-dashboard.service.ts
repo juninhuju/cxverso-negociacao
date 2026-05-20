@@ -10,6 +10,8 @@ export type SolicitacaoAcompanhamento = RenegociacaoResumo & {
   readonly produto: string;
   readonly protocolo: string;
   readonly valorTotalFormatado: string;
+  readonly contratoCaixa: string; // Adicionada anteriormente
+  readonly dataUltimo: string; // Adicionada para corrigir o erro
 };
 
 @Injectable({ providedIn: 'root' })
@@ -23,8 +25,13 @@ export class AcompanhamentoDashboardService {
   }
 
   buscarContratosPorDocumento(documento: string): Observable<Contrato[]> {
+    const documentoNormalizado = this.normalizar(documento);
     return this.http.get<Contrato[]>('/assets/contratos.json').pipe(
-      map((contratos) => contratos.filter((contrato) => this.normalizar(contrato.cpfCnpj) === documento)),
+      map((contratos) =>
+        contratos.filter(
+          (contrato) => this.normalizar(contrato.cpfCnpj) === documentoNormalizado,
+        ),
+      ),
       catchError(() => of([])),
     );
   }

@@ -20,11 +20,6 @@
           <mat-icon aria-hidden="true" class="mat-icon">apps</mat-icon>
           <span>Painel de acompanhamento</span>
         </a>
-        <a class="sidebar-link" routerLink="/chatbot" routerLinkActive="sidebar-link--active"
-          [routerLinkActiveOptions]="{ exact: false }" (click)="closeSidenav()">
-          <mat-icon aria-hidden="true" class="mat-icon">support_agent</mat-icon>
-          <span>Chatbot</span>
-        </a>
       </nav>
 
       <section class="sidenav-user" aria-label="Dados do usuário">
@@ -48,8 +43,15 @@
           [attr.aria-pressed]="isSidenavOpen()">
           <mat-icon>menu</mat-icon>
         </button>
+
         <div class="corp-title-group">
           <span class="corp-title">Sistema Corporativo CAIXA</span>
+        </div>
+        <div>
+          <button class="chatbot-fab" mat-fab type="button" aria-label="Abrir chatbot" (click)="openChatbotDialog()">
+            <mat-icon aria-hidden="true">support_agent</mat-icon>
+            <span class="chatbot-fab-label">Chatbot</span>
+          </button>
         </div>
       </div>
 

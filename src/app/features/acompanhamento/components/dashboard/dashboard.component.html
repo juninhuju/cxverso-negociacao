@@ -34,34 +34,57 @@
       @for (solicitacao of solicitacoesUsuario(); track solicitacao.id) {
       <article class="solicitacao-card">
 
-        <dl>
-          <dt>Protocolo</dt>
-          <dd>{{ solicitacao.protocolo }}</dd>
+        <div class="dados-grid" role="group" aria-label="Dados da solicitação">
+          <div class="dado-item">
+            <span class="dado-label">Protocolo</span>
+            <span class="dado-value">{{ solicitacao.protocolo }}</span>
+          </div>
 
-          <dt>Cliente</dt>
-          <dd>{{ solicitacao.cliente }}</dd>
+          <div class="dado-item">
+            <span class="dado-label">Cliente</span>
+            <span class="dado-value dado-value--cliente">{{ solicitacao.cliente }}</span>
+          </div>
 
-          <dt>CPF/CNPJ</dt>
-          <dd>{{ solicitacao.cpfCnpj }}</dd>
+          <div class="dado-item">
+            <span class="dado-label">CPF/CNPJ</span>
+            <span class="dado-value">{{ formatDocumento(solicitacao.cpfCnpj) }}</span>
+          </div>
 
-          <dt>Contrato</dt>
-          <dd>{{ solicitacao.numeroContrato }}</dd>
+          <div class="dado-item">
+            <span class="dado-label">Contrato</span>
+            <span class="dado-value">{{ solicitacao.numeroContrato }}</span>
+          </div>
 
-          <dt>Produto</dt>
-          <dd>{{ solicitacao.produto }}</dd>
+          <div class="dado-item">
+            <span class="dado-label">Produto</span>
+            <span class="dado-value">{{ solicitacao.produto }}</span>
+          </div>
 
-          <dt>Valor</dt>
-          <dd>{{ solicitacao.valorTotalFormatado }}</dd>
+          <div class="dado-item">
+            <span class="dado-label">Valor</span>
+            <span class="dado-value">{{ solicitacao.valorTotalFormatado }}</span>
+          </div>
 
-          <dt>Data</dt>
-          <dd>{{ solicitacao.dataInicio }}</dd>
+          <div class="dado-item">
+            <span class="dado-label">Data</span>
+            <span class="dado-value">{{ solicitacao.dataInicio }}</span>
+          </div>
 
-          <dt>Status</dt>
-          <dd>{{ statusLabel[solicitacao.status] }}</dd>
-        </dl>
+          <div class="dado-item">
+            <span class="dado-label">Status</span>
+            <span class="dado-value dado-value--status"
+              [class.status-value--andamento]="solicitacao.status === 'EM_ANDAMENTO'"
+              [class.status-value--concluida]="solicitacao.status === 'CONCLUIDA'"
+              [class.status-value--cancelada]="solicitacao.status === 'CANCELADA'"
+              [class.status-value--juridico]="solicitacao.status === 'AGUARDANDO_JURIDICO'">
+              {{ statusLabel[solicitacao.status] }}
+            </span>
+          </div>
+        </div>
 
         <div class="botoes-status">
-          <button type="button" class="btn-delete" (click)="excluirSolicitacao(solicitacao.protocolo)">
+          <button type="button" class="btn-delete" (click)="excluirSolicitacao(solicitacao.protocolo)"
+            [attr.aria-label]="'Excluir solicitação ' + solicitacao.protocolo">
             Excluir
           </button>
         </div>

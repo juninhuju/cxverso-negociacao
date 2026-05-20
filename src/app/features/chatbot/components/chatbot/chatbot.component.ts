@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
 type Role = 'user' | 'bot';
@@ -47,6 +48,8 @@ const STORAGE = 'chat_local';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatbotComponent {
+  private readonly dialogRef = inject(MatDialogRef<ChatbotComponent>, { optional: true });
+  readonly isDialog = computed(() => this.dialogRef !== null);
 
   // ✅ evita null no value
   mensagem = new FormControl<string>('', { nonNullable: true });
@@ -143,6 +146,10 @@ export class ChatbotComponent {
 
   abrirConversa(id: string) {
     this.conversaAtivaId.set(id);
+  }
+
+  fecharDialogo(): void {
+    this.dialogRef?.close();
   }
 
   private saveState(state: Conversation[]) {

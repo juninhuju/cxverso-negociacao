@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd } from '@angular/router';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { NavigationEnd, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { ShellComponent } from './shell.component';
@@ -18,10 +18,17 @@ describe('ShellComponent', () => {
     events: of(new NavigationEnd(1, '/inicial', '/inicial')),
     navigate: jasmine.createSpy('navigate'),
   };
+  const dialogMock = {
+    getDialogById: jasmine.createSpy('getDialogById').and.returnValue(null),
+    open: jasmine.createSpy('open'),
+  };
 
   beforeEach(async () => {
     authMock.logout.calls.reset();
     routerMock.navigate.calls.reset();
+    dialogMock.getDialogById.calls.reset();
+    dialogMock.getDialogById.and.returnValue(null);
+    dialogMock.open.calls.reset();
 
     await TestBed.configureTestingModule({
       imports: [ShellComponent],
@@ -30,6 +37,7 @@ describe('ShellComponent', () => {
         { provide: Router, useValue: routerMock },
       ],
     })
+      .overrideProvider(MatDialog, { useValue: dialogMock })
       .overrideComponent(ShellComponent, {
         set: { template: '' },
       })
@@ -65,6 +73,16 @@ describe('ShellComponent', () => {
 
     expect(authMock.logout).toHaveBeenCalled();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+  });
+
+  testCase('deve abrir modal do chatbot quando nao houver dialog aberto', () => {
+    const fixture = TestBed.createComponent(ShellComponent);
+    const component = fixture.componentInstance;
+
+    component.openChatbotDialog();
+
+    expect(dialogMock.getDialogById).toHaveBeenCalled();
+    expect(dialogMock.open).toHaveBeenCalled();
   });
 
   testCase('deve formatar data atual com primeira letra maiúscula', () => {

@@ -1,15 +1,18 @@
 :host {
   display: block;
   width: 100%;
+  height: 100%;
 }
 
 /* LAYOUT GERAL */
 .chatbot-page {
-  min-height: calc(100vh - 72px);
+  height: 100%;
+  min-height: 100%;
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: var(--spacing-lg);
   padding: var(--spacing-lg);
+  box-sizing: border-box;
   background: var(--dsc-color-bg-neutral-2);
 }
 
@@ -69,9 +72,10 @@
 
 /* MAIN */
 .chatbot-main {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: var(--spacing-md);
+  min-height: 0;
 
   background: var(--dsc-color-bg-neutral-1);
   border: 1px solid var(--dsc-color-bg-neutral-4);
@@ -83,6 +87,7 @@
 .chatbot-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-sm);
 
   h1 {
@@ -96,11 +101,37 @@
   }
 }
 
+.chatbot-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.chatbot-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--dsc-color-content-neutral-2);
+  cursor: pointer;
+}
+
+.chatbot-close:hover {
+  background: var(--dsc-color-bg-neutral-3);
+}
+
+.chatbot-close:focus-visible {
+  outline: 2px solid var(--dsc-color-border-highlight-1);
+  outline-offset: 2px;
+}
+
 /* THREAD */
 .chat-thread {
-  flex: 1;
-  min-height: 350px;
-  max-height: 55vh;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--spacing-md);
 
@@ -153,8 +184,14 @@
 
 /* INPUT */
 .chat-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
   display: flex;
   gap: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--dsc-color-bg-neutral-4);
+  background: var(--dsc-color-bg-neutral-1);
 }
 
 .chat-actions input {
@@ -185,13 +222,26 @@
   color: var(--dsc-color-content-neutral-1);
 }
 
+.chatbot-page--dialog {
+  height: 100%;
+  grid-template-columns: 260px 1fr;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
 /* RESPONSIVO */
 @media (max-width: 960px) {
   .chatbot-page {
     grid-template-columns: 1fr;
+    min-height: 100%;
   }
 
   .chat-actions {
     flex-direction: column;
+  }
+
+  .chatbot-page--dialog {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
   }
 }

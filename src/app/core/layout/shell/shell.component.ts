@@ -2,11 +2,15 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, NgZone, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { ChatbotComponent } from '../../../features/chatbot/components/chatbot/chatbot.component';
 import { AuthService } from '../../auth/auth.service';
+
+const CHATBOT_DIALOG_ID = 'chatbot-floating-dialog';
 
 @Component({
   selector: 'app-shell',
@@ -15,6 +19,7 @@ import { AuthService } from '../../auth/auth.service';
     RouterOutlet,
     RouterModule,
     MatButtonModule,
+    MatDialogModule,
     MatIconModule,
     MatSidenavModule
   ],
@@ -25,6 +30,7 @@ import { AuthService } from '../../auth/auth.service';
 export class ShellComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
   private readonly document = inject(DOCUMENT);
   private readonly ngZone = inject(NgZone);
   readonly pageBodyRef = viewChild<ElementRef<HTMLElement>>('pageBodyRef');
@@ -63,6 +69,26 @@ export class ShellComponent {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  openChatbotDialog(): void {
+    const dialogAtual = this.dialog.getDialogById(CHATBOT_DIALOG_ID);
+    if (dialogAtual) {
+      dialogAtual.updatePosition({ right: '24px', bottom: '92px' });
+      return;
+    }
+
+    this.dialog.open(ChatbotComponent, {
+      id: CHATBOT_DIALOG_ID,
+      panelClass: 'chatbot-dialog-panel',
+      position: { right: '24px', bottom: '92px' },
+      width: 'min(92vw, 980px)',
+      height: 'min(82vh, 760px)',
+      maxWidth: '980px',
+      autoFocus: false,
+      restoreFocus: true,
+      hasBackdrop: true,
+    });
   }
 
   private resetScrollPosition(): void {

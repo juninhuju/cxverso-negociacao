@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
@@ -11,6 +10,7 @@ import {
     ResultadoRenegociacao,
     SimulacaoRenegociacao,
     SimulacoesDisponiveis,
+    StatusValidacao,
     ValidacaoOperacional
 } from '../../features/renegociacao/models/renegociacao.model';
 import { BffResponse } from '../../shared/models/bff-response.model';
@@ -64,9 +64,15 @@ export class RenegociacaoApiService {
 
   solicitarValidacaoOperacional(numeroContrato: string): Observable<ValidacaoOperacional> {
     if (this.isDev) {
-      interface ValidacaoOperacionalJson extends ValidacaoOperacional {
+      interface ValidacaoOperacionalJson {
         numeroContrato: string;
         cliente: string;
+        status: StatusValidacao;
+        aptoParaRenegociacao: boolean;
+        impedimentos: string[];
+        uploadAtendido: boolean;
+        checksEtapasAnteriores: boolean;
+        validadoEm: string;
       }
       return this.http.get<ValidacaoOperacionalJson[]>(
         `/assets/validacao-operacional.json`

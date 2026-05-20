@@ -38,6 +38,9 @@
   display: flex;
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sr-only {
@@ -53,6 +56,7 @@
 
 .input {
   flex: 1;
+  min-width: 0;
   padding: var(--spacing-sm);
   border: 1px solid var(--color-gray-300);
   border-radius: var(--border-radius-md);
@@ -66,38 +70,115 @@
 
 .solicitacoes-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: var(--spacing-md);
 }
 
 .solicitacao-card {
   border: 1px solid var(--color-gray-200);
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
 }
 
-dl {
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  border: 1px solid var(--dsc-color-border-feedback-danger);
+  border-radius: var(--border-radius-md);
+  background: var(--color-error-red);
+  color: var(--color-surface);
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background: var(--dsc-color-content-feedback-danger);
+  border-color: var(--dsc-color-content-feedback-danger);
+}
+
+.btn-delete:focus-visible {
+  outline: 2px solid var(--dsc-color-border-feedback-danger);
+  outline-offset: 2px;
+}
+
+.dados-grid {
   margin: 0;
   display: grid;
-  grid-template-columns: minmax(120px, 160px) 1fr;
-  gap: var(--spacing-xs);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-lg) var(--spacing-lg);
 }
 
-dt {
+.dado-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dado-label {
   color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
 }
 
-dd {
-  margin: 0;
+.dado-value {
   font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  line-height: 1.45;
   color: var(--color-gray-900);
+}
+
+.dado-value--cliente {
+  color: var(--dsc-color-content-highlight-2);
+  font-size: var(--font-size-lg);
+}
+
+.dado-value--status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 120px;
+  padding: 2px var(--spacing-sm);
+  border-radius: 999px;
+  border: 1px solid var(--color-gray-300);
+  font-size: var(--font-size-sm);
+  line-height: 1.3;
+}
+
+.status-value--andamento {
+  background: var(--color-gray-100);
+  color: var(--dsc-color-content-highlight-2);
+}
+
+.status-value--concluida {
+  background: var(--color-success-green-light);
+  color: var(--color-success-green);
+  border-color: var(--dsc-color-border-feedback-success);
+}
+
+.status-value--cancelada {
+  background: var(--color-error-red-light);
+  color: var(--color-error-red);
+  border-color: var(--dsc-color-border-feedback-danger);
+}
+
+.status-value--juridico {
+  background: var(--color-warning-yellow-light);
+  color: var(--color-warning-yellow);
+  border-color: var(--dsc-color-border-feedback-warning);
 }
 
 .botoes-status {
   display: inline-flex;
+  width: 100%;
+  justify-content: flex-end;
   gap: var(--spacing-sm);
 }
 
@@ -125,11 +206,23 @@ dd {
 }
 
 @media (max-width: 960px) {
-  .solicitacoes-grid {
-    grid-template-columns: 1fr;
-  }
-
   .busca-form {
     flex-direction: column;
+    width: 100%;
+  }
+
+  .solicitacao-card {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .dados-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-md) var(--spacing-md);
+  }
+}
+
+@media (max-width: 640px) {
+  .dados-grid {
+    grid-template-columns: 1fr;
   }
 }
