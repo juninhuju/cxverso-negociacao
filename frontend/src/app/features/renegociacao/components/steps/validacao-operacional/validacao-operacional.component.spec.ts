@@ -1,10 +1,12 @@
+// @ts-ignore
+declare var describe: any, it: any, expect: any, beforeEach: any, afterEach: any, jasmine: any, spyOn: any;
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { RenegociacaoApiService } from '../../../../../core/auth/renegociacao-api.service';
+import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { Contrato, ValidacaoOperacional } from '../../../models/renegociacao.model';
 import { ValidacaoOperacionalComponent } from './validacao-operacional.component';
 

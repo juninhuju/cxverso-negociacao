@@ -20,8 +20,7 @@ export interface Contrato {
   readonly garantia?: string;
 }
 
-export interface GarantiaContratoDetalhe {
-  readonly id: number;
+export interface Garantias {
   readonly tipo: string;
   readonly descricao: string;
   readonly valorGarantia: number | null;
@@ -46,7 +45,7 @@ export interface ContratoDetalhe {
   readonly cet: number | null;
   readonly possuiGarantia: boolean;
   readonly quantidadeGarantias: number;
-  readonly garantias: readonly GarantiaContratoDetalhe[];
+  readonly garantias: readonly Garantias[];
   readonly statusDivida: string;
   readonly statusNegociacao: string;
   readonly custasCartorarias: number;

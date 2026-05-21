@@ -21,7 +21,7 @@
 
     <div class="email-preview" [class.editando]="modoEdicao">
       <label class="sr-only" for="consulta-juridica-texto">Texto da consulta jurídica</label>
-      <textarea id="consulta-juridica-texto" [(ngModel)]="emailTexto" [readonly]="!modoEdicao" rows="20">
+      <textarea id="consulta-juridica-texto" [(ngModel)]="emailTexto" [readonly]="!modoEdicao" rows="20" required>
       </textarea>
     </div>
 

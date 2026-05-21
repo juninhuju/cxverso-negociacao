@@ -1,3 +1,5 @@
+// @ts-ignore
+declare var describe: any, it: any, expect: any, beforeEach: any, jasmine: any;
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ChatbotComponent } from './chatbot.component';

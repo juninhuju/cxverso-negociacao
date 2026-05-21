@@ -74,14 +74,15 @@
       <div class="form-field">
         <label for="valorEntradaInput">Entrada Mínima</label>
         <input id="valorEntradaInput" type="number" name="valorEntrada" [ngModel]="valorEntrada()"
-          (ngModelChange)="atualizarValorEntrada($event)" inputmode="decimal" min="0" aria-label="Entrada mínima" />
+          (ngModelChange)="atualizarValorEntrada($event)" inputmode="decimal" min="0" aria-label="Entrada mínima"
+          required />
       </div>
 
       <div class="form-field">
         <label for="numeroParcelasInput">Número de parcelas</label>
         <input id="numeroParcelasInput" type="number" name="numeroParcelas" [ngModel]="numeroParcelas()"
-          (ngModelChange)="atualizarNumeroParcelas($event)" inputmode="numeric" min="1"
-          aria-label="Número de parcelas" />
+          (ngModelChange)="atualizarNumeroParcelas($event)" inputmode="numeric" min="1" aria-label="Número de parcelas"
+          required />
       </div>
 
     </form>

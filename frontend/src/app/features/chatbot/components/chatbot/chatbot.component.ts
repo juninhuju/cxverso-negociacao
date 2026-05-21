@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -52,7 +52,7 @@ export class ChatbotComponent {
   readonly isDialog = computed(() => this.dialogRef !== null);
 
   // ✅ evita null no value
-  mensagem = new FormControl<string>('', { nonNullable: true });
+  mensagem = new FormControl<string>('', { nonNullable: true, validators: [Validators.required] });
 
   private _conversas = signal<Conversation[]>(this.load());
   conversas = this._conversas.asReadonly();

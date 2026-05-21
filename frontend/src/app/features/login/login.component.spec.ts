@@ -1,3 +1,7 @@
+// @ts-ignore
+declare var describe: any, it: any, expect: any, beforeEach: any, jasmine: any;
+// @ts-ignore
+declare const jasmine: any;
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -40,6 +44,12 @@ describe('LoginComponent', () => {
   };
 
   beforeEach(async () => {
+    // Resetar spies para evitar interferência entre testes
+    authMock.login.calls.reset();
+    userServiceMock.carregarUsuario.calls.reset();
+    routerMock.navigate.calls.reset();
+    facadeMock.buscarContrato.calls.reset();
+
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
       providers: [

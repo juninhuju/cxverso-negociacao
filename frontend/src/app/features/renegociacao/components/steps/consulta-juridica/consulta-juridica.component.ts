@@ -74,9 +74,13 @@ export class ConsultaJuridicaComponent {
   }
 
 
-enviarConsulta(): void {
-  this.aviso = 'Consulta enviada com sucesso.';
 
+enviarConsulta(): void {
+  if (!this.emailTexto.trim()) {
+    this.aviso = 'O texto da consulta jurídica é obrigatório.';
+    return;
+  }
+  this.aviso = 'Consulta enviada com sucesso.';
   setTimeout(() => {
     this.fechar();
   }, 1500);

@@ -1,3 +1,5 @@
+// @ts-ignore
+declare var describe: any, it: any, expect: any, beforeEach: any, jasmine: any, spyOn: any;
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 

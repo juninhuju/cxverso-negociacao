@@ -202,8 +202,11 @@ export class SimulacaoComponent {
   simular(): void {
     const entrada = Math.max(0, this.valorEntrada());
     const parcelas = Math.max(1, this.numeroParcelas());
+    if (!entrada || !parcelas) {
+      this.erroApiOpcoes.set('Preencha corretamente os campos obrigatórios para simular.');
+      return;
+    }
     this.facade.simular(entrada, parcelas);
-
   }
 
   continuar(): void {

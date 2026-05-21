@@ -29,7 +29,15 @@ import { RenegociacaoFacade } from '../../../../states/renegociacao/renegociacao
     readonly loading = this.facade.loading;
 
     get progressPercent(): number {
-        const stepAtual = Math.max(0, this.stepAtual() ?? 0);
-        return Math.round((stepAtual / STEPS.length) * 100);
+      const stepAtual = Math.max(0, this.stepAtual() ?? 0);
+      return Math.round((stepAtual / STEPS.length) * 100);
+    }
+
+    /**
+     * Verifica se o contrato está apto para renegociação.
+     * Retorna false se o status for 'CEDIDO', true para os demais.
+     */
+    isContratoApto(status: string): boolean {
+      return this.facade.validarContratoElegibilidade(status);
     }
   }

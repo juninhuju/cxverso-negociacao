@@ -12,7 +12,8 @@
         <div class="search-input-wrapper">
           <mat-icon class="search-input-icon">search</mat-icon>
           <input type="text" [ngModel]="termoBusca()" (ngModelChange)="onTermoBuscaChange($event)" name="termoBusca"
-            placeholder="Digite CPF, CNPJ ou número do contrato" class="search-input" [mask]="mascaraDocumento()" />
+            placeholder="Digite CPF, CNPJ ou número do contrato" class="search-input" [mask]="mascaraDocumento()"
+            required />
         </div>
 
         <button type="submit" class="search-btn" [disabled]="!termoBusca().trim()" aria-label="Buscar contrato">
