@@ -12,6 +12,7 @@ export const renegociacaoReducer = createReducer(
     error: null,
     session: {
       ...state.session,
+      contratos: state.session.contratos,
       contrato,
       validacaoOperacional: null,
       consultaJuridica: null,
@@ -21,13 +22,23 @@ export const renegociacaoReducer = createReducer(
   })),
 
   // Busca de contrato
-  on(RenegociacaoActions.buscarContrato, (state) => ({ ...state, loading: true, error: null })),
-  on(RenegociacaoActions.buscarContratoSuccess, (state, { contrato }) => ({
+  on(RenegociacaoActions.buscarContrato, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+    session: {
+      ...state.session,
+      contratos: [],
+      contrato: null,
+    },
+  })),
+  on(RenegociacaoActions.buscarContratoSuccess, (state, { contratos }) => ({
     ...state,
     loading: false,
     session: {
       ...state.session,
-      contrato,
+      contratos,
+      contrato: contratos[0] ?? null,
       validacaoOperacional: null,
       consultaJuridica: null,
       simulacao: null,
@@ -38,6 +49,11 @@ export const renegociacaoReducer = createReducer(
     ...state,
     loading: false,
     error,
+    session: {
+      ...state.session,
+      contratos: [],
+      contrato: null,
+    },
   })),
 
   // Validação operacional

@@ -5,6 +5,7 @@ import { RenegociacaoActions } from './renegociacao.actions';
 import {
     selectConsultaJuridica,
     selectContrato,
+    selectContratos,
     selectError,
     selectLoading,
     selectResultado,
@@ -21,6 +22,7 @@ export class RenegociacaoFacade {
   readonly session = toSignal(this.store.select(selectSession));
   readonly loading = toSignal(this.store.select(selectLoading), { initialValue: false });
   readonly error = toSignal(this.store.select(selectError), { initialValue: null });
+  readonly contratos = toSignal(this.store.select(selectContratos), { initialValue: [] });
   readonly contrato = toSignal(this.store.select(selectContrato), { initialValue: null });
   readonly validacaoOperacional = toSignal(this.store.select(selectValidacaoOperacional), {
     initialValue: null,

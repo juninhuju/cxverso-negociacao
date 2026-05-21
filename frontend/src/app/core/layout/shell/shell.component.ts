@@ -9,6 +9,7 @@ import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/rout
 import { filter, map } from 'rxjs';
 import { ChatbotComponent } from '../../../features/chatbot/components/chatbot/chatbot.component';
 import { AuthService } from '../../auth/auth.service';
+import { UserService } from '../../auth/user.service';
 
 const CHATBOT_DIALOG_ID = 'chatbot-floating-dialog';
 
@@ -29,6 +30,7 @@ const CHATBOT_DIALOG_ID = 'chatbot-floating-dialog';
 })
 export class ShellComponent {
   private readonly authService = inject(AuthService);
+  private readonly userService = inject(UserService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly document = inject(DOCUMENT);
@@ -43,14 +45,30 @@ export class ShellComponent {
     { initialValue: Date.now() },
   );
 
-  readonly username = signal('CAIXA');
+  readonly username = computed(() => this.userService.usuario()?.nome ?? this.authService.username());
   readonly isSidenavOpen = signal(false);
-  readonly matricula = signal('123456');
+  readonly matricula = computed(() => this.userService.usuario()?.matricula ?? '–');
   readonly dataAtual = computed(() => this.formatarDataAtual());
+  private readonly usuarioApiSincronizado = signal(false);
 
   private readonly scrollToTopOnNavigation = effect(() => {
     this.navigationTick();
     this.resetScrollPosition();
+  });
+
+  private readonly carregarUsuarioDaApi = effect(() => {
+    const logado = this.authService.isLoggedIn();
+    if (!logado) {
+      this.usuarioApiSincronizado.set(false);
+      return;
+    }
+
+    if (this.usuarioApiSincronizado()) {
+      return;
+    }
+
+    this.usuarioApiSincronizado.set(true);
+    this.userService.carregarUsuario();
   });
 
   toggleSidenav(): void {
@@ -67,6 +85,7 @@ export class ShellComponent {
   }
 
   logout(): void {
+    this.userService.limpar();
     this.authService.logout();
     this.router.navigate(['/login']);
   }

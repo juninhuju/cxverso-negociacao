@@ -20,6 +20,40 @@ export interface Contrato {
   readonly garantia?: string;
 }
 
+export interface GarantiaContratoDetalhe {
+  readonly id: number;
+  readonly tipo: string;
+  readonly descricao: string;
+  readonly valorGarantia: number | null;
+  readonly registroGarantia: string | null;
+}
+
+export interface ContratoDetalhe {
+  readonly id: number;
+  readonly clienteId: number;
+  readonly tipoContrato: string;
+  readonly saldoDevedor: number;
+  readonly desconto: number | null;
+  readonly valorDesconto: number | null;
+  readonly saldoRenegociado: number | null;
+  readonly entradaNegociacao: number | null;
+  readonly entradaTotal: number | null;
+  readonly valorFinanciado: number | null;
+  readonly parcelaMinima: number | null;
+  readonly parcelaMaxima: number | null;
+  readonly jurosAoMesTaxa: number | null;
+  readonly iofTaxa: number | null;
+  readonly cet: number | null;
+  readonly possuiGarantia: boolean;
+  readonly quantidadeGarantias: number;
+  readonly garantias: readonly GarantiaContratoDetalhe[];
+  readonly statusDivida: string;
+  readonly statusNegociacao: string;
+  readonly custasCartorarias: number;
+  readonly custas: number;
+  readonly honorarios: number;
+}
+
 export interface ConsultaJuridica {
   readonly solicitacaoId: string;
   readonly status: StatusValidacao;
@@ -77,6 +111,7 @@ export interface ResultadoRenegociacao {
 }
 
 export interface RenegociacaoSession {
+  readonly contratos: readonly Contrato[];
   readonly contrato: Contrato | null;
   readonly validacaoOperacional: ValidacaoOperacional | null;
   readonly consultaJuridica: ConsultaJuridica | null;

@@ -11,7 +11,7 @@
       <div class="form-group">
         <label for="username">Usuário</label>
         <input id="username" type="text" [ngModel]="username()" (ngModelChange)="username.set($event)" name="username"
-          placeholder="Digite seu usuário" autocomplete="username" />
+          placeholder="Digite seu usuário" autocomplete="username" title="C123456" />
       </div>
 
       <div class="form-group">
@@ -19,7 +19,7 @@
         <div class="password-input-wrapper">
           <input id="password" [type]="hidePassword() ? 'password' : 'text'" [ngModel]="password()"
             (ngModelChange)="password.set($event)" name="password" placeholder="Digite sua senha"
-            autocomplete="current-password" />
+            autocomplete="current-password" title="123456" />
           <button mat-icon-button type="button" class="toggle-password"
             [attr.aria-label]="hidePassword() ? 'Mostrar senha' : 'Ocultar senha'" [attr.aria-pressed]="!hidePassword()"
             (click)="toggleHidePassword()">

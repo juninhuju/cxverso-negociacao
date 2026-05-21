@@ -10,6 +10,8 @@
 export {
     ConsultaJuridica,
     Contrato,
+    ContratoDetalhe,
+    GarantiaContratoDetalhe,
     OpcaoSimulacao,
     Parcela,
     RenegociacaoSession,

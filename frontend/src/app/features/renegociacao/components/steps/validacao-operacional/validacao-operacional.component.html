@@ -34,14 +34,18 @@
         <div class="card-intro">Rastreabilidade e segurança jurídica</div>
         <section class="microcopy-custas">
           <span class="garantia-label">Garantia</span>
-          <div class="garantia-valor">{{ garantia.tipo }}</div>
+          <div class="garantia-valor">{{ garantia().tipo }}</div>
         </section>
         <div class="garantia-valor-registro">
-          <span>Valor da garantia: {{ garantia.valor | currency:'BRL':'symbol':'1.2-2' }}</span>
-          <span>Registro: {{ garantia.registro }}</span>
+          @if (garantia().valor !== null) {
+          <span>Valor da garantia: {{ garantia().valor | currency:'BRL':'symbol':'1.2-2' }}</span>
+          } @else {
+          <span>Valor da garantia: Não informado</span>
+          }
+          <span>Registro: {{ garantia().registro }}</span>
         </div>
         <div class="garantia-endereco">
-          <span>{{ garantia.endereco }}</span>
+          <span>{{ garantia().endereco }}</span>
         </div>
       </section>
 
@@ -63,7 +67,7 @@
     <div class="coluna">
       <section class="card validacoes-card">
         <h2>Validações Automáticas</h2>
-        @for (v of validacoes; track v.label) {
+        @for (v of validacoes(); track v.label) {
         <section class="validacao-item" [ngClass]="v.valido ? 'valida' : 'invalida'">
           <mat-icon aria-hidden="true">check_circle</mat-icon>
           <span class="validacao-item-texto">

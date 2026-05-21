@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { buildFriendlyApiErrorMessage } from '../../../core/http/api-error.util';
@@ -26,9 +26,33 @@ export class AcompanhamentoDashboardService {
   }
 
   listarSolicitacoes(): Observable<SolicitacaoAcompanhamento[]> {
+    const localData = this.carregarHistoricoLocal();
     return this.http
       .get<SolicitacaoAcompanhamento[]>(`${this.baseUrl}/negociacoes`)
-      .pipe(catchError((error: unknown) => this.toFriendlyError(error, 'consultar solicitacoes')));
+      .pipe(
+        map((apiData) => this.mesclarSolicitacoes(localData, apiData)),
+        catchError(() => of(localData)),
+      );
+  }
+
+  private carregarHistoricoLocal(): SolicitacaoAcompanhamento[] {
+    try {
+      const raw = localStorage.getItem('negocia_caixa_historico') ?? '[]';
+      return JSON.parse(raw) as SolicitacaoAcompanhamento[];
+    } catch {
+      return [];
+    }
+  }
+
+  private mesclarSolicitacoes(
+    local: SolicitacaoAcompanhamento[],
+    api: SolicitacaoAcompanhamento[],
+  ): SolicitacaoAcompanhamento[] {
+    const mapa = new Map<string, SolicitacaoAcompanhamento>();
+    for (const item of api) mapa.set(item.protocolo, item);
+    // localStorage tem prioridade (persiste entre sessões)
+    for (const item of local) mapa.set(item.protocolo, item);
+    return Array.from(mapa.values()).sort((a, b) => b.dataInicio.localeCompare(a.dataInicio));
   }
 
   buscarContratosPorDocumento(documento: string): Observable<Contrato[]> {

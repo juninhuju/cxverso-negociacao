@@ -18,6 +18,7 @@ export const selectError = createSelector(
 );
 
 export const selectContrato = createSelector(selectSession, (session: RenegociacaoSession) => session.contrato);
+export const selectContratos = createSelector(selectSession, (session: RenegociacaoSession) => session.contratos);
 export const selectValidacaoOperacional = createSelector(
 	selectSession,
 	(session: RenegociacaoSession) => session.validacaoOperacional,

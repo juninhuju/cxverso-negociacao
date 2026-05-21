@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { UserService } from '../../core/auth/user.service';
 import { RenegociacaoFacade } from '../../states/renegociacao/renegociacao.facade';
 
 @Component({
@@ -26,6 +27,7 @@ import { RenegociacaoFacade } from '../../states/renegociacao/renegociacao.facad
 })
 export class LoginComponent {
   private readonly auth = inject(AuthService);
+  private readonly userService = inject(UserService);
   private readonly router = inject(Router);
   private readonly renegociacaoFacade = inject(RenegociacaoFacade);
 
@@ -62,6 +64,7 @@ export class LoginComponent {
 
     this.buscaPendente.set(false);
     this.auth.login(contrato.cliente, '');
+    this.userService.carregarUsuario();
     this.router.navigate(['/renegociacao'], {
       state: { contratoSelecionado: contrato },
     });
@@ -71,6 +74,7 @@ export class LoginComponent {
     const user = this.username().trim();
     if (!user) return;
     this.auth.login(user, this.password());
+    this.userService.carregarUsuario();
     this.router.navigate(['/renegociacao']);
   }
 

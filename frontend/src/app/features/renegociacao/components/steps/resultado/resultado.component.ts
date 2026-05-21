@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 
+const HISTORICO_KEY = 'negocia_caixa_historico';
+
 @Component({
   selector: 'app-resultado',
   standalone: true,
@@ -45,6 +47,7 @@ export class ResultadoComponent {
   );
   readonly iofValor = computed(() => this.saldoAFinanciar() * this.iofTaxa);
   readonly cetTaxa = computed(() => (this.simulacao()?.taxaJuros ?? 0) + this.iofTaxa);
+  readonly jurosValorPositivo = computed(() => Math.abs(this.simulacao()?.totalJuros ?? 0));
   readonly cetValor = computed(() =>
     this.saldoAFinanciar() + (this.simulacao()?.totalJuros ?? 0) + this.iofValor()
   );
@@ -53,8 +56,48 @@ export class ResultadoComponent {
   );
 
   continuar(): void {
+    this.salvarNegociacaoLocalStorage();
+    this.facade.formalizar();
     this.facade.avancarStep();
     this.router.navigate(['/renegociacao/conclusao']);
+  }
+
+  private salvarNegociacaoLocalStorage(): void {
+    const contrato = this.contrato();
+    const simulacao = this.simulacao();
+    if (!contrato || !simulacao) return;
+
+    const agora = new Date().toISOString().slice(0, 19);
+    const valorTotal = simulacao.totalPago;
+    const protocolo = `NEG-${contrato.numero}-${Date.now()}`;
+    const entrada = {
+      id: protocolo,
+      protocolo,
+      numeroContrato: contrato.numero,
+      cliente: contrato.cliente,
+      cpfCnpj: contrato.cpfCnpj,
+      produto: contrato.produto,
+      valorTotal,
+      valorTotalFormatado: new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(valorTotal),
+      dataInicio: agora,
+      dataUltimo: agora,
+      status: 'CONCLUIDA' as const,
+      contratoCaixa: contrato.numero,
+    };
+
+    try {
+      const historico: typeof entrada[] = JSON.parse(localStorage.getItem(HISTORICO_KEY) ?? '[]');
+      const jaExiste = historico.some((h) => h.numeroContrato === contrato.numero && h.status === 'CONCLUIDA');
+      if (!jaExiste) {
+        historico.push(entrada);
+        localStorage.setItem(HISTORICO_KEY, JSON.stringify(historico));
+      }
+    } catch {
+      // localStorage indisponível, ignorar
+    }
   }
 
   voltar(): void {

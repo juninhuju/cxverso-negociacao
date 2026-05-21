@@ -78,7 +78,7 @@
         </article>
         <article>
           <span class="label">Valor do juros (taxa {{ simAtual.taxaJuros | percent:'1.2-2' }} a.m.)</span>
-          <span class="valor">{{ simAtual.totalJuros | currency:'BRL':'symbol':'1.2-2' }}</span>
+          <span class="valor">{{ jurosValorPositivo() | currency:'BRL':'symbol':'1.2-2' }}</span>
         </article>
         <article>
           <span class="label">IOF (0,38%)</span>

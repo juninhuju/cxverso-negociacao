@@ -8,6 +8,7 @@ export interface RenegociacaoState {
 
 export const initialRenegociacaoState: RenegociacaoState = {
   session: {
+    contratos: [],
     contrato: null,
     validacaoOperacional: null,
     consultaJuridica: null,

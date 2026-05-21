@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import {
     ConsultaJuridica,
     Contrato,
+    ContratoDetalhe,
     ResultadoRenegociacao,
     SimulacaoRenegociacao,
     SimulacoesDisponiveis,
@@ -18,19 +19,26 @@ import { buildFriendlyApiErrorMessage } from '../http/api-error.util';
 export class RenegociacaoApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.bffUrl}/renegociacao`;
+  private readonly negociacaoUrl = `${environment.bffUrl}/negociacao`;
 
   private toFriendlyError(error: unknown, contexto: string): Observable<never> {
     return throwError(() => new Error(buildFriendlyApiErrorMessage(error, contexto)));
   }
 
-  buscarContrato(termo: string): Observable<Contrato> {
+  buscarContrato(termo: string): Observable<Contrato[]> {
     const params = new HttpParams().set('termo', termo);
     return this.http
-      .get<BffResponse<Contrato>>(`${this.baseUrl}/contratos`, { params })
+      .get<BffResponse<Contrato[]>>(`${this.baseUrl}/contratos`, { params })
       .pipe(
         map((res) => res.data),
         catchError((error: unknown) => this.toFriendlyError(error, 'buscar contrato')),
       );
+  }
+
+  carregarDetalheContrato(numeroContrato: string): Observable<ContratoDetalhe> {
+    return this.http
+      .get<ContratoDetalhe>(`${this.negociacaoUrl}/contratos/${numeroContrato}`)
+      .pipe(catchError((error: unknown) => this.toFriendlyError(error, 'carregar detalhe do contrato')));
   }
 
   solicitarConsultaJuridica(numeroContrato: string): Observable<ConsultaJuridica> {

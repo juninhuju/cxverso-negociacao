@@ -21,7 +21,7 @@ interface ConsultaJuridicaDialogData {
 })
 export class ConsultaJuridicaComponent {
   private readonly facade = inject(RenegociacaoFacade);
-  private readonly dialogRef = inject(MatDialogRef<ConsultaJuridicaComponent, 'voltar' | 'continuar'>, {
+  private readonly dialogRef = inject(MatDialogRef<ConsultaJuridicaComponent, 'continuar'>, {
     optional: true,
   });
   private readonly data = inject<ConsultaJuridicaDialogData | null>(MAT_DIALOG_DATA, {
@@ -57,10 +57,6 @@ export class ConsultaJuridicaComponent {
     );
   });
 
-  fechar(): void {
-    this.dialogRef?.close('voltar');
-  }
-
   alternarEdicao(): void {
     this.modoEdicao = !this.modoEdicao;
     this.aviso = this.modoEdicao
@@ -71,16 +67,24 @@ export class ConsultaJuridicaComponent {
   async copiarTexto(): Promise<void> {
     try {
       await navigator.clipboard.writeText(this.emailTexto);
-      this.aviso = 'Texto copiado para a area de transferencia.';
+      this.aviso = 'Texto copiado para a área de transferência.';
     } catch {
-      this.aviso = 'Nao foi possivel copiar o texto neste navegador.';
+      this.aviso = 'Não foi possível copiar o texto neste navegador.';
     }
   }
 
-  enviarConsulta(): void {
-    this.aviso = 'Consulta enviada com sucesso.';
-    this.dialogRef?.close('continuar');
-  }
+
+enviarConsulta(): void {
+  this.aviso = 'Consulta enviada com sucesso.';
+
+  setTimeout(() => {
+    this.fechar();
+  }, 1500);
+}
+
+fechar(): void {
+  this.dialogRef?.close();
+}
 
   private montarTextoEmail(
     contratoAtual: Contrato,

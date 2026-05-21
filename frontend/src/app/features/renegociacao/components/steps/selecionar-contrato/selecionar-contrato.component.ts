@@ -31,15 +31,8 @@ export class SelecionarContratoComponent {
   readonly loading = this.facade.loading;
   readonly error = this.facade.error;
   readonly contrato = this.facade.contrato;
-
-  readonly contratosCliente = computed(() => {
-    const contratoAtual = this.contrato();
-    if (!contratoAtual) {
-      return [];
-    }
-
-    return [contratoAtual];
-  });
+  readonly contratosCliente = this.facade.contratos;
+  readonly contratoPrincipal = computed(() => this.contratosCliente()[0] ?? this.contrato());
 
   readonly totalContratos = computed(() => this.contratosCliente().length);
 

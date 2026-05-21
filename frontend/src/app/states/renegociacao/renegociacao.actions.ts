@@ -12,7 +12,7 @@ export const RenegociacaoActions = createActionGroup({
   events: {
     // Busca de contrato
     'Buscar Contrato': props<{ termo: string }>(),
-    'Buscar Contrato Success': props<{ contrato: Contrato }>(),
+    'Buscar Contrato Success': props<{ contratos: Contrato[] }>(),
     'Buscar Contrato Failure': props<{ error: string }>(),
 
     // Validação operacional

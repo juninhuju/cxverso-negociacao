@@ -1,11 +1,13 @@
 import { CommonModule, CurrencyPipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { RenegociacaoApiService } from '../../../../../core/auth/renegociacao-api.service';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
+import { ContratoDetalhe } from '../../../models/renegociacao.model';
 import { ConsultaJuridicaComponent } from '../consulta-juridica/consulta-juridica.component';
 
 @Component({
@@ -26,6 +28,7 @@ export class ValidacaoOperacionalComponent {
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly api = inject(RenegociacaoApiService);
 
 
   readonly stepAtual = this.facade.stepAtual;
@@ -33,64 +36,83 @@ export class ValidacaoOperacionalComponent {
   readonly error = this.facade.error;
   readonly contrato = this.facade.contrato;
   readonly validacao = this.facade.validacaoOperacional;
+  readonly detalheContrato = signal<ContratoDetalhe | null>(null);
 
+  private ultimoContratoDetalhado: string | null = null;
 
-  // Mock de contrato atual (substitua por this.contrato() real)
-  contratoAtual = {
-    numero: '100000001',
-    cliente: 'Ana Paula Souza',
-    produto: 'Crédito Pessoal',
-    valorDevido: 15000.00,
-    status: 'EXECUCAO_EXTRAJUDICIAL',
-    diasAtraso: 124,
-    garantia: 'Imóvel',
-  };
+  private readonly carregarDetalheContratoEffect = effect(() => {
+    const contrato = this.contrato();
+    if (!contrato || this.ultimoContratoDetalhado === contrato.numero) {
+      return;
+    }
 
-  // Custas e entrada dinâmicas
+    this.ultimoContratoDetalhado = contrato.numero;
+    this.api.carregarDetalheContrato(contrato.numero).subscribe({
+      next: (detalhe) => this.detalheContrato.set(detalhe),
+      error: () => this.detalheContrato.set(null),
+    });
+  });
+
   get entradaMinima(): number {
-    return Math.round((this.contratoAtual.valorDevido * 0.10) * 100) / 100;
+    const contrato = this.contrato();
+    if (!contrato) {
+      return 0;
+    }
+    return Math.round((contrato.valorDevido * 0.10) * 100) / 100;
   }
 
   get custasTotal(): number {
-    return this.contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'
-      ? Math.round((this.contratoAtual.valorDevido * 0.125) * 100) / 100
-      : 0;
+    const detalhe = this.detalheContrato();
+    if (!detalhe) {
+      return 0;
+    }
+
+    return Math.round((detalhe.custasCartorarias + detalhe.custas + detalhe.honorarios) * 100) / 100;
   }
 
   entrada = 0;
 
-  // Validações automáticas (mock)
-  readonly validacoes = [
-    {
-      label: 'Sem impedimentos jurídicos identificados',
-      valido: true
-    },
-    {
-      label: 'Sem impedimentos relativos à execução extrajudicial',
-      valido: true
-    },
-    {
-      label: 'Critérios de risco e crédito validados',
-      valido: true
-    },
-    {
-      label: 'Custas extrajudiciais identificadas',
-      valido: this.contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL'
-    },
-    {
-      label: 'Laudo',
-      valido: true // ou false para testar cor vermelha
-    }
-  ];
+  readonly validacoes = computed(() => {
+    const contrato = this.contrato();
+    const detalhe = this.detalheContrato();
 
-  // Garantia mock
-  readonly garantia = {
-    tipo: this.contratoAtual.garantia,
-    valor: 200000.00,
-    registro: 'Matrícula 12345',
-    endereco: 'Rua Exemplo, 123, Centro, Cidade/UF',
-    valida: true
-  };
+    return [
+      {
+        label: 'Sem impedimentos jurídicos identificados',
+        valido: true,
+      },
+      {
+        label: 'Sem impedimentos relativos à execução extrajudicial',
+        valido: true,
+      },
+      {
+        label: 'Critérios de risco e crédito validados',
+        valido: true,
+      },
+      {
+        label: 'Custas extrajudiciais identificadas',
+        valido: contrato?.status === 'EXECUCAO_EXTRAJUDICIAL' || (detalhe ? this.custasTotal > 0 : false),
+      },
+      {
+        label: 'Laudo',
+        valido: true,
+      },
+    ];
+  });
+
+  readonly garantia = computed(() => {
+    const contrato = this.contrato();
+    const detalhe = this.detalheContrato();
+    const primeiraGarantia = detalhe?.garantias?.[0];
+
+    return {
+      tipo: primeiraGarantia ? this.formatarTipoGarantia(primeiraGarantia.tipo) : (contrato?.garantia ?? 'Não informado'),
+      valor: primeiraGarantia?.valorGarantia ?? null,
+      registro: primeiraGarantia?.registroGarantia ?? 'Não informado',
+      endereco: primeiraGarantia?.descricao ?? 'Não informado',
+      valida: Boolean(primeiraGarantia),
+    };
+  });
 
 
   async abrirConsultaJuridica(): Promise<void> {
@@ -131,5 +153,14 @@ export class ValidacaoOperacionalComponent {
   voltar(): void {
     this.facade.voltarStep();
     this.router.navigate(['/renegociacao/selecionar']);
+  }
+
+  private formatarTipoGarantia(tipo: string): string {
+    const mapa: Record<string, string> = {
+      IMOVEL: 'Imóvel',
+      VEICULO: 'Veículo',
+    };
+
+    return mapa[tipo] ?? tipo;
   }
 }

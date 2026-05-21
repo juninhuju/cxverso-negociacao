@@ -18,7 +18,7 @@ export class RenegociacaoEffects {
       ofType(RenegociacaoActions.buscarContrato),
       switchMap(({ termo }) =>
         this.api.buscarContrato(termo).pipe(
-          map((contrato) => RenegociacaoActions.buscarContratoSuccess({ contrato })),
+          map((contratos) => RenegociacaoActions.buscarContratoSuccess({ contratos })),
           catchError((err: unknown) =>
             of(
               RenegociacaoActions.buscarContratoFailure({

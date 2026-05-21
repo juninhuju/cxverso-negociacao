@@ -1,5 +1,6 @@
 export interface DadosUsuario {
-    "matricula": string,
-    "nome": string,
-    "senha": string
+  id: number;
+  matricula: string;
+  nome: string;
+  senha: string;
 }

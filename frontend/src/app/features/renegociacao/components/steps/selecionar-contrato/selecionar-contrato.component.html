@@ -10,13 +10,13 @@
   </p>
 
   <!-- CLIENTE -->
-  @if (contrato()) {
+  @if (contratoPrincipal()) {
   <section class="cliente-card">
     <mat-icon>business</mat-icon>
 
     <div class="cliente">
-      <strong>Cliente: {{ contrato()!.cliente }}</strong>
-      <span>CNPJ: {{ contrato()!.cpfCnpj }}</span>
+      <strong>Cliente: {{ contratoPrincipal()!.cliente }}</strong>
+      <span>CNPJ: {{ contratoPrincipal()!.cpfCnpj }}</span>
     </div>
   </section>
   }

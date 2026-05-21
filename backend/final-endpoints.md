@@ -597,6 +597,53 @@ curl -X GET "http://localhost:8080/negociacao/negociacoes/5001" \\\\
 
 * **POST** `/negociacao/negociacoes` → Formaliza uma negociação (cria e fecha)
 * **GET** `/negociacao/negociacoes/{negociacaoId}` → Consulta uma negociação existente
+* **GET** `/user` → Retorna dados do usuário autenticado
 
+---
+
+# Endpoint — Usuário
+
+## ✅ Endpoint
+
+**GET** `/user`
+
+## O que faz?
+
+Retorna os dados do usuário autenticado na sessão.
+
+## Model — `DadosUsuario`
+
+| Campo       | Tipo     | Descrição                          |
+| ----------- | -------- | ---------------------------------- |
+| `id`        | `number` | Identificador único do usuário     |
+| `matricula` | `string` | Matrícula funcional (ex.: C123456) |
+| `nome`      | `string` | Nome completo do usuário           |
+| `senha`     | `string` | Senha (hash — não exibir em texto plano em produção) |
+
+## Exemplo de requisição (cURL)
+
+```bash
+curl -X GET "http://localhost:8080/user" \
+  -H "Accept: application/json"
+```
+
+## Resposta de sucesso — `200 OK`
+
+```json
+{
+  "id": 1,
+  "matricula": "C123456",
+  "nome": "Usuário",
+  "senha": "123456"
+}
+```
+
+## Erros possíveis
+
+| Status | Título              | Detalhe                            |
+| ------ | ------------------- | ---------------------------------- |
+| `404`  | Usuário não encontrado | Nenhum usuário com o id informado |
+
+---
 
 

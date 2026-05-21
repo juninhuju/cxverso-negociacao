@@ -63,7 +63,7 @@ export class BuscaContratoComponent {
 
     const termo = this.termoBuscaPendente();
     const error = this.error();
-    const contrato = this.facade.contrato();
+    const contratos = this.facade.contratos();
 
     if (error) {
       this.buscaPendente.set(false);
@@ -71,11 +71,11 @@ export class BuscaContratoComponent {
       return;
     }
 
-    if (!contrato) {
+    if (!contratos.length) {
       return;
     }
 
-    if (!this.contratoCorrespondeAoTermo(termo, contrato.numero, contrato.cpfCnpj)) {
+    if (!this.existeContratoCorrespondenteAoTermo(termo, contratos)) {
       return;
     }
 
@@ -106,16 +106,19 @@ export class BuscaContratoComponent {
     setTimeout(() => this.erroSync.set(null), 3000);
   }
 
-  private contratoCorrespondeAoTermo(
+  private existeContratoCorrespondenteAoTermo(
     termo: string,
-    numeroContrato: string,
-    cpfCnpj: string,
+    contratos: readonly { numero: string; cpfCnpj: string }[],
   ): boolean {
     const termoNormalizado = termo.replace(/\D/g, '');
-    return (
-      numeroContrato === termo ||
-      cpfCnpj === termo ||
-      cpfCnpj.replace(/\D/g, '') === termoNormalizado
-    );
+
+    return contratos.some((contrato) => {
+      const cpfCnpj = contrato.cpfCnpj ?? '';
+      return (
+        contrato.numero === termo ||
+        cpfCnpj === termo ||
+        cpfCnpj.replace(/\D/g, '') === termoNormalizado
+      );
+    });
   }
 }

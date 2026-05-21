@@ -11,6 +11,10 @@ const jurosAoMesTaxa = 0.0199;
 const iofTaxa = 0.0038;
 const cet = jurosAoMesTaxa + iofTaxa;
 
+const usuarios = [
+  { id: 1, matricula: 'C123456', nome: 'Usuário', senha: '123456' }
+];
+
 const clientes = [
   { id: 1, nome: 'Maria da Silva', cpf: '12345678901' },
   { id: 2, nome: 'Joao Souza', cpf: '98765432100' },
@@ -23,6 +27,7 @@ const contratos = [
     clienteId: 1,
     tipoContrato: 'Habitacional',
     saldoDevedor: 25000.75,
+    diasAtraso: 45,
     desconto: 0.15,
     statusDivida: 'EM_ATRASO',
     statusNegociacao: 'EM_NEGOCIACAO',
@@ -32,13 +37,14 @@ const contratos = [
     parcelaMinima: 6,
     parcelaMaxima: 48,
     possuiGarantia: true,
-    garantias: [{ id: 5, tipo: 'IMOVEL', descricao: 'Apartamento Asa Norte' }]
+    garantias: [{ id: 5, tipo: 'IMOVEL', descricao: 'Apartamento Asa Norte', valorGarantia: 180000.00, registroGarantia: 'Matrícula 45231-1' }]
   },
   {
     id: 11,
     clienteId: 1,
     tipoContrato: 'Consignado',
     saldoDevedor: 7800,
+    diasAtraso: 0,
     desconto: 0.05,
     statusDivida: 'REGULAR',
     statusNegociacao: 'FORMALIZADA',
@@ -55,6 +61,7 @@ const contratos = [
     clienteId: 2,
     tipoContrato: 'Veiculo',
     saldoDevedor: 15300.4,
+    diasAtraso: 62,
     desconto: 0.12,
     statusDivida: 'EM_ATRASO',
     statusNegociacao: 'EM_NEGOCIACAO',
@@ -64,13 +71,14 @@ const contratos = [
     parcelaMinima: 6,
     parcelaMaxima: 24,
     possuiGarantia: true,
-    garantias: [{ id: 8, tipo: 'VEICULO', descricao: 'Automovel hatch 2019' }]
+    garantias: [{ id: 8, tipo: 'VEICULO', descricao: 'Automóvel hatch 2019', valorGarantia: 42000.00, registroGarantia: 'RENAVAM 00123456789' }]
   },
   {
     id: 30,
     clienteId: 3,
     tipoContrato: 'Pessoal',
     saldoDevedor: 10450.2,
+    diasAtraso: 30,
     desconto: 0.1,
     statusDivida: 'EM_ATRASO',
     statusNegociacao: 'EM_NEGOCIACAO',
@@ -167,7 +175,7 @@ function contratoFrontDto(contrato) {
     valorDevido: contrato.saldoDevedor,
     dataVencimento: '',
     status: mapearStatusFront(contrato.statusDivida),
-    diasAtraso: contrato.statusDivida === 'EM_ATRASO' ? 45 : 0,
+    diasAtraso: contrato.diasAtraso ?? 0,
     garantia: contrato.possuiGarantia ? 'SIM' : 'NAO'
   };
 }
@@ -185,6 +193,23 @@ function encontrarContratoPorTermo(termo) {
   const idContrato = parsePositiveInt(normalizado);
   if (!idContrato) return null;
   return contratos.find((c) => c.id === idContrato) || null;
+}
+
+function encontrarContratosPorTermo(termo) {
+  const normalizado = String(termo || '').replace(/\D/g, '');
+  if (!normalizado) return [];
+
+  if (normalizado.length === 11) {
+    const cliente = clientes.find((c) => c.cpf === normalizado);
+    if (!cliente) return [];
+    return contratos.filter((c) => c.clienteId === cliente.id);
+  }
+
+  const idContrato = parsePositiveInt(normalizado);
+  if (!idContrato) return [];
+
+  const contrato = contratos.find((c) => c.id === idContrato);
+  return contrato ? [contrato] : [];
 }
 
 function contratoDetalheDto(contrato) {
@@ -447,11 +472,11 @@ app.get('/negociacao/negociacoes/:negociacaoId', (req, res) => {
 
 // Compatibilidade para o frontend atual (BFF /api)
 app.get('/api/renegociacao/contratos', (req, res) => {
-  const contrato = encontrarContratoPorTermo(req.query.termo);
-  if (!contrato) {
+  const contratosEncontrados = encontrarContratosPorTermo(req.query.termo);
+  if (!contratosEncontrados.length) {
     return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para o termo informado.', req.originalUrl);
   }
-  return res.json({ data: contratoFrontDto(contrato) });
+  return res.json({ data: contratosEncontrados.map(contratoFrontDto) });
 });
 
 app.post('/api/renegociacao/consulta-juridica', (req, res) => {
@@ -477,11 +502,13 @@ app.post('/api/renegociacao/validacao-operacional', (req, res) => {
     return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para validacao operacional.', req.originalUrl);
   }
 
+  const aptoParaRenegociacao = contrato.statusDivida !== 'CEDIDO';
+
   return res.json({
     data: {
       status: 'APROVADO',
-      aptoParaRenegociacao: contrato.statusNegociacao === 'EM_NEGOCIACAO',
-      impedimentos: contrato.statusNegociacao === 'EM_NEGOCIACAO' ? [] : ['Contrato fora da fase de negociacao'],
+      aptoParaRenegociacao,
+      impedimentos: aptoParaRenegociacao ? [] : ['Contrato cedido para outra instituição'],
       uploadAtendido: true,
       checksEtapasAnteriores: true,
       validadoEm: new Date().toISOString()
@@ -603,7 +630,38 @@ app.get('/api/negociacao/contratos/:contratoId', (req, res) => {
 });
 
 app.get('/api/negociacao/negociacoes', (_req, res) => {
-  return res.json(Array.from(negociacoes.values()));
+  const lista = Array.from(negociacoes.values()).map((neg) => {
+    const contrato = contratos.find((c) => c.id === neg.contratoId);
+    const cliente = contrato ? clientes.find((c) => c.id === contrato.clienteId) : null;
+    const valorTotal = round2(neg.entradaNegociacao + neg.valorParcela * neg.quantidadeParcelas);
+    return {
+      id: String(neg.negociacaoId),
+      protocolo: `NEG-${neg.negociacaoId}`,
+      numeroContrato: String(neg.contratoId),
+      cliente: cliente ? cliente.nome : `Cliente ${neg.contratoId}`,
+      cpfCnpj: cliente ? cliente.cpf : '',
+      produto: contrato ? contrato.tipoContrato : '',
+      valorTotal,
+      valorTotalFormatado: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal),
+      dataInicio: neg.criadoEm,
+      dataUltimo: neg.atualizadoEm,
+      status: 'CONCLUIDA',
+      contratoCaixa: String(neg.contratoId),
+    };
+  });
+  return res.json(lista);
+});
+
+app.get('/api/user', (req, res) => {
+  const { matricula } = req.query;
+  if (matricula) {
+    const usuario = usuarios.find((u) => u.matricula === String(matricula));
+    if (!usuario) {
+      return problem(res, 404, 'Usuário não encontrado', `Nenhum usuário com matrícula ${matricula}`, '/api/user');
+    }
+    return res.json(usuario);
+  }
+  return res.json(usuarios[0]);
 });
 
 app.get('/health', (_req, res) => {
