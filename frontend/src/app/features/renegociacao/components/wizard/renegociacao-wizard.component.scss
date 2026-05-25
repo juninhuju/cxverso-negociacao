@@ -203,3 +203,27 @@
     flex-wrap: wrap;
   }
 }
+
+/* 🔷 STEP ICON */
+.step-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--color-gray-300);
+  background: var(--color-gray-100);
+  margin-right: 8px;
+  vertical-align: middle;
+  transition: background 0.2s, border 0.2s;
+}
+
+.step-icon.done {
+  background: var(--color-primary-blue);
+  border-color: var(--color-primary-blue);
+}
+
+.step-icon.current {
+  background: #fff;
+  border-color: var(--color-primary-blue);
+  box-shadow: 0 0 0 2px var(--color-primary-blue33);
+}

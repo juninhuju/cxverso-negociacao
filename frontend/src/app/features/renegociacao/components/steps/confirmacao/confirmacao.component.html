@@ -1,0 +1,82 @@
+<div class="step-card">
+  <header class="step-header">
+    <button type="button" class="step-back-link" (click)="voltar()"
+      aria-label="Voltar para a etapa anterior (Simulação)">← Volta à "Simulação"</button>
+    <h2>Confirmação</h2>
+    <p class="step-subtitle">Contrato {{ contrato()?.numero }} • {{ contrato()?.cliente }}</p>
+  </header>
+
+  <div class="step-content">
+    @if (error()) {
+    <p class="error-message" role="alert"><mat-icon aria-hidden="true">warning</mat-icon> {{ error() }}</p>
+    }
+
+    @if (simulacao(); as simAtual) {
+    <!-- KPIs e detalhamento da simulação -->
+    <section class="card card--resultado">
+      <h3 class="card-title">Resultado da Simulação</h3>
+      <div class="resultado-kpis">
+        <div class="kpi-item">
+          <span class="kpi-label">Valor da Parcela</span>
+          <strong class="kpi-value">{{ simAtual.valorParcela | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+        <div class="kpi-item">
+          <span class="kpi-label">Total Negociação</span>
+          <strong class="kpi-value">{{ cetValor() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+        </div>
+      </div>
+      <div class="detalhamento">
+        <h4 class="detalhamento-title">DETALHAMENTO FINANCEIRO</h4>
+        <div class="detalhamento-grid">
+          <div class="grid-item">
+            <span class="label">Saldo Devedor</span>
+            <strong class="value">{{ saldoRenegociado() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+          </div>
+          <div class="grid-item">
+            <span class="label">Entrada + Custas</span>
+            <strong class="value">{{ (simAtual.valorEntrada + custasHonorarios()) |
+              currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+          </div>
+          <div class="grid-item">
+            <span class="label">Custas</span>
+            <strong class="value">{{ custasHonorarios() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+          </div>
+          <div class="grid-item">
+            <span class="label">Parcelas</span>
+            <strong class="value">{{ simAtual.numeroParcelas }}x</strong>
+          </div>
+          <div class="grid-item">
+            <span class="label">Juros</span>
+            <strong class="value-secondary">{{ simAtual.taxaJuros | percent:'1.2-2':'pt-BR' }} a.a.</strong>
+          </div>
+          <div class="grid-item">
+            <span class="label">Total</span>
+            <strong class="value">{{ cetValor() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+          </div>
+        </div>
+        <h4 class="detalhamento-title detalhamento-title--secondary">RESUMO DO FINANCIAMENTO</h4>
+        <div class="detalhamento-grid detalhamento-grid--resume">
+          <div class="grid-item">
+            <span class="label">Saldo Original</span>
+            <strong class="value">{{ saldoRenegociado() | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+          </div>
+          <div class="grid-item">
+            <span class="label">Entrada</span>
+            <strong class="value">{{ simAtual.valorEntrada | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+    } @else {
+    <p class="empty-state" role="status">
+      Nenhuma simulação disponível. Retorne e realize a simulação.
+    </p>
+    }
+  </div>
+
+  <div class="step-actions">
+    <button class="btn-secondary" (click)="voltar()" aria-label="Voltar para a etapa anterior">Voltar</button>
+    <button class="btn-primary" [disabled]="!simulacao()" (click)="continuar()"
+      aria-label="Finalizar a renegociação">Finalizar Renegociação</button>
+  </div>
+</div>

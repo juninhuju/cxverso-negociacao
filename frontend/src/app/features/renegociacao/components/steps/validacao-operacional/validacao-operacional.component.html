@@ -1,115 +1,218 @@
 <section class="validacao-operacional">
-  <button type="button" class="step-back-link" (click)="voltar()"
-    aria-label="Voltar para etapa de seleção de contrato">← Voltar para contrato</button>
+
+  <button type="button" class="step-back-link" (click)="voltar()" aria-label="Voltar para etapa de seleção de contrato">
+    ← Voltar para contrato
+  </button>
+
   <h1 class="titulo">Validação Operacional do contrato</h1>
 
   @if (contrato(); as contratoAtual) {
+
+  <!-- ================= HEADER ================= -->
   <div class="contrato-info">
     <span class="contrato-numero">Contrato: {{ contratoAtual.numero }}</span>
     <span class="contrato-cliente">Cliente: {{ contratoAtual.cliente }}</span>
   </div>
 
   <div class="colunas">
+
+    <!-- ================= COLUNA ESQUERDA ================= -->
     <div class="coluna">
+
+      <!-- ===== DADOS DO CONTRATO ===== -->
       <section class="card">
         <h2>Dados do contrato</h2>
+
         <dl>
           <dt>Número do contrato</dt>
           <dd>{{ contratoAtual.numero }}</dd>
+
           <dt>Produto</dt>
           <dd>{{ contratoAtual.produto }}</dd>
+
           <dt>Cliente</dt>
           <dd>{{ contratoAtual.cliente }}</dd>
+
           <dt>Saldo Devedor</dt>
           <dd>{{ contratoAtual.valorDevido | currency:'BRL':'symbol':'1.2-2' }}</dd>
+
           <dt>Dias de Atraso</dt>
           <dd>{{ contratoAtual.diasAtraso }}</dd>
+
           <dt>Status</dt>
           <dd>{{ contratoAtual.status }}</dd>
         </dl>
       </section>
 
+      <!-- ===== GARANTIAS ===== -->
       <section class="card garantia-card">
         <h2>Informações da garantia</h2>
         <div class="card-intro">Rastreabilidade e segurança jurídica</div>
-        <section class="microcopy-custas">
-          <span class="garantia-label">Garantia</span>
-          <div class="garantia-valor">{{ garantia().tipo }}</div>
-        </section>
-        <div class="garantia-valor-registro">
-          @if (garantia().valor !== null) {
-          <span>Valor da garantia: {{ garantia().valor | currency:'BRL':'symbol':'1.2-2' }}</span>
-          } @else {
-          <span>Valor da garantia: Não informado</span>
+
+        @if (garantiasContrato().length > 0) {
+
+        <div class="todas-garantias">
+          @for (g of garantiasContrato(); track (g.registro ?? $index)) {
+
+          <div class="garantia-bloco">
+
+            <span class="garantia-label">Garantia</span>
+
+            <div class="garantia-tipo">
+              {{ g.tipo }}
+            </div>
+
+            <span>
+              Valor da garantia:
+              @if (g.valor != null) {
+              {{ g.valor | currency:'BRL':'symbol':'1.2-2' }}
+              } @else {
+              Não informado
+              }
+            </span>
+
+            <span>
+              Registro: {{ g.registro ?? 'Não informado' }}
+            </span>
+
+            <span>
+              {{ g.endereco ?? g.descricao ?? 'Não informado' }}
+            </span>
+
+          </div>
           }
-          <span>Registro: {{ garantia().registro }}</span>
         </div>
-        <div class="garantia-endereco">
-          <span>{{ garantia().endereco }}</span>
+
+        } @else {
+
+        <!-- ✅ CORREÇÃO IMPORTANTE: NÃO USA MAIS "g" -->
+        <div class="garantia-bloco">
+          <span class="garantia-label">Garantia</span>
+
+          <div class="garantia-valor">
+            Não há garantia vinculada
+          </div>
+
+          <span>Valor da garantia: Não informado</span>
+          <span>Registro: Não informado</span>
+          <span>Descrição: Não informado</span>
         </div>
+
+        }
+
       </section>
 
+      <!-- ===== CUSTAS ===== -->
       @if (contratoAtual.status === 'EXECUCAO_EXTRAJUDICIAL') {
+
       <section class="card custas-card">
+
         <h2>Custas Identificadas</h2>
+
         <section class="custas-resumo">
           <span>Total de custas</span>
-          <div class="valor-custas">{{ custasTotal | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="valor-custas">
+            {{ custasTotal() | currency:'BRL':'symbol':'1.2-2' }}
+          </div>
         </section>
+
         <section class="custas-aviso">
-          <div class="microcopy-custas">Custas do processo de execução extrajudicial obrigatoriamente pagos na entrada.
-            Parcelamento não permitido.</div>
+          <div class="microcopy-custas">
+            Custas do processo de execução extrajudicial obrigatoriamente pagos na entrada.
+            Parcelamento não permitido.
+          </div>
         </section>
+
       </section>
       }
+
     </div>
 
+    <!-- ================= COLUNA DIREITA ================= -->
     <div class="coluna">
+
+      <!-- ===== VALIDAÇÕES ===== -->
       <section class="card validacoes-card">
+
         <h2>Validações Automáticas</h2>
+
         @for (v of validacoes(); track v.label) {
+
         <section class="validacao-item" [ngClass]="v.valido ? 'valida' : 'invalida'">
-          <mat-icon aria-hidden="true">check_circle</mat-icon>
+
+          <mat-icon aria-hidden="true">
+            {{ v.valido ? 'check_circle' : 'cancel' }}
+          </mat-icon>
+
           <span class="validacao-item-texto">
             {{ v.label }}
+
             @if (v.label === 'Laudo') {
             {{ v.valido ? ' válido' : ' inválido' }}
             }
           </span>
+
         </section>
         }
+
       </section>
 
-
+      <!-- ===== STATUS OPERACIONAL ===== -->
       <section class="card" [ngClass]="validacao()?.aptoParaRenegociacao ? 'aprovado' : 'reprovado'">
+
         <h2>Status Operacional</h2>
+
         <div class="status-operacional" [ngClass]="validacao()?.aptoParaRenegociacao ? 'verde' : 'vermelho'">
+
           @if (validacao()?.aptoParaRenegociacao) {
           <span>Apto para renegociação</span>
           } @else {
           <span>Não apto para renegociação</span>
           }
+
         </div>
+
         <div class="status-msg">
           Todas as validações foram concluídas com sucesso.
         </div>
+
         <div class="botoes-status">
-          <button type="button" class="btn-primary" (click)="abrirConsultaJuridica()">Abrir
-            consulta jurídica</button>
-          <button type="button" class="btn-primary" aria-label="Consultar normativo aplicável">Consulta
-            Normativo</button>
+
+          <button type="button" class="btn-primary" (click)="abrirConsultaJuridica()">
+            Abrir consulta jurídica
+          </button>
+
+          <button type="button" class="btn-primary" aria-label="Consultar normativo aplicável">
+            Consulta Normativo
+          </button>
+
         </div>
+
       </section>
+
     </div>
+
   </div>
 
+  <!-- ===== AÇÕES ===== -->
   <div class="step-actions-end">
+
     <button type="button" class="btn-primary" (click)="prosseguirSimulacao()"
-      [disabled]="!validacao()?.aptoParaRenegociacao" aria-label="Simular renegociação">
+      [disabled]="!validacao()?.aptoParaRenegociacao" aria-label="Simular renegociação"
+      [attr.title]="!validacao()?.aptoParaRenegociacao ? 'Contrato não pode ser renegociado' : null">
+
       Simulação
+
     </button>
+
   </div>
+
   } @else {
-  <p class="empty-state" role="status">Contrato não encontrado para validação operacional.</p>
+
+  <p class="empty-state" role="status">
+    Contrato não encontrado para validação operacional.
+  </p>
+
   }
+
 </section>

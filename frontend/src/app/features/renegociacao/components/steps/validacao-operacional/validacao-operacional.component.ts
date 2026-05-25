@@ -1,10 +1,20 @@
 import { CommonModule, CurrencyPipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    signal
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+
 import { RenegociacaoApiService } from '../../../../../core/auth/renegociacao-api.service';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { ContratoDetalhe } from '../../../models/renegociacao.model';
@@ -25,101 +35,101 @@ import { ConsultaJuridicaComponent } from '../consulta-juridica/consulta-juridic
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ValidacaoOperacionalComponent {
+
+  // ================= DEPENDÊNCIAS =================
   private readonly facade = inject(RenegociacaoFacade);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   private readonly api = inject(RenegociacaoApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
-
-  readonly stepAtual = this.facade.stepAtual;
-  readonly loading = this.facade.loading;
-  readonly error = this.facade.error;
+  // ================= STATE =================
   readonly contrato = this.facade.contrato;
   readonly validacao = this.facade.validacaoOperacional;
+
   readonly detalheContrato = signal<ContratoDetalhe | null>(null);
 
-  private ultimoContratoDetalhado: string | null = null;
+  // ================= EFFECT =================
+  private ultimoContratoId: string | null = null;
 
-  private readonly carregarDetalheContratoEffect = effect(() => {
+  private readonly carregarDetalheEffect = effect(() => {
     const contrato = this.contrato();
-    if (!contrato || this.ultimoContratoDetalhado === contrato.numero) {
-      return;
-    }
 
-    this.ultimoContratoDetalhado = contrato.numero;
-    this.api.carregarDetalheContrato(contrato.numero).subscribe({
-      next: (detalhe) => this.detalheContrato.set(detalhe),
-      error: () => this.detalheContrato.set(null),
-    });
+    const contratoId = contrato?.numero ? String(contrato.numero) : null;
+    if (!contratoId) return;
+
+    if (this.ultimoContratoId === contratoId) return;
+    this.ultimoContratoId = contratoId;
+
+    this.api.carregarDetalheContrato(contratoId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: detalhe => this.detalheContrato.set(detalhe),
+        error: () => this.detalheContrato.set(null),
+      });
   });
 
-  get entradaMinima(): number {
+  // ================= COMPUTED =================
+
+  readonly entradaMinima = computed(() => {
     const contrato = this.contrato();
-    if (!contrato) {
-      return 0;
-    }
-    return Math.round((contrato.valorDevido * 0.10) * 100) / 100;
-  }
 
-  get custasTotal(): number {
+    if (!contrato) return 0;
+
+    return this.round2(contrato.valorDevido * 0.10);
+  });
+
+  readonly custasTotal = computed(() => {
     const detalhe = this.detalheContrato();
-    if (!detalhe) {
-      return 0;
-    }
 
-    return Math.round((detalhe.custasCartorarias + detalhe.custas + detalhe.honorarios) * 100) / 100;
-  }
+    if (!detalhe) return 0;
 
-  entrada = 0;
+    return this.round2(
+      (detalhe.custasCartorarias ?? 0) +
+      (detalhe.custas ?? 0) +
+      (detalhe.honorarios ?? 0)
+    );
+  });
 
   readonly validacoes = computed(() => {
     const contrato = this.contrato();
-    const detalhe = this.detalheContrato();
+    const custas = this.custasTotal();
 
     return [
-      {
-        label: 'Sem impedimentos jurídicos identificados',
-        valido: true,
-      },
-      {
-        label: 'Sem impedimentos relativos à execução extrajudicial',
-        valido: true,
-      },
-      {
-        label: 'Critérios de risco e crédito validados',
-        valido: true,
-      },
+      { label: 'Sem impedimentos jurídicos identificados', valido: true },
+      { label: 'Sem impedimentos relativos à execução extrajudicial', valido: true },
+      { label: 'Critérios de risco e crédito validados', valido: true },
       {
         label: 'Custas extrajudiciais identificadas',
-        valido: contrato?.status === 'EXECUCAO_EXTRAJUDICIAL' || (detalhe ? this.custasTotal > 0 : false),
+        valido: contrato?.status === 'EXECUCAO_EXTRAJUDICIAL' || custas > 0,
       },
-      {
-        label: 'Laudo',
-        valido: true,
-      },
+      { label: 'Laudo', valido: true },
     ];
   });
 
-  readonly garantia = computed(() => {
-    const contrato = this.contrato();
+  readonly garantiasContrato = computed(() => {
     const detalhe = this.detalheContrato();
-    const primeiraGarantia = detalhe?.garantias?.[0];
 
-    return {
-      tipo: primeiraGarantia ? this.formatarTipoGarantia(primeiraGarantia.tipo) : (contrato?.garantia ?? 'Não informado'),
-      valor: primeiraGarantia?.valorGarantia ?? null,
-      registro: primeiraGarantia?.registroGarantia ?? 'Não informado',
-      endereco: primeiraGarantia?.descricao ?? 'Não informado',
-      valida: Boolean(primeiraGarantia),
-    };
+    if (!Array.isArray(detalhe?.garantias)) {
+      return [];
+    }
+
+    return detalhe.garantias
+      .filter(g => g && g.tipo)
+      .map(g => ({
+        tipo: this.formatarTipoGarantia(g.tipo),
+        valor: g.valorGarantia ?? null,
+        registro: g.registroGarantia ?? null,
+        descricao: g.descricao ?? null,
+        endereco: (g as any).endereco ?? g.descricao ?? null,
+      }));
   });
 
+  // ================= ACTIONS =================
 
   async abrirConsultaJuridica(): Promise<void> {
     const contrato = this.contrato();
-    if (!contrato) {
-      return;
-    }
+    if (!contrato) return;
 
     this.facade.solicitarConsultaJuridica(contrato.numero);
 
@@ -135,6 +145,7 @@ export class ValidacaoOperacionalComponent {
     });
 
     const resultado = await firstValueFrom(dialogRef.afterClosed());
+
     if (resultado === 'continuar') {
       this.facade.avancarStep();
       this.router.navigate(['/renegociacao/simulacao']);
@@ -153,6 +164,12 @@ export class ValidacaoOperacionalComponent {
   voltar(): void {
     this.facade.voltarStep();
     this.router.navigate(['/renegociacao/selecionar']);
+  }
+
+  // ================= UTILS =================
+
+  private round2(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
   }
 
   private formatarTipoGarantia(tipo: string): string {

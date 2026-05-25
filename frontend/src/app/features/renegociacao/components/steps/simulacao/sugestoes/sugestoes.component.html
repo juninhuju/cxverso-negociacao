@@ -1,0 +1,57 @@
+<div class="sugestoes-list">
+  <div *ngFor="let opcao of opcoes" class="sugestao-card" [class.selected]="opcaoSelecionada?.id === opcao.id"
+    (click)="onSelecionar(opcao)" role="button" tabindex="0" (keydown.enter)="onSelecionar(opcao)"
+    (keydown.space)="onSelecionar(opcao)">
+    <!-- HEADER -->
+    <div class="sugestao-header">
+      <span *ngIf="opcaoSelecionada?.id === opcao.id" class="sugestao-badge">
+        Selecionado
+      </span>
+    </div>
+    <!-- DETALHES COMPLETOS -->
+    <div class="detalhe-oferta">
+      <div class="row-item">
+        <span class="label">Entrada</span>
+        <span class="value">
+          {{ opcao.valorEntrada | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+        </span>
+      </div>
+      <div class="row-item destaque">
+        <span class="label">Parcelas</span>
+        <span class="value">
+          {{ opcao.numeroParcelas }}x
+        </span>
+      </div>
+      <div class="row-item">
+        <span class="label">Valor da Parcela</span>
+        <span class="value">
+          {{ opcao.valorParcela | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+        </span>
+      </div>
+      <div class="row-item">
+        <span class="label">Taxa de Juros</span>
+        <span class="value">
+          {{ opcao.taxaJuros | percent:'1.2-2':'pt-BR' }} a.a.
+        </span>
+      </div>
+      <div class="row-item economia">
+        <span class="label">Economia</span>
+        <span class="value">
+          {{ opcao.economiaTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+        </span>
+      </div>
+      <div class="row-item" *ngIf="opcao.detalhes">
+        <span class="label">Detalhes</span>
+        <span class="value">{{ opcao.detalhes }}</span>
+      </div>
+    </div>
+    <!-- Botão aceitar oferta -->
+    <div class="oferta-cta">
+      <button class="btn-primary" [disabled]="opcaoSelecionada?.id !== opcao.id"
+        (click)="$event.stopPropagation(); aceitarOferta()">
+        Aceitar oferta
+      </button>
+    </div>
+  </div>
+
+</div>

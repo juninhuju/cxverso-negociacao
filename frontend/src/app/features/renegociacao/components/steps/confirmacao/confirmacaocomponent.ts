@@ -1,3 +1,4 @@
+
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,8 +21,8 @@ const HISTORICO_KEY = 'negocia_caixa_historico';
     MatDividerModule,
     MatIconModule,
   ],
-  templateUrl: '../confirmacao/confirmacao.component.html',
-  styleUrl: '../confirmacao/confirmacao.component.scss',
+  templateUrl: './confirmacao.component.html',
+  styleUrl: './confirmacao.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmacaoComponent {
@@ -33,7 +34,16 @@ export class ConfirmacaoComponent {
   readonly error = this.facade.error;
   readonly contrato = this.facade.contrato;
   readonly consulta = this.facade.consultaJuridica;
-  readonly simulacao = this.facade.simulacao;
+  readonly simulacao = computed(() => {
+    // Prioriza o estado global, mas busca no localStorage se necessário
+    const sim = this.facade.simulacao();
+    if (sim) return sim;
+    try {
+      const local = localStorage.getItem('simulacao_atual');
+      if (local) return JSON.parse(local);
+    } catch {}
+    return null;
+  });
 
   // Valores de apoio para o detalhamento quando não vierem da API
   readonly tarifaRenegociacao = 250;

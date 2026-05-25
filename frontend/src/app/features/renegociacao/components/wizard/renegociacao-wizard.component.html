@@ -17,7 +17,7 @@
           <div class="progress-bar__fill" [style.width.%]="progressPercent">
           </div>
         </div>
-        <p class="progress-label">{{ progressPercent }}% concluído</p>
+        <p class="progress-label">{{ progressPercent }}%</p>
       </div>
 
       <!-- DIREITA (STEPS) -->
@@ -26,7 +26,8 @@
           @for (step of steps; track step.path; let i = $index) {
           <li class="step-item" [class.step-done]="i < stepAtual()" [class.step-current]="i === stepAtual()">
 
-            <span class="step-number">{{ i + 1 }}</span>
+            <span class="step-icon" [class.done]="i < stepAtual()" [class.current]="i === stepAtual()">
+            </span>
             <span class="step-label">{{ step.label }}</span>
 
           </li>

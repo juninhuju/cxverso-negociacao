@@ -1,0 +1,150 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+
+.sugestoes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md) var(--spacing-lg);
+  width: 100%;
+  justify-content: center;
+}
+
+/* CARD */
+
+.sugestao-card {
+  flex: 1 1 320px;
+  max-width: 420px;
+  min-width: 260px;
+  min-height: 320px;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-gray-300);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.oferta-cta {
+  min-height: 48px;
+  display: flex;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+@media (max-width: 900px) {
+  .sugestoes-list {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .sugestao-card {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+/* HOVER */
+
+.sugestao-card:hover {
+  border-color: var(--color-primary-blue);
+  box-shadow: var(--shadow-md);
+}
+
+/* 🔥 SELECIONADO (DECISÃO FINAL) */
+
+.sugestao-card.selected {
+  border: 2px solid var(--color-primary-blue);
+  background: var(--color-primary-blue-light);
+
+  box-shadow: 0 0 0 2px rgba(0, 92, 169, 0.15);
+}
+
+/* HEADER */
+
+.sugestao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sugestao-descricao {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+  color: var(--color-primary-blue);
+}
+
+.sugestao-badge {
+  background: var(--color-primary-blue);
+  color: #fff;
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* 🔥 DETALHAMENTO (novo layout correto) */
+
+.detalhe-oferta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* LINHA */
+
+.row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 4px 0;
+}
+
+/* LABEL */
+
+.label {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+}
+
+/* VALUE */
+
+.value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+}
+
+/* 🔥 DESTAQUE PRINCIPAL */
+
+.row-item.destaque {
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--color-gray-300);
+}
+
+.row-item.destaque .value {
+  font-size: 1.2rem;
+  color: var(--color-primary-blue);
+}
+
+/* ECONOMIA */
+
+.row-item.economia .value {
+  color: var(--color-success-green);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+  .row-item {
+    font-size: var(--font-size-sm);
+  }
+}

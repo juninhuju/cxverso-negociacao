@@ -1,0 +1,31 @@
+<ng-container *ngIf="resultado" class="resultado">
+  <div class="resultado-kpis">
+    <div class="kpi-item">
+      <span class="kpi-label">Valor da Parcela</span>
+      <strong class="kpi-value">{{ resultado.valorParcela | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+    </div>
+    <div class="kpi-item">
+      <span class="kpi-label">Total Negociação</span>
+      <strong class="kpi-value">{{ resultado.totalPago | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+    </div>
+  </div>
+  <div class="detalhamento-grid">
+    <div class="grid-item">
+      <span class="label">Entrada + Custas</span>
+      <strong class="value">{{ (resultado.valorEntrada + custasObrigatorias) |
+        currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+    </div>
+    <div class="grid-item">
+      <span class="label">Parcelas</span>
+      <strong class="value">{{ resultado.numeroParcelas }}x</strong>
+    </div>
+    <div class="grid-item">
+      <span class="label">Juros</span>
+      <strong class="value-secondary">{{ resultado.taxaJuros | percent:'1.2-2':'pt-BR' }} a.a.</strong>
+    </div>
+    <div class="grid-item">
+      <span class="label">Total</span>
+      <strong class="value">{{ resultado.totalPago | currency:'BRL':undefined:undefined:'pt-BR' }}</strong>
+    </div>
+  </div>
+</ng-container>

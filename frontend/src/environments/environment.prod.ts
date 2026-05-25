@@ -5,5 +5,5 @@ export const environment = {
     realm: 'negocia-caixa',
     clientId: 'negocia-caixa-frontend',
   },
-  bffUrl: 'https://api.negocia.caixa.gov.br/bff',
+  bffUrl: 'https://negocia.caixa.gov.br/bff',
 };

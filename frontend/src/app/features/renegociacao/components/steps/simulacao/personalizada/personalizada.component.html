@@ -1,0 +1,24 @@
+<form class="form-grid">
+  <div class="form-field">
+    <label for="valorEntradaInput">Entrada mínima</label>
+    <input id="valorEntradaInput" type="number" name="valorEntrada" [ngModel]="valorEntrada"
+      (ngModelChange)="onValorEntradaChange($event)" inputmode="decimal" [min]="entradaMinima" [step]="0.01"
+      aria-label="Entrada mínima" required />
+    <small class="input-hint">
+      Mínimo: 8% do saldo devedor (R$ {{ entradaMinima | number:'1.2-2':'pt-BR' }})
+    </small>
+  </div>
+  <div class="form-field">
+    <label for="numeroParcelasInput">Número de parcelas</label>
+    <input id="numeroParcelasInput" type="number" name="numeroParcelas" [ngModel]="numeroParcelas"
+      (ngModelChange)="onNumeroParcelasChange($event)" inputmode="numeric" [min]="parcelaMinima" [max]="parcelaMaxima"
+      aria-label="Número de parcelas" required />
+    <small class="input-hint">
+      Permitido: de {{ parcelaMinima }} até {{ parcelaMaxima }} parcelas
+    </small>
+  </div>
+</form>
+<button class="btn-primary" (click)="onSimular()" aria-label="Simular negociação"
+  [disabled]="valorEntrada < entradaMinima || numeroParcelas < parcelaMinima || numeroParcelas > parcelaMaxima">
+  Simular
+</button>

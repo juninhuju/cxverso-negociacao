@@ -65,14 +65,14 @@ export const RENEGOCIACAO_ROUTES: Routes = [
           ),
       },
       {
-        path: 'resultado',
+        path: 'confirmacao',
         data: {
-          title: 'Resultado da Simulação',
-          description: 'Veja o detalhamento final da operação e valores calculados.',
+          title: 'Confirmação da Renegociação',
+          description: 'Confira todos os dados finais da simulação antes de formalizar.',
         },
         loadComponent: () =>
-          import('./components/steps/resultado/resultado.component').then(
-            (c) => c.ResultadoComponent,
+          import('./components/steps/confirmacao/confirmacaocomponent').then(
+            (c) => c.ConfirmacaoComponent,
           ),
       },
       {

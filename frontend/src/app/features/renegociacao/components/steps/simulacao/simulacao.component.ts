@@ -1,4 +1,4 @@
-import { CommonModule, CurrencyPipe, PercentPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -21,15 +21,16 @@ import { catchError, map, of, switchMap } from 'rxjs';
 import { RenegociacaoApiService } from '../../../../../core/auth/renegociacao-api.service';
 import { buildFriendlyApiErrorMessage } from '../../../../../core/http/api-error.util';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
-import { Contrato, OpcaoSimulacao, SimulacoesDisponiveis } from '../../../models/renegociacao.model';
+import { Contrato, OpcaoSimulacao, SimulacaoRenegociacao, SimulacoesDisponiveis } from '../../../models/renegociacao.model';
+import { PersonalizadaComponent } from './personalizada/personalizada.component';
+import { ResultadoComponent } from './resultado/resultado.component';
+import { SugestoesComponent } from './sugestoes/sugestoes.component';
 
 @Component({
   selector: 'app-simulacao',
   standalone: true,
   imports: [
     CommonModule,
-    CurrencyPipe,
-    PercentPipe,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -37,12 +38,84 @@ import { Contrato, OpcaoSimulacao, SimulacoesDisponiveis } from '../../../models
     MatIconModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    PersonalizadaComponent,
+    SugestoesComponent,
+    ResultadoComponent,
   ],
   templateUrl: './simulacao.component.html',
   styleUrl: './simulacao.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimulacaoComponent {
+  modalPersonalizadaAberto = false;
+
+  abrirModalPersonalizada() {
+    this.modalPersonalizadaAberto = true;
+  }
+
+  fecharModalPersonalizada() {
+    this.modalPersonalizadaAberto = false;
+  }
+
+  aceitarOferta() {
+    // Avança para a tela de confirmação com a opção selecionada
+    this.continuar();
+  }
+
+
+  concluirPersonalizada() {
+    // Avança para a tela de confirmação com os dados personalizados
+    this.fecharModalPersonalizada();
+    this.continuar();
+  }
+
+  // Computed para resultado personalizado (SimulacaoRenegociacao)
+  readonly resultadoPersonalizado = computed<SimulacaoRenegociacao | null>(() => {
+    return {
+      valorEntrada: this.valorEntrada(),
+      numeroParcelas: this.numeroParcelas(),
+      valorParcela: this.parcelaMensalPreview(),
+      taxaJuros: this.taxaJurosDinamica(),
+      totalPago: this.cetValor(),
+      totalJuros: this.jurosValor(),
+      parcelas: [],
+    };
+  });
+
+  // Computed para resultado da opção sugerida (SimulacaoRenegociacao)
+  readonly resultadoSimulacao = computed<SimulacaoRenegociacao | null>(() => {
+    const opcao = this.opcaoSelecionada();
+    if (!opcao) return null;
+    return {
+      valorEntrada: opcao.valorEntrada,
+      numeroParcelas: opcao.numeroParcelas,
+      valorParcela: opcao.valorParcela,
+      taxaJuros: this.normalizarTaxa(opcao.taxaJuros),
+      totalPago: opcao.valorParcela * opcao.numeroParcelas + this.custasObrigatorias(),
+      totalJuros: 0, // ajuste conforme necessário
+      parcelas: [],
+    };
+  });
+
+  // Resultado final exibido
+
+  // resultadoFinal não é mais necessário, pois o modal controla o fluxo
+    // Métodos públicos para uso no template
+  public entradaMinima(): number {
+    const contrato = this.contrato();
+    if (!contrato) return 0;
+    return Math.round(contrato.valorDevido * 0.08 * 100) / 100;
+  }
+
+  public parcelaMinima(): number {
+    const contrato = this.contrato();
+    return (contrato as any)?.parcelaMinima ?? 1;
+  }
+
+  public parcelaMaxima(): number {
+    const contrato = this.contrato();
+    return (contrato as any)?.parcelaMaxima ?? 120;
+  }
   private readonly facade = inject(RenegociacaoFacade);
   readonly stepAtual = this.facade.stepAtual;
   private readonly router = inject(Router);
@@ -66,7 +139,7 @@ export class SimulacaoComponent {
 
         this.erroApiOpcoes.set(null);
 
-        return this.api.carregarOpcoesSimulacao(contrato.numero).pipe(
+        return this.api.obterOpcoesSimulacao(contrato.numero).pipe(
           map((resp: SimulacoesDisponiveis | null) => (resp?.opcoes ? [...resp.opcoes] : [])),
           catchError((error: unknown) => {
             this.erroApiOpcoes.set(buildFriendlyApiErrorMessage(error, 'carregar opcoes de simulacao'));
@@ -100,9 +173,9 @@ export class SimulacaoComponent {
     if (!simulacao) {
       return null;
     }
-
-    const mesmaEntrada = simulacao.valorEntrada === this.valorEntrada();
-    const mesmasParcelas = simulacao.numeroParcelas === this.numeroParcelas();
+    // Comparação robusta para evitar problemas de tipo/precisão
+    const mesmaEntrada = Number(simulacao.valorEntrada) === Number(this.valorEntrada());
+    const mesmasParcelas = Number(simulacao.numeroParcelas) === Number(this.numeroParcelas());
     return mesmaEntrada && mesmasParcelas ? simulacao : null;
   });
 
@@ -140,7 +213,7 @@ export class SimulacaoComponent {
 
         if (!this.opcaoSelecionada()) {
           const correspondente = opcoes.find(
-            (o) => o.valorEntrada === simulacaoAtual.valorEntrada && o.numeroParcelas === simulacaoAtual.numeroParcelas,
+            (o: OpcaoSimulacao) => o.valorEntrada === simulacaoAtual.valorEntrada && o.numeroParcelas === simulacaoAtual.numeroParcelas,
           );
           if (correspondente) this.opcaoSelecionada.set(correspondente);
         }
@@ -197,22 +270,65 @@ export class SimulacaoComponent {
     this.numeroParcelas.set(opcao.numeroParcelas);
 
     this.simular();
+    // Salva dados da simulação no localStorage após simular
+    setTimeout(() => {
+      const simulacao = this.simulacao();
+      if (simulacao) {
+        localStorage.setItem('simulacao_atual', JSON.stringify(simulacao));
+      }
+    }, 500);
   }
 
-  simular(): void {
-    const entrada = Math.max(0, this.valorEntrada());
-    const parcelas = Math.max(1, this.numeroParcelas());
-    if (!entrada || !parcelas) {
+simular(): void {
+  const entrada = this.valorEntrada();
+  const parcelas = this.numeroParcelas();
+  const contrato = this.contrato();
+
+  // Se a opção foi selecionada a partir das sugestões da API, não aplicar validação rígida
+  const opcaoSelecionada = this.opcaoSelecionada();
+  const isSugestaoApi = opcaoSelecionada && opcaoSelecionada.valorEntrada === entrada && opcaoSelecionada.numeroParcelas === parcelas;
+
+  if (!isSugestaoApi) {
+    if (!Number.isFinite(entrada) || entrada < 0 || !Number.isFinite(parcelas) || parcelas < 1) {
       this.erroApiOpcoes.set('Preencha corretamente os campos obrigatórios para simular.');
       return;
     }
-    this.facade.simular(entrada, parcelas);
+
+    // Validação extra conforme backend
+    if (contrato) {
+      const saldoDevedor = contrato.valorDevido;
+      const entradaMinima = Math.round(saldoDevedor * 0.08 * 100) / 100;
+      if (entrada < entradaMinima) {
+        this.erroApiOpcoes.set(`O valor de entrada deve ser pelo menos 8% do saldo devedor (mínimo: R$ ${entradaMinima.toLocaleString('pt-BR', {minimumFractionDigits: 2})}).`);
+        return;
+      }
+      // Se o contrato tiver faixa de parcelas
+      const parcelaMin = (contrato as any).parcelaMinima ?? 1;
+      const parcelaMax = (contrato as any).parcelaMaxima ?? 120;
+      if (parcelas < parcelaMin || parcelas > parcelaMax) {
+        this.erroApiOpcoes.set(`O número de parcelas deve estar entre ${parcelaMin} e ${parcelaMax}.`);
+        return;
+      }
+    }
   }
 
+  this.erroApiOpcoes.set(null);
+  this.facade.simular(entrada, parcelas);
+  // Salva dados da simulação no localStorage após simular
+  setTimeout(() => {
+    const simulacao = this.simulacao();
+    if (simulacao) {
+      localStorage.setItem('simulacao_atual', JSON.stringify(simulacao));
+    }
+  }, 500);
+}
   continuar(): void {
-    this.simular();
+    // Só chama simular() se não houver simulação compatível
+    if (!this.simulacaoCompativel()) {
+      this.simular();
+    }
     this.facade.avancarStep();
-    this.router.navigate(['/renegociacao/resultado']);
+    this.router.navigate(['/renegociacao/confirmacao']);
   }
 
   voltar(): void {

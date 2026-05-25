@@ -9,7 +9,7 @@ import { RenegociacaoFacade } from '../../../../states/renegociacao/renegociacao
     { label: 'Contrato', path: 'selecionar' },
     { label: 'Validação', path: 'validacao' },
     { label: 'Simulação', path: 'simulacao' },
-    { label: 'Resultado', path: 'resultado' },
+    { label: 'Confirmação', path: 'confirmacao' },
     { label: 'Conclusão', path: 'conclusao' },
   ] as const;
 
@@ -30,7 +30,11 @@ import { RenegociacaoFacade } from '../../../../states/renegociacao/renegociacao
 
     get progressPercent(): number {
       const stepAtual = Math.max(0, this.stepAtual() ?? 0);
-      return Math.round((stepAtual / STEPS.length) * 100);
+      // Se estiver no último step (Conclusão), mostrar 100%
+      if (stepAtual >= STEPS.length - 1) {
+        return 100;
+      }
+      return Math.round((stepAtual / (STEPS.length - 1)) * 100);
     }
 
     /**

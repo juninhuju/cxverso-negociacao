@@ -5,11 +5,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RenegociacaoFacade } from '../../../../../states/renegociacao/renegociacao.facade';
 import { ConsultaJuridica, Contrato, SimulacaoRenegociacao } from '../../../models/renegociacao.model';
-import { ResultadoComponent } from './resultado.component';
+import { ConfirmacaoComponent } from './confirmacaocomponent';
 
-describe('ResultadoComponent', () => {
-  let fixture: ComponentFixture<ResultadoComponent>;
-  let component: ResultadoComponent;
+describe('ConfirmacaoComponent', () => {
+  let fixture: ComponentFixture<ConfirmacaoComponent>;
+  let component: ConfirmacaoComponent;
 
   const contratoMock: Contrato = {
     numero: '10',
@@ -58,14 +58,14 @@ describe('ResultadoComponent', () => {
   beforeEach(async () => {
     localStorage.clear();
     await TestBed.configureTestingModule({
-      imports: [ResultadoComponent],
+      imports: [ConfirmacaoComponent],
       providers: [
         { provide: RenegociacaoFacade, useValue: facadeMock },
         { provide: Router, useValue: routerMock },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ResultadoComponent);
+    fixture = TestBed.createComponent(ConfirmacaoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

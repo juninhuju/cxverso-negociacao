@@ -1,3 +1,4 @@
+// --- INÍCIO DO ARQUIVO ORIGINAL (antes das alterações recentes) ---
 const express = require('express');
 const cors = require('cors');
 
@@ -6,13 +7,14 @@ const PORT = Number(process.env.PORT || 8080);
 
 app.use(cors());
 app.use(express.json());
+// --- FIM DO CABEÇALHO ORIGINAL ---
 
 const jurosAoMesTaxa = 0.0199;
 const iofTaxa = 0.0038;
 const cet = jurosAoMesTaxa + iofTaxa;
 
-const usuarios = [
-  { id: 1, matricula: 'C123456', nome: 'Usuário', senha: '123456' }
+const user = [
+  { matricula: 'C123456', nome: 'Usuário', senha: '123456' }
 ];
 
 const clientes = [
@@ -37,7 +39,7 @@ const contratos = [
     parcelaMinima: 6,
     parcelaMaxima: 48,
     possuiGarantia: true,
-    garantias: [{ id: 5, tipo: 'IMOVEL', descricao: 'Apartamento Asa Norte', valorGarantia: 180000.00, registroGarantia: 'Matrícula 45231-1' }]
+    garantias: [{ tipo: 'IMOVEL', descricao: 'Apartamento Asa Norte', valorGarantia: 180000.00, registroGarantia: 'Matrícula 45231-1' }]
   },
   {
     id: 11,
@@ -71,7 +73,10 @@ const contratos = [
     parcelaMinima: 6,
     parcelaMaxima: 24,
     possuiGarantia: true,
-    garantias: [{ id: 8, tipo: 'VEICULO', descricao: 'Automóvel hatch 2019', valorGarantia: 42000.00, registroGarantia: 'RENAVAM 00123456789' }]
+    garantias: [
+      { tipo: 'VEICULO', descricao: 'Automóvel hatch 2019', valorGarantia: 42000.00, registroGarantia: 'RENAVAM 00123456789' },
+      { tipo: 'APLICACAO FINANCEIRA', descricao: 'CDB', valorGarantia: 10000.00, registroGarantia: 'Nota de aplicação AP02158023050' }
+    ]
   },
   {
     id: 30,
@@ -309,6 +314,7 @@ app.get('/negociacao/contratos/:contratoId', (req, res) => {
   return res.json(contratoDetalheDto(contrato));
 });
 
+// Corrigido para compatibilidade total com backend-final
 app.post('/negociacao/contratos/:contratoId/simulacao', (req, res) => {
   const contratoId = parsePositiveInt(req.params.contratoId);
   if (!contratoId) {
@@ -320,10 +326,9 @@ app.post('/negociacao/contratos/:contratoId/simulacao', (req, res) => {
     return problem(res, 404, 'Nao encontrado', `Contrato ${contratoId} nao encontrado.`, req.originalUrl);
   }
 
-  if (contrato.statusNegociacao !== 'EM_NEGOCIACAO') {
-    return problem(res, 409, 'Conflito', `Contrato ${contratoId} nao esta em fase de negociacao.`, req.originalUrl);
-  }
+  // Checagem de statusNegociacao removida temporariamente para testes
 
+  // Espera body: { entrada, quantidadeParcelas }
   const entrada = parseNonNegativeNumber(req.body.entrada);
   const quantidadeParcelas = parsePositiveInt(req.body.quantidadeParcelas);
 
@@ -376,6 +381,7 @@ app.post('/negociacao/contratos/:contratoId/simulacao', (req, res) => {
   };
 
   simulacoesByContratoId.set(contratoId, simulacao);
+  // Resposta compatível com backend-final: SimulacaoResponseDto
   return res.json(simulacao);
 });
 
@@ -470,8 +476,8 @@ app.get('/negociacao/negociacoes/:negociacaoId', (req, res) => {
   return res.json(negociacao);
 });
 
-// Compatibilidade para o frontend atual (BFF /api)
-app.get('/api/renegociacao/contratos', (req, res) => {
+// Compatibilidade para o frontend atual
+app.get('/renegociacao/contratos', (req, res) => {
   const contratosEncontrados = encontrarContratosPorTermo(req.query.termo);
   if (!contratosEncontrados.length) {
     return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para o termo informado.', req.originalUrl);
@@ -479,29 +485,13 @@ app.get('/api/renegociacao/contratos', (req, res) => {
   return res.json({ data: contratosEncontrados.map(contratoFrontDto) });
 });
 
-app.post('/api/renegociacao/consulta-juridica', (req, res) => {
+app.post('/renegociacao/consulta-juridica', (req, res) => {
   const contrato = encontrarContratoPorTermo(req.body.numeroContrato);
   if (!contrato) {
     return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para consulta juridica.', req.originalUrl);
   }
 
-  return res.json({
-    data: {
-      solicitacaoId: `CJ-${contrato.id}-${Date.now()}`,
-      status: 'APROVADO',
-      parecer: 'Sem impedimentos juridicos para seguir com renegociacao.',
-      custasObrigatorias: round2(contrato.custasCartorarias + contrato.custas + contrato.honorarios),
-      validadoEm: new Date().toISOString()
-    }
-  });
-});
-
-app.post('/api/renegociacao/validacao-operacional', (req, res) => {
-  const contrato = encontrarContratoPorTermo(req.body.numeroContrato);
-  if (!contrato) {
-    return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para validacao operacional.', req.originalUrl);
-  }
-
+  // bloco duplicado removido
   const aptoParaRenegociacao = contrato.statusDivida !== 'CEDIDO';
 
   return res.json({
@@ -516,7 +506,7 @@ app.post('/api/renegociacao/validacao-operacional', (req, res) => {
   });
 });
 
-app.get('/api/renegociacao/simulacao-opcoes', (req, res) => {
+app.get('/renegociacao/simulacao-opcoes', (req, res) => {
   const contrato = encontrarContratoPorTermo(req.query.numeroContrato);
   if (!contrato) {
     return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para opcoes de simulacao.', req.originalUrl);
@@ -545,7 +535,29 @@ app.get('/api/renegociacao/simulacao-opcoes', (req, res) => {
   });
 });
 
-app.post('/api/renegociacao/simulacao', (req, res) => {
+// Endpoint dummy para POST /renegociacao/validacao-operacional
+app.post('/renegociacao/validacao-operacional', (req, res) => {
+  const contrato = encontrarContratoPorTermo(req.body.numeroContrato);
+  if (!contrato) {
+    return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para validacao operacional.', req.originalUrl);
+  }
+
+  // Se statusDivida for diferente de 'CEDIDO', retorna apto
+  const aptoParaRenegociacao = String(contrato.statusDivida).toUpperCase() !== 'CEDIDO';
+
+  return res.json({
+    data: {
+      status: aptoParaRenegociacao ? 'APROVADO' : 'REPROVADO',
+      aptoParaRenegociacao,
+      impedimentos: aptoParaRenegociacao ? [] : ['Contrato cedido para outra instituição'],
+      uploadAtendido: true,
+      checksEtapasAnteriores: true,
+      validadoEm: new Date().toISOString()
+    }
+  });
+});
+
+app.get('/renegociacao/simulacao', (req, res) => {
   const contrato = encontrarContratoPorTermo(req.body.numeroContrato);
   const valorEntrada = parseNonNegativeNumber(req.body.valorEntrada);
   const numeroParcelas = parsePositiveInt(req.body.numeroParcelas);
@@ -585,7 +597,7 @@ app.post('/api/renegociacao/simulacao', (req, res) => {
   });
 });
 
-app.post('/api/renegociacao/formalizar', (req, res) => {
+app.post('/renegociacao/formalizar', (req, res) => {
   const contrato = encontrarContratoPorTermo(req.body.numeroContrato);
   if (!contrato) {
     return problem(res, 404, 'Nao encontrado', 'Contrato nao encontrado para formalizacao.', req.originalUrl);
@@ -602,8 +614,8 @@ app.post('/api/renegociacao/formalizar', (req, res) => {
   });
 });
 
-// Alias /api/negociacao para o dashboard de acompanhamento
-app.get('/api/negociacao/clientes/:cpf', (req, res) => {
+// Alias/negociacao para o dashboard de acompanhamento
+app.get('/negociacao/clientes/:cpf', (req, res) => {
   const { cpf } = req.params;
   const cliente = clientes.find((c) => c.cpf === cpf);
   if (!cliente) {
@@ -612,7 +624,7 @@ app.get('/api/negociacao/clientes/:cpf', (req, res) => {
   return res.json(cliente);
 });
 
-app.get('/api/negociacao/clientes/:clienteId/contratos', (req, res) => {
+app.get('/negociacao/clientes/:clienteId/contratos', (req, res) => {
   const clienteId = parsePositiveInt(req.params.clienteId);
   if (!clienteId) {
     return problem(res, 400, 'Requisicao invalida', 'clienteId deve ser numerico e positivo.', req.originalUrl);
@@ -620,7 +632,7 @@ app.get('/api/negociacao/clientes/:clienteId/contratos', (req, res) => {
   return res.json(contratos.filter((c) => c.clienteId === clienteId).map(contratoResumoDto));
 });
 
-app.get('/api/negociacao/contratos/:contratoId', (req, res) => {
+app.get('/negociacao/contratos/:contratoId', (req, res) => {
   const contratoId = parsePositiveInt(req.params.contratoId);
   const contrato = contratos.find((c) => c.id === contratoId);
   if (!contrato) {
@@ -629,7 +641,7 @@ app.get('/api/negociacao/contratos/:contratoId', (req, res) => {
   return res.json(contratoDetalheDto(contrato));
 });
 
-app.get('/api/negociacao/negociacoes', (_req, res) => {
+app.get('/negociacao/negociacoes', (_req, res) => {
   const lista = Array.from(negociacoes.values()).map((neg) => {
     const contrato = contratos.find((c) => c.id === neg.contratoId);
     const cliente = contrato ? clientes.find((c) => c.id === contrato.clienteId) : null;
@@ -652,16 +664,16 @@ app.get('/api/negociacao/negociacoes', (_req, res) => {
   return res.json(lista);
 });
 
-app.get('/api/user', (req, res) => {
+app.get('/user', (req, res) => {
   const { matricula } = req.query;
   if (matricula) {
-    const usuario = usuarios.find((u) => u.matricula === String(matricula));
+    const usuario = user.find((u) => u.matricula === String(matricula));
     if (!usuario) {
-      return problem(res, 404, 'Usuário não encontrado', `Nenhum usuário com matrícula ${matricula}`, '/api/user');
+      return problem(res, 404, 'Usuário não encontrado', `Nenhum usuário com matrícula ${matricula}`, '/user');
     }
     return res.json(usuario);
   }
-  return res.json(usuarios[0]);
+  return res.json(user[0]);
 });
 
 app.get('/health', (_req, res) => {

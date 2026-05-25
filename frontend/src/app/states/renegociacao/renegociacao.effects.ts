@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { RenegociacaoApiService } from '../../core/auth/renegociacao-api.service';
+import { Contrato } from '../../shared/models/contrato.model';
 import { RenegociacaoActions } from './renegociacao.actions';
 import { selectContrato } from './renegociacao.selectors';
 
@@ -17,8 +18,8 @@ export class RenegociacaoEffects {
     this.actions$.pipe(
       ofType(RenegociacaoActions.buscarContrato),
       switchMap(({ termo }) =>
-        this.api.buscarContrato(termo).pipe(
-          map((contratos) => RenegociacaoActions.buscarContratoSuccess({ contratos })),
+        this.api.buscarContratos(termo).pipe(
+          map((contratos) => RenegociacaoActions.buscarContratoSuccess({ contratos: contratos as Contrato[] })),
           catchError((err: unknown) =>
             of(
               RenegociacaoActions.buscarContratoFailure({
@@ -71,21 +72,30 @@ export class RenegociacaoEffects {
     this.actions$.pipe(
       ofType(RenegociacaoActions.simularRenegociacao),
       withLatestFrom(this.store.select(selectContrato)),
-      switchMap(([{ valorEntrada, numeroParcelas }, contrato]) =>
-        this.api.simular(contrato?.numero ?? '', valorEntrada, numeroParcelas).pipe(
+      switchMap(([{ valorEntrada, numeroParcelas }, contrato]) => {
+        const numeroContrato = contrato?.numero?.trim();
+
+        if (!numeroContrato) {
+          return of(
+            RenegociacaoActions.simularRenegociacaoFailure({
+              error: 'Contrato não selecionado para simulação.',
+            })
+          );
+        }
+
+        return this.api.simular(numeroContrato, valorEntrada, numeroParcelas).pipe(
           map((simulacao) => RenegociacaoActions.simularRenegociacaoSuccess({ simulacao })),
           catchError((err: unknown) =>
             of(
               RenegociacaoActions.simularRenegociacaoFailure({
                 error: err instanceof Error ? err.message : 'Erro na simulação',
-              }),
-            ),
-          ),
-        ),
-      ),
-    ),
+              })
+            )
+          )
+        );
+      })
+    )
   );
-
   formalizarRenegociacao$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RenegociacaoActions.formalizarRenegociacao),

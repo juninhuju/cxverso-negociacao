@@ -5,5 +5,5 @@ export const environment = {
     realm: 'negocia-caixa',
     clientId: 'negocia-caixa-frontend',
   },
-  bffUrl: 'http://localhost:8080/api',
+  bffUrl: 'http://localhost:8080',
 };
